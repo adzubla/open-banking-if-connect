@@ -1,0 +1,192 @@
+openapi: 3.0.0
+info:
+  title: Especificação Plataforma de Open Banking
+  version: '1.0'
+  description: "- [1. Identificação do Documento](#1-identificação-do-documento)\n- [2. Definições e Abreviaturas](#2-definições-e-abreviaturas)\n- [3. Visão Geral](#3-visão-geral)\n  - [3.1. Plataforma de Open Banking](#31-plataforma-de-open-banking)\n  - [3.2. Arquitetura](#32-arquitetura)\n    - [3.2.1. Visão de Serviços](#321-visão-de-serviços)\n    - [3.2.2. Arquitetura de Referência](#322-arquitetura-de-referência)\n  - [3.3. Integração com instituições financeiras](#33-integração-com-instituições-financeiras)\n  - [3.4. Conectores Com a plataforma de Open Banking](#34-conectores-com-a-plataforma-de-open-banking)\n  - [3.5. Conectores para gerenciamento do consentimento (Implementação TecBan)](#35-conectores-para-gerenciamento-do-consentimento-implementação-tecban)\n  - [3.6. Conectores para o servidor de autorização (Implementação TecBan)](#36-conectores-para-o-servidor-de-autorização-implementação-tecban)\n  - [3.7. Conectores para dados do cliente (2º Fase) (Implementação Banco)](#37-conectores-para-dados-do-cliente-2º-fase-implementação-banco)\n  - [3.8. Conectores para iniciação de pagamentos (3º Fase) (Implementação Banco)](#38-conectores-para-iniciação-de-pagamentos-3º-fase-implementação-banco)\n  - [3.9. Relatórios e Logs](#39-relatórios-e-logs)\n  - [3.10. Proposta Jornada do usuário](#310-proposta-jornada-do-usuário)\n  - [3.11. Utilização do Swagger (OpenAPI 3)](#311-utilização-do-swagger-openapi-3)\n  - [3.12. Esquema Swagger Tecban](#312-esquema-swagger-tecban)\n- [4. Monitoração](#4-monitoração)\n- [5. Segurança](#5-segurança)\n  - [5.1. Introdução](#51-introdução)\n  - [5.2. Segurança nas APIs](#52-segurança-nas-apis)\n  - [5.3. Geração do Token JWT](#53-geração-do-token-jwt)\n  - [5.4. Conectividade - Integração via internet ou API Gateway Privado (Link Dedicado ou VPN)](#54-conectividade---integração-via-internet-ou-api-gateway-privado-link-dedicado-ou-vpn)\n  - [5.5. Certificado Digital](#55-certificado-digital)\n- [6. Ambiente Sandbox](#6-ambiente-sandbox)\n- [7. Premissas e Restrições](#7-premissas-e-restrições)\n- [8. Histórico de Alterações do Documento](#8-histórico-de-alterações-do-documento)\n- [9. Documentos de apoio](#9-documentos-de-apoio)\n\n\n# 1. Identificação do Documento\n\n# 2. Definições e Abreviaturas\t\n\n# 3. Visão Geral\n## 3.1. Plataforma de Open Banking\n## 3.2. Arquitetura\n### 3.2.1. Visão de Serviços\n### 3.2.2. Arquitetura de Referência\n\n## 3.3. Integração com instituições financeiras\n\n## 3.4. Conectores Com a plataforma de Open Banking\n\n## 3.5. Conectores para gerenciamento do consentimento (Implementação TecBan)\n\n## 3.6. Conectores para o servidor de autorização (Implementação TecBan)\n\n## 3.7. Conectores para dados do cliente (2º Fase) (Implementação Banco)\n\n## 3.8. Conectores para iniciação de pagamentos (3º Fase) (Implementação Banco)\n\n## 3.9. Relatórios e Logs\n\n## 3.10. Proposta Jornada do usuário\n\n## 3.11. Utilização do Swagger (OpenAPI 3)\n\n## 3.12. Esquema Swagger Tecban\n\n# 4. Monitoração\n\n# 5. Segurança\n## 5.1. Introdução\n## 5.2. Segurança nas APIs\n## 5.3. Geração do Token JWT\n## 5.4. Conectividade - Integração via internet ou API Gateway Privado (Link Dedicado ou VPN)\n## 5.5. Certificado Digital\n\n# 6. Ambiente Sandbox\n\n# 7. Premissas e Restrições\n\n# 8. Histórico de Alterações do Documento\n\n# 9. Documentos de apoio"
+servers:
+  - url: 'http://localhost:3000'
+paths:
+  '/users/{userId}':
+    parameters:
+      - schema:
+          type: integer
+        name: userId
+        in: path
+        required: true
+        description: Id of an existing user.
+    get:
+      summary: Get User Info by User ID
+      tags: []
+      responses:
+        '200':
+          description: User Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+              examples:
+                Get User Alice Smith:
+                  value:
+                    id: 142
+                    firstName: Alice
+                    lastName: Smith
+                    email: alice.smith@gmail.com
+                    dateOfBirth: '1997-10-31'
+                    emailVerified: true
+                    signUpDate: '2019-08-24'
+        '404':
+          description: User Not Found
+      operationId: get-users-userId
+      description: Retrieve the information of the user with the matching user ID.
+      parameters: []
+    patch:
+      summary: Update User Information
+      operationId: patch-users-userId
+      responses:
+        '200':
+          description: User Updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+              examples:
+                Updated User Rebecca Baker:
+                  value:
+                    id: 13
+                    firstName: Rebecca
+                    lastName: Baker
+                    email: rebecca@gmail.com
+                    dateOfBirth: '1985-10-02'
+                    emailVerified: false
+                    createDate: '2019-08-24'
+        '404':
+          description: User Not Found
+        '409':
+          description: Email Already Taken
+      description: Update the infromation of an existing user.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                firstName:
+                  type: string
+                lastName:
+                  type: string
+                email:
+                  type: string
+                  description: 'If a new email is given, the user''s email verified property will be set to false.'
+                dateOfBirth:
+                  type: string
+            examples:
+              Update First Name:
+                value:
+                  firstName: Rebecca
+              Update Email:
+                value:
+                  email: rebecca@gmail.com
+              Update Last Name & Date of Birth:
+                value:
+                  lastName: Baker
+                  dateOfBirth: '1985-10-02'
+        description: Patch user properties to update.
+  /user:
+    post:
+      summary: Create New User
+      operationId: post-user
+      responses:
+        '200':
+          description: User Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+              examples:
+                New User Bob Fellow:
+                  value:
+                    id: 12
+                    firstName: Bob
+                    lastName: Fellow
+                    email: bob.fellow@gmail.com
+                    dateOfBirth: '1996-08-24'
+                    emailVerified: false
+                    createDate: '2020-11-18'
+        '400':
+          description: Missing Required Information
+        '409':
+          description: Email Already Taken
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                firstName:
+                  type: string
+                lastName:
+                  type: string
+                email:
+                  type: string
+                dateOfBirth:
+                  type: string
+                  format: date
+              required:
+                - firstName
+                - lastName
+                - email
+                - dateOfBirth
+            examples:
+              Create User Bob Fellow:
+                value:
+                  firstName: Bob
+                  lastName: Fellow
+                  email: bob.fellow@gmail.com
+                  dateOfBirth: '1996-08-24'
+        description: Post the necessary fields for the API to create a new user.
+      description: Create a new user.
+components:
+  schemas:
+    User:
+      title: User
+      type: object
+      description: ''
+      x-examples:
+        Alice Smith:
+          id: 142
+          firstName: Alice
+          lastName: Smith
+          email: alice.smith@gmail.com
+          dateOfBirth: '1997-10-31'
+          emailVerified: true
+          signUpDate: '2019-08-24'
+      properties:
+        id:
+          type: integer
+          description: Unique identifier for the given user.
+        firstName:
+          type: string
+        lastName:
+          type: string
+        email:
+          type: string
+          format: email
+        dateOfBirth:
+          type: string
+          format: date
+          example: '1997-10-31'
+        emailVerified:
+          type: boolean
+          description: Set to true if the user's email has been verified.
+        createDate:
+          type: string
+          format: date
+          description: The date that the user was created.
+      required:
+        - id
+        - firstName
+        - lastName
+        - email
+        - emailVerified
+  securitySchemes: {}
+  examples: {}

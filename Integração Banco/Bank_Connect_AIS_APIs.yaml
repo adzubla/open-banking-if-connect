@@ -1,0 +1,1329 @@
+openapi: 3.0.1
+info:
+  title: TecBan Bank Connect - AIS APIs
+  description: |
+    Este documento fornece a especificação OAS3 para APIs de informação da conta para o TecBan Bank Connect.
+    
+    Essas APIs devem ser implementadas por uma IF para que a TecBan possa expor esses end-points para os parceiros.
+
+    #### Estrutura do documento
+    Esta documentação contém váris referências do formulário "XXX-999-999". Estas são referências para diversos casos de teste no equipamento de homologação da TecBan que a IF pode usar para testar suas implementações do Conector Bancário.
+
+    Reconhecemos que construir um Conector Bancário não é uma tarefa fácil. Ao projetar essas APIs, consideramos que diferentes bancos terão diferentes recursos para extrair dados dos seus sistemas de registro, a profundidade em que as validações de campo podem ser possíveis, etc.
+
+    Fornecemos alternativas, sempre que possível, e indicamos estas nas seções de `Optionality` na operação da API.
+
+    Finalmente, temos validações em "deve", "deveria" e "pode" para fornecer alguma priorização de validação que a IF devem implementar.
+
+  version: Versão 2.2 Lançamento 30.1
+  
+tags:
+- name: accounts
+  description: |
+    APIs que devem ser implementadas pela IF para expor informações de `accounts` para os parceiros
+    
+- name: balances
+  description: |
+    APIs que devem ser implementadas pela IF para expor informações de `balances` para os parceiros 
+
+- name: transactions 
+  description: |
+    APIs que devem ser implementadas pela IF para expor informações de `transactions` para os parceiros.
+
+paths:
+  /accounts:
+    get:
+      tags:
+        - accounts
+      summary: Obter contas 
+      description: |
+
+        ###### ACC-010-010
+
+        A API deve retornar todas as contas especificads pelo parâmetro de consulta `:accountIds`.
+
+        ###### ACC-010-020
+
+        Se o parâmetro de consulta `:accountsIds` não for especificado, a API deve retornar todas as contas para 
+        o usuário pagador identificado pelo cabeçalho `o3-psu-identifier`. 
+
+        ###### ACC-010-030
+
+        Se um ou mais accountIds especificados não existirem ou não puderam ser recuperados, a chamada deve continuar retornando outras contas. 
+
+        ###### ACC-010-040
+
+        Se nenhuma conta for encontrada, a chamada deve retornar um código de status de sucesso `200` com um array `data` vazio.
+
+        ## Opcionalidade
+        Pelo menos um dos `/accounts` ou `/accounts/:accountId` deve ser implementado.
+
+        Se não for implementado, TecBan usará o end-point `/accounts/:accountId`. 
+        No entanto, essa não é uma alternativa com bom desempenho e é encorajado que as IFs implementem esse end-point.
+
+      operationId: findAccounts
+      parameters:
+        # parâmetros de cabeçalho comuns que definem o contexto
+        - $ref: '#/components/parameters/aspspId'
+        - $ref: '#/components/parameters/callerOrgId'
+        - $ref: '#/components/parameters/callerClientId'
+        - $ref: '#/components/parameters/callerSoftwareStatementId'
+        - $ref: '#/components/parameters/apiUri'
+        - $ref: '#/components/parameters/apiOperation'
+        - $ref: '#/components/parameters/consentId'
+        - $ref: '#/components/parameters/callerInteractionId'
+        - $ref: '#/components/parameters/ozoneInteractionId'
+        - $ref: '#/components/parameters/psuIdentifier'
+
+        # parâmetros de consulta
+        - name: accountIds
+          in: query
+          description: ids, separados por vírgulas, das contas a serem retornadas
+          required: true
+          schema:
+            type: string
+            minimum: 1
+      responses:
+        200:
+          description: operação bem sucedida
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AccountsResponse'
+        400:
+          description: |
+            A operação __deve__ falhar com o status `400` sob as seguintes condições de erro: 
+            
+            - ###### ACC-010-050
+              Tanto o parâmetro de consulta `:accountIds` quanto o parâmetro de cabeçalho `o3-psu-identifier` não são especificados.
+
+            - ###### ACC-010-060
+              O cabeçalho `o3-aspsp-id` está ausente ou tem um valor inesperado
+
+
+            A operação __pode__ falhar com o status `400` sob as seguintes condições de erro: 
+
+            - ###### ACC-010-070, ACC-010-080, ACC-010-090
+              Um ou mais parâmetros obrigatórios do cabeçalho não foram especificados ou têm valor inesperado
+              - `o3-api-uri`, 
+              - `o3-api-operation`, 
+              - `o3-ozone-interaction-id` 
+
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+        401:
+          description: |
+            A operação __deve__ falhar com o status `401` sob as seguintes condições de erro:
+
+            - ###### ACC-010-100
+              O usuário da API não está autorizado
+
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      security:
+        - bearerAuth: []
+
+  /accounts/{accountId}:
+    get:
+      tags:
+      - accounts
+      summary: Busca a conta especificada pelo id da conta
+
+      description: |
+        ###### ACC-020-010
+
+        Retorna a conta especificada pelo parâmetro `accountId`.
+
+        ## Optionality
+        Pelo menos um `/accounts` ou `/accounts/:accountId` deve ser implementados
+
+      operationId: findByAccountId
+      parameters:
+        # parâmetros de cabeçalho comuns que definem o contexto
+        - $ref: '#/components/parameters/aspspId'
+        - $ref: '#/components/parameters/callerOrgId'
+        - $ref: '#/components/parameters/callerClientId'
+        - $ref: '#/components/parameters/callerSoftwareStatementId'
+        - $ref: '#/components/parameters/apiUri'
+        - $ref: '#/components/parameters/apiOperation'
+        - $ref: '#/components/parameters/consentId'
+        - $ref: '#/components/parameters/callerInteractionId'
+        - $ref: '#/components/parameters/ozoneInteractionId'
+        - $ref: '#/components/parameters/psuIdentifier'
+
+      
+        # Definições de parâmetros do caminho
+        - name: accountId
+          in: path
+          description: Id da conta a ser consultada
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: operação bem sucedida
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AccountResponse'
+        400:
+          description: |
+            A operação __deve__ falhar com o status `400` sob as seguintes condições de erro:
+
+            - ###### ACC-020-020
+              A consulta à conta correspondente ao parâmetro `:accountId` não existe ou está bloqueada
+
+            - ###### ACC-020-030
+              O cabeçalho `o3-aspsp-id` está ausente ou tem um valor inesperado
+
+            A operação __deve__ falhar com o status `400` sob sa seguintes condições de erro:
+
+            - ###### ACC-020-040
+              A chamada da IF deve falhar se o cabeçalho `o3-psu-identifier` não for especificado.
+            
+            - ###### ACC-020-050
+              A chamada da IF deve falhar se o `:accountId` não se referir à uma conta que é acessível por um usuário pagador identificado pelo cabeçalho  `o3-psu-identifier`.
+
+            A operação __pode__ falhar com o status `400` sob as seguintes condições de erro:
+
+            - ###### ACC-020-060, ACC-020-070, ACC-020-080
+              Um ou mais parâmetros obrigatórios do cabeçalho não foram especificados ou têm valor inesperado
+              - `o3-api-uri`, 
+              - `o3-api-operation`, 
+              - `o3-ozone-interaction-id`               
+
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+        401:
+          description: |
+            A operação __deve__ falhar com o status `401` sob as seguintes condições de erro:
+
+            - ###### ACC-020-090
+              O usuário da API não está autorizado.
+
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+      security:
+        - bearerAuth: []
+
+  /balances:
+    get:
+      tags:
+      - balances
+      summary: Obter saldos
+      operationId: findBalancesByAccountIds
+      description: |
+        ###### BAL-010-010
+
+        A API deve retornar todos os saldos das contas especificadas pelo parâmetro de consulta `:accountIds`
+      
+        ###### BAL-010-020
+
+        Se o parâmetro de consulta `:accountIds` não for especificado, a API deve retornar todos os saldos para todas as contas do usuário pagador identificado pelo cabeçalho `o3-psu-identifier`. 
+
+        ###### BAL-010-030
+
+        Se um ou mais accountIds especificados não existir ou não puderem ser recuperados, a chamada deve continuar retornando os saldos de outras contas. 
+
+        ###### BAL-010-040
+
+        Se nenhuma conta for encontrada, a chamada deve retornar o status de sucesso com o código `200` com um array `data` vazio.
+
+        ###### BAL-010-050
+
+        Se o `balanceType` for especificado, a IF deve retornar apenas o tipo de saldo especificado. 
+
+        ###### BAL-010-060
+        
+        Se o `balanceType` não for especificado, a IF pode retornar mais de um registro de saldo para cada conta. Cada linha representaria um saldo de tipo diferente.
+
+        ## Opcionalidade
+        
+        Pelo menos um `/balances` ou `/accounts/:accountId/balances` deve ser implementado.
+
+        Se não estiver implementado, TecBan usará o end-point `/accounts/:accountId/balances`.
+
+        No entanto, essa não é uma alternativa com bom desempenho e é encorajado que as IFs implementem esse end-point.
+
+      parameters:
+        # parâmetros de cabeçalho comuns que definem o contexto
+        - $ref: '#/components/parameters/aspspId'
+        - $ref: '#/components/parameters/callerOrgId'
+        - $ref: '#/components/parameters/callerClientId'
+        - $ref: '#/components/parameters/callerSoftwareStatementId'
+        - $ref: '#/components/parameters/apiUri'
+        - $ref: '#/components/parameters/apiOperation'
+        - $ref: '#/components/parameters/consentId'
+        - $ref: '#/components/parameters/callerInteractionId'
+        - $ref: '#/components/parameters/ozoneInteractionId'
+        - $ref: '#/components/parameters/psuIdentifier'
+
+        # Definições de parâmetros de consulta
+        - name: accountIds
+          in: query
+          description: IDs, separados por vírgula, da conta a ser consultada
+          required: true
+          schema:
+            type: string
+            minimum: 1
+
+        - name: balanceType
+          in: query
+          description: Tipo do saldo a ser retornado
+          required: false
+          schema:
+            $ref: '#/components/schemas/BalanceTypeEnum'
+      responses:
+        200:
+          description: operação bem sucedida
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BalancesResponse'
+                
+        400:
+          description: |
+            A operação __deve__ falhar com o status `400` sob as seguintes condições de erro:
+
+            - ###### BAL-010-070
+              Tanto o parâmetro de consulta `:accountIds` quanto o parâmetro de cabeçalho` o3-psu-identifier` não são especificados.
+
+            - ###### BAL-010-080
+              O cabeçalho `o3-aspsp-id` está ausente ou tem um valor inesperado.
+
+            - ###### BAL-010-130
+              O parâmetro de consulta `balanceType` tem um valor inesperado ou não é compatível com o conector.
+
+            A operação __pode__ falhar com o status `400` sob as seguintes condições de erro:
+
+            - ###### BAL-010-090, BAL-010-100, BAL-010-110
+              Um ou mais dos parâmetros obrigatórios do cabeçalho não foram especificados ou têm um valor inesperado
+              - `o3-api-uri`, 
+              - `o3-api-operation`, 
+              - `o3-ozone-interaction-id` 
+          
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        401:
+          description: |
+            A operação __deve__ falhar com o status `401` sob as seguintes condições de erro:
+
+            - ###### BAL-010-120
+              O usuário da API não está autorizado.
+
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+      security:
+        - bearerAuth: []
+
+  /accounts/{accountId}/balances:
+    get:
+      tags:
+      - balances
+      summary: Obter os saldos da conta especificada pelo id da conta.
+      operationId: findBalanceByAccountId
+
+      description: |
+        ###### BAL-020-010
+
+        Recupera o saldo para conta especificada pelo parâmetro `accountId`.
+
+        ###### BAL-020-100
+
+        Se o `balanceType` for especificado, a IF deve retornar apenas o tipo de saldo especificado.
+
+        ###### BAL-010-110
+        Se o balanceType não for especificado, a IF pode retornar um ou mais registros de saldo para cada conta. Cada registro representaria um tipo diferente de saldo. 
+        
+        ## Optionality
+        Pelo menos um de `/balances` ou `/accounts/:accountId/balances` deve ser implementado.
+
+      parameters:
+        # parâmetros de cabeçalho comuns que definem o contexto
+        - $ref: '#/components/parameters/aspspId'
+        - $ref: '#/components/parameters/callerOrgId'
+        - $ref: '#/components/parameters/callerClientId'
+        - $ref: '#/components/parameters/callerSoftwareStatementId'
+        - $ref: '#/components/parameters/apiUri'
+        - $ref: '#/components/parameters/apiOperation'
+        - $ref: '#/components/parameters/consentId'
+        - $ref: '#/components/parameters/callerInteractionId'
+        - $ref: '#/components/parameters/ozoneInteractionId'
+        - $ref: '#/components/parameters/psuIdentifier'
+        
+        # Definições de parâmetros do caminho
+        - name: accountId
+          in: path
+          description: Id da conta a ser consultada
+          required: true
+          schema:
+            type: string
+          example: abc-123
+        - name: balanceType
+          in: query
+          description: Tipo do saldo a ser retornado
+          required: false
+          schema:
+            $ref: '#/components/schemas/BalanceTypeEnum'
+      responses:
+        200:
+          description: operação bem sucedida
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BalancesResponse'
+        400:
+          description: |
+            A operação __deve__ falhar com o status `400` sob as seguintes condições de erro:
+
+            - ###### BAL-020-020
+              O saldo da conta correspondente a consulta do parâmetro 
+              `:accountId` não existe ou está bloqueado.
+
+            - ###### BAL-020-030
+              O cabeçalho `o3-aspsp-id` está ausente ou tem um valor inesperado
+
+            - ###### BAL-010-120
+              A consulta do `balanceType` tem um valor inesperado ou não é compatível com o conector.
+
+            A operação __deve__ falhar com o status `400` sob as seguintes condições de erro:
+
+            - ###### BAL-020-040
+              A requisição da IF deve falhar se o cabeçalho `o3-psu-identifier` não for especificado.
+            
+            - ###### BAL-020-050
+              A requisição da IF deve falhar se a `:accountId` não se referir a uma conta que é acessível ao usuário pagador identificado pelo cabeçalho `o3-psu-identifier`.
+
+            A operação __pode__ falhar com o status `400` sob as seguintes condições de erro:
+
+            - ###### BAL-020-060, BAL-020-070, BAL-020-080
+              Um ou mais dos parâmetros obrigatórios do cabeçalho não foram especificados ou têm um valor inesperado
+              - `o3-api-uri`, 
+              - `o3-api-operation`, 
+              - `o3-ozone-interaction-id`            
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+        401:
+          description: |
+            A operação __deve__ falhar com o status `401` sob as seguintes condições de erro:
+
+            - ###### BAL-020-090
+              O usuário da API não está autorizado
+
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+      security:
+        - bearerAuth: []
+
+  /transactions:
+    get:
+      tags:
+      - transações
+      summary: Obter transações
+      description: |
+        Um dos parâmetros de cabeçalho `psuIdentifier` ou parâmetro de consulta `accountIds` seria sempre especificado.
+
+        ###### TXN-020-010
+        Recupera todas as transações das contas especificadas.
+
+        Se `accountIds` for especificado, transações para as contas especificadas.
+
+        Se apenas `psuIdentifier` for especificado, retorna as transações para todas as contas do usuário pagador.
+
+        ###### TXN-020-011
+        Recupera as transações para a lista de contas especificadas, como accountIds nos parâmetros de consulta ou como psuIdentified no cabeçalho, a partir da consulta do parâmetro  `fromBookingDateTime` válido especificado, até hoje.
+
+        ###### TXN-020-012
+        Recupera as transações para a conta especificada, começando do início e terminando no parâmetro de consulta válido especificado `toBookingDateTime`.
+
+        ###### TXN-020-013
+        Recupera as transações para a conta especificada, começando com o parâmetro de consulta válido `fromBookingDateTime` e terminando no parâmetro de consulta válido especificado `toBookingDateTime`.
+
+        ###### TXN-020-020
+        Se um ou mais accountIds especificados não existirem ou não puderem ser recuperados, a chamada deve continuar a retornar transações para outras contas. 
+
+        ## Opcionalidade
+        Pelo menos um `/transactions` ou `/accounts/:accountId/transactions` deve ser implementado.
+
+        ## Opcionalidade
+        Pelo menos um `/transactions` ou `/accounts/:accountId/transactions` deve ser implementado.
+
+        Se naõ implementado, TecBan usará o end-point `/accounts/:accountId/transactions`. 
+
+        No entanto, essa não é uma alternativa com bom desempenho e é encorajado que as IFs implementem esse end-point.
+
+      operationId: findTransactions
+      parameters:
+        # parâmetros de cabeçalho comuns que definem o contexto
+        - $ref: '#/components/parameters/aspspId'
+        - $ref: '#/components/parameters/callerOrgId'
+        - $ref: '#/components/parameters/callerClientId'
+        - $ref: '#/components/parameters/callerSoftwareStatementId'
+        - $ref: '#/components/parameters/apiUri'
+        - $ref: '#/components/parameters/apiOperation'
+        - $ref: '#/components/parameters/consentId'
+        - $ref: '#/components/parameters/callerInteractionId'
+        - $ref: '#/components/parameters/ozoneInteractionId'
+        - $ref: '#/components/parameters/psuIdentifier'
+        - $ref: '#/components/parameters/pagination-page'
+
+        # Definições dos parâmetros de consulta
+        - name: accountIds
+          in: query
+          description: IDs, separados por vírgula, das contas a serem consultadas
+          required: true
+          schema:
+            type: string
+            minimum: 1
+
+        - $ref: '#/components/parameters/transaction-status'
+        - $ref: '#/components/parameters/transaction-fromBookingDateTime'
+        - $ref: '#/components/parameters/transaction-toBookingDateTime'
+        - $ref: '#/components/parameters/transaction-creditDebitIndicator'
+
+      responses:
+        200:
+          description: operação bem sucedida
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TransactionsResponse'
+        400:
+          description: |
+            A operação __deve__ falhar com o status `400` sob as seguintes condições de erro:
+
+            - ###### TXN-020-090
+              Tanto o parâmetro de consulta `:accountIds` quanto o parâmetro de cabeçalho `o3-psu-identifier` não são especificados.
+
+            - ###### TXN-020-030
+              O cabeçalho `o3-aspsp-id` está ausente ou tem um valor inesperado
+
+            - ###### TXN-020-070
+              O `fromBookingDateTime` não está no formato de data ISO
+
+            - ###### TXN-020-080
+              O `toBookingDateTime` não está no formato de data ISO
+
+            A operação __pode__ falhar com o status `400` sob as seguintes condições de erro:
+
+            - ###### TXN-020-040, TXN-020-050, TXN-020-060
+              Um ou mais dos parâmetros obrigatórios do cabeçalho não foram especificados ou têm um valor inesperado
+              - `o3-api-uri`, 
+              - `o3-api-operation`, 
+              - `o3-ozone-interaction-id` 
+
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        401:
+          description: |
+            A operação __deve__ falhar com o status `401` sob as seguintes condições de erro:
+
+            - ###### TXN-010-100
+              O usuário da APi não está autorizado.
+
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      security:
+        - bearerAuth: []
+
+  /accounts/{accountId}/transactions:
+    get:
+      tags:
+      - transactions
+      summary: Obter transações para a conta especificada pelo accountId
+      description: |
+        ###### TXN-010-010
+        Recupera todas as transações da conta especificada por `accountId` na URL.
+
+        ###### TXN-010-011
+        Recupera as transações para a conta especificada, começando com o parâmetro de consulta válido especificado `fromBookingDateTime`, até hoje.
+
+        ###### TXN-010-012
+        Recupera as transações para a conta especificada, começando do início e terminando no parâmetro de consulta válido especificado `toBookingDateTime`.
+
+        ###### TXN-010-013
+        Recupera as transações para a conta especificada, começando com o parâmetro de consulta válido `fromBookingDateTime`e terminando no parâmetro de consulta válido especificado `toBookingDateTime`.
+
+        ###### TXN-010-020
+        Se a conta não existir ou estiver bloqueada, a IF deve retornar um erro com status 400.
+
+        ## Optionality
+        Pelo menos um de `/transactions` ou `/accounts/:accountId/transactions` deve ser implementado.
+
+      operationId: findTransactionsByAccountId
+      parameters:
+        # parâmetros de cabeçalho comuns que definem o contexto
+        - $ref: '#/components/parameters/aspspId'
+        - $ref: '#/components/parameters/callerOrgId'
+        - $ref: '#/components/parameters/callerClientId'
+        - $ref: '#/components/parameters/callerSoftwareStatementId'
+        - $ref: '#/components/parameters/apiUri'
+        - $ref: '#/components/parameters/apiOperation'
+        - $ref: '#/components/parameters/consentId'
+        - $ref: '#/components/parameters/callerInteractionId'
+        - $ref: '#/components/parameters/ozoneInteractionId'
+        - $ref: '#/components/parameters/psuIdentifier'
+        - $ref: '#/components/parameters/pagination-page'
+
+        # Definições de parâmetros do caminho
+        - name: accountId
+          in: path
+          description: Id da conta a ser consultada
+          required: true
+          schema:
+            type: string
+          example: abc-123
+
+        - $ref: '#/components/parameters/transaction-status'
+        - $ref: '#/components/parameters/transaction-fromBookingDateTime'
+        - $ref: '#/components/parameters/transaction-toBookingDateTime'
+        - $ref: '#/components/parameters/transaction-creditDebitIndicator'
+
+      responses:
+        200:
+          description: operação bem sucedida
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TransactionsResponse'
+        400:
+          description: |
+            A operação __deve__ falhar com o status `400` sob as seguintes condições de erro:
+
+            - ###### TXN-010-030
+              O cabeçalho `o3-aspsp-id` está ausente ou tem um valor inesperado
+
+            - ###### TXN-010-060
+              O `fromBookingDateTime` não está no formato de data ISO
+
+            - ###### TXN-010-080
+              O `toBookingDateTime` não está no formato de data ISO
+
+            A operação __pode__ falhar com o status `400` sob as seguintes condições de erro:
+
+            - ###### TXN-010-040, TXN-010-050, TXN-010-060
+              Um ou mais dos parâmetros obrigatórios do cabeçalho não foram especificados ou têm um valor inesperado
+              - `o3-api-uri`, 
+              - `o3-api-operation`, 
+              - `o3-ozone-interaction-id` 
+
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        401:
+          description: |
+            A operação __deve__ falhar com o status `401` sob as seguintes condições de erro:
+
+            - ###### TXN-010-100
+              O usuário da API não está autorizado.
+
+      security:
+        - bearerAuth: []
+
+components:
+  schemas:
+    #
+    # Esquemas para contas
+    #
+    AccountsResponse:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/Account'
+
+    AccountResponse:
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/Account'     
+        meta:
+          $ref: '#/components/schemas/Meta'  
+
+    Account:
+      type: object
+      description: |
+        Descrição para um conta.
+        Este é um objeto composto que pode ser expandido no futuro para oferecer suporte a tipos de contas adicionais para novos padrões de API e tipos de conta.
+      oneOf:
+        - $ref: '#/components/schemas/GenericAccount'
+
+    GenericAccount:
+      type: object
+      properties:
+        id:
+          type: string
+        product:
+          $ref: '#/components/schemas/ProductIdentifier'
+        multiAuth:
+          type: boolean
+        currency:
+          $ref: '#/components/schemas/TCurrency'
+        businessCustomer:
+          type: array
+          items:
+            $ref: '#/components/schemas/CustomerIdentifier'
+        customers:
+          type: array
+          items:
+            $ref: '#/components/schemas/CustomerIdentifier'
+          minimum: 1
+        accountNumbers:
+          type: array
+          items:
+            $ref: '#/components/schemas/AccountNumber'
+          minimum: 1
+        status:
+          $ref: '#/components/schemas/AccountStatusEnum'
+        accountType:
+          $ref: '#/components/schemas/AccountTypeEnum'
+        accountSubType:
+          $ref: '#/components/schemas/AccountSubTypeEnum'
+        description:
+          type: string
+        nickName:
+          type: string
+        openingDate:
+          type: string
+          format: date-time
+        maturityDate:
+          type: string
+          format: date-time
+      required:
+        - id
+        - product
+        - multiAuth
+        - currency
+        - customers
+        - accountNumbers
+      additionalProperties: false
+
+    ProductIdentifier:
+      type: object
+      properties:
+        id:
+          type: string
+        productName:
+          type: string
+      required:
+        - id
+        - productName
+
+    CustomerIdentifier:
+      type: object
+      properties:
+        id:
+          type: string
+        customerName:
+          type: string
+      required:
+        - id
+        - customerName
+
+    AccountStatusEnum:
+      type: string
+      enum:
+        - Enabled
+        - Disabled
+        - Deleted
+        - ProForma
+        - Pending
+
+    AccountTypeEnum:
+      type: string
+      enum:
+        - Business
+        - Personal
+
+    AccountSubTypeEnum:
+      type: string
+      enum:
+        - ChargeCard
+        - CreditCard
+        - CurrentAccount
+        - EMoney Loan
+        - Mortgage
+        - PrePaidCard
+        - Savings
+
+    #  
+    # Esquemas relacionados a saldos
+    #
+    BalancesResponse:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/Balance'
+
+    BalanceResponse:
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/Balance'           
+    
+    Balance:
+      type: object
+      properties:
+        accountId:
+          type: string
+        creditDebitIndicator:
+          $ref: '#/components/schemas/CreditDebitEnum'
+        balanceType:
+          $ref: '#/components/schemas/BalanceTypeEnum'
+        timestamp:
+          type: string
+          format: date-time
+        amount:
+          $ref: '#/components/schemas/Amount'
+        creditLines:
+          type: array
+          items:
+            $ref: '#/components/schemas/CreditLine'
+      required:
+        - accountId
+        - creditDebitIndicator
+        - balanceType
+        - timestamp
+        - amount
+    
+    BalanceTypeEnum:
+      type: string
+      enum:
+        - ClosingAvailable
+        - ClosingBooked
+        - ClosingCleared
+        - Expected
+        - ForwardAvailable
+        - Information
+        - InterimAvailable
+        - InterimBooked
+        - InterimCleared
+        - OpeningAvailable
+        - OpeningBooked
+        - OpeningCleared
+        - PreviouslyClosedBooked
+    
+    CreditLine:
+      type: object
+      properties:
+        included:
+          type: boolean
+        amount:
+          $ref: '#/components/schemas/Amount'
+        creditType:
+          type: string
+          enum:
+            - Available
+            - Credit Emergency
+            - Pre-Agreed
+            - Temporary
+      required:
+        - included
+        - amount
+
+    #
+    # Esquemas relacionados a transações
+    #
+    TransactionsResponse:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/Transaction'
+        meta:
+            $ref: '#/components/schemas/PaginatedMeta'
+
+    Transaction:
+      type: object
+      oneOf:
+        - $ref: '#/components/schemas/GenericTransaction'
+
+    GenericTransaction:
+      type: object
+      properties:
+        accountId:
+          type: string
+        transactionId:
+          type: string
+        transactionReference:
+          type: string
+        statementReference:
+          type: array
+          items: 
+            type: string
+        creditDebitIndicator:
+          $ref: '#/components/schemas/CreditDebitEnum'
+        status:
+          $ref: '#/components/schemas/TransactionStatusEnum'
+        transactionMutability:
+          type: string
+          enum:
+              - Mutable
+              - Immutable
+        bookingDateTime:
+          type: string
+          format: date-time
+        valueDateTime: 
+          type: string
+          format: date-time
+        transactionInformation:
+          type: string
+        merchantAddress:
+          type: string
+        amount:
+          $ref: '#/components/schemas/Amount'
+        chargeAmount:
+          $ref: '#/components/schemas/Amount'
+        currencyExchange:
+          $ref: '#/components/schemas/CurrencyExchange'
+        bankTransactionCode:
+          $ref: '#/components/schemas/BankTransactionCode'
+        proprietoryBankTransactionCode:
+          $ref: '#/components/schemas/ProprietoryBankTransactionCode'
+        Balance:
+          $ref: '#/components/schemas/TransactionBalance'
+        merchantDetails:
+          $ref: '#/components/schemas/MerchantDetails'
+        creditorAgent:
+          $ref: '#/components/schemas/Agent'
+        creditorAccount:
+          $ref: '#/components/schemas/AccountNumber'
+        debtorAgent:
+          $ref: '#/components/schemas/Agent'
+        debtorAccount:
+          $ref: '#/components/schemas/AccountNumber'
+        cardInstrument:
+          $ref: '#/components/schemas/CardInstrument'
+        supplementaryData:
+          type: object
+      required:
+        - accountId
+        - creditDebitIndicator
+        - status
+        - bookingDateTime
+        - amount
+
+    CardInstrument:
+      type: object
+      properties:
+        cardSchemeName:
+          type: string
+          enum:
+            - AmericanExpress
+            - Diners
+            - Discover
+            - MasterCard
+            - VISA
+        authorizationType:
+          type: string
+          enum:
+            - ConsumerDevice
+            - Contactless
+            - None
+            - PIN
+        name:
+          type: string
+        identificiation:
+          type: string
+      required:
+        - cardSchemeName
+
+    Agent:
+      type: object
+      properties:
+        schemeName:
+          type: string
+        identification:
+          type: string
+        name:
+          type: string
+        postalAddress:
+          $ref: '#/components/schemas/PostalAddress'
+      required:
+        - schemeName
+        - identification
+
+    PostalAddress:
+      type: object
+      properties:
+        addressType:
+          type: string
+          enum:
+            - Business
+            - Correspondence
+            - DeliveryTo
+            - MailTo
+            - POBox
+            - Postal
+            - Residential
+            - Statement          
+        department:
+          type: string
+        subDepartment:
+          type: string
+        streetName:
+          type: string
+        buildingNumber:
+          type: string
+        postCode:
+          type: string
+        townName:
+          type: string
+        countrySubDivision:
+          type: string
+        country:
+          type: string
+          pattern: ^[A-Z]{2,2}$
+        addressLine:
+          type: array
+          items:
+            type: string
+            minItems: 0
+            maxItems: 7
+
+    MerchantDetails:
+      type: object
+      properties:
+        merchantName:
+          type: string
+        merchantCategoryCode:
+          type: string
+
+    TransactionBalance:
+      type: object
+      properties:
+        amount:
+          $ref: '#/components/schemas/Amount'
+        creditDebitIndicator:
+          $ref: '#/components/schemas/CreditDebitEnum'
+        balanceType:
+          $ref: '#/components/schemas/BalanceTypeEnum'
+      required:
+        - amount
+        - creditDebitIndicator
+        - balanceType
+
+    ProprietoryBankTransactionCode:
+      type: string
+      properties:
+        code:
+            type: string
+        issuer:
+            type: string
+      required:
+        - code
+
+    BankTransactionCode:
+      type: object
+      properties:
+        code:
+            type: string
+        subCode:
+            type: string
+      required:
+        - code
+        - subCode
+
+    CurrencyExchange:
+      type: object
+      properties:
+        sourceCurrency:
+          $ref: '#/components/schemas/TCurrency'
+        targetCurrency:
+          $ref: '#/components/schemas/TCurrency'
+        unitCurrency:
+          $ref: '#/components/schemas/TCurrency'
+        exchangeRate:
+          type: string
+        contractIdentification:
+          type: string
+        quotationDate:
+          type: string
+          format: date-time
+        instructedAmount:
+          $ref: '#/components/schemas/Amount'
+      required:
+        - sourceCurrency
+        - exchangeRate
+
+    TransactionStatusEnum:
+      type: string
+      enum:
+        - Booked
+        - Pending
+
+    #
+    # Tipos comuns
+    #
+    TCurrency:
+      type: string
+      pattern: '^[A-Z]{3,3}$'
+
+    AccountNumber:
+      type: object
+      properties:
+        name:
+          type: string
+        schemeName:
+          type: string
+        identification:
+          type: string
+        secondaryIdentification:
+          type: string
+      required:
+        - schemeName
+        - identification
+
+    CreditDebitEnum:
+      type: string
+      enum:
+        - Credit
+        - Debit
+
+    Amount:
+      type: object
+      properties:
+        amount:
+          type: string
+          pattern: '^\d{1,13}$|^\d{1,13}.\d{1,5}$'
+        currency:
+          $ref: '#/components/schemas/TCurrency'
+
+      required:
+        - amount
+        - currency
+    
+    Meta:
+      type: object
+      additionalProperties: false
+      
+    PaginatedMeta:
+      type: object
+      properties:
+        paginated: 
+          type: boolean
+          description: |
+            `true` se a resposta for paginada.
+
+            `false` se a resposta retornar todos os elementos de dados correspondentes.
+
+            Se não for especificado, assume-se uma resposta não paginada.
+        
+        totalPages:
+          type: number
+          description: |
+            O número de páginas esperadas para a consulta. 
+
+    Error:
+      type: object
+      properties:
+        errorCode:
+          type: string
+          description: Código de erro que identifica o problema ocorrido
+        errorMessage:
+          type: string
+          description: Mensagem que descreve o problema ocorrido
+
+  parameters:
+    aspspId:
+      name: o3-aspsp-id
+      in: header
+      schema:
+        type: string
+      required: true
+      description: Identificador da IF para a qual a solicitação é direcionada
+
+    callerOrgId:
+      name: o3-caller-org-id
+      in: header
+      schema:
+        type: string
+      required: false
+      description: Um identificador para a organização que chama a API
+
+    callerClientId:
+      name: o3-caller-client-id
+      in: header
+      schema:
+        type: string
+      required: false
+      description: Um identificador para o clientId OIDC chamando a API
+
+    callerSoftwareStatementId:
+      name: o3-caller-software-statement-id
+      in: header
+      schema:
+        type: string
+      required: false
+      description: Um identificador para a homologação do software que chama a API
+      
+    apiUri: 
+      name: o3-api-uri
+      in: header
+      schema:
+        type: string
+      required: true
+      description: A URL parametrizada da API que está sendo chamada pelo requisitante
+      
+    apiOperation:
+      name: o3-api-operation
+      in: header
+      schema:
+        type: string
+      required: true
+      description: A operação da API realizada pelo requisitante (ex. GET, POST, PUT, DELETE, PATCH)
+      
+    consentId:
+      name: o3-consent-id
+      in: header
+      schema:
+        type: string
+      required: false
+      description: O consentId para o qual esta chamada está sendo feita
+      
+    callerInteractionId:
+      name: o3-caller-interaction-id
+      in: header
+      schema:
+        type: string
+      required: false
+      description: O ID de interação passado pelo requisitante da chamada, se houver
+      
+    ozoneInteractionId:
+      name: o3-ozone-interaction-id
+      in: header
+      schema:
+        type: string
+      required: true
+      description: Um ID de interação gerado pela TecBan se o requisitante não enviou um. Se o callerInteractionId for especificado, ele assume o mesmo valor.
+      
+    psuIdentifier:
+      name: o3-psu-identifier
+      in: header
+      schema:
+        type: string
+      required: false
+      description: Uma representação codificada em Base64 do objeto JSON psuIdentifier.
+
+    pageNumber:
+      name: page
+      in: query
+      schema:
+        type: string
+      required: false
+      description: Número da página a ser retornada
+
+    transaction-status:
+      name: status
+      in: query
+      description: |
+        Se especificado, a API deve retornar apenas transações que correspondam ao `status` especificado.
+
+        Se este parâmetro não for especificado, todas as transações, independentemente do status, devem ser retornadas.
+
+        Esta funcionalidade é necessária apenas para APIs do Berlin Group.
+
+        ### Opcionalidade
+        Este parâmetro é opcional para suporte.
+
+        Se não for suportado pela IF e o parâmetro for fornecido, a IF deve retornar um erro.
+
+      required: false
+      schema: 
+        $ref: '#/components/schemas/TransactionStatusEnum'
+            
+
+    transaction-fromBookingDateTime:
+      name: fromBookingDateTime
+      in: query
+      description: |
+        Se especificado, a API deve retornar apenas as transações que têm um `bookingDateTime` que ocorre na data-hora especificada ou após essa data.
+      required: false
+      schema:
+        type: string
+        format: date
+
+    transaction-toBookingDateTime:
+      name: toBookingDateTime
+      in: query
+      description: |
+        Se especificado, a API só deve retornar transações que tenham um `bookingDateTime` que ocorre na data-hora especificada ou antes dela.
+      required: false
+      schema:
+        type: string
+        format: date
+
+    transaction-creditDebitIndicator:
+      name: creditDebitIndicator
+      in: query
+      description: |
+        Se especificado, a API deve retornar apenas transações que correspondam ao `creditDebitIndicator` especificado..
+
+        Se este parâmetro não for especificado, todas as transações, independentemente do status, devem ser retornadas.
+
+        Esta funcionalidade é necessária apenas para APIs do Berlin Group.
+
+        ### Opcionalidade
+        Este parâmetro é opcional para suporte.
+
+        Se não for suportado pela IF e o parâmetro for fornecido, a IF deve retornar um erro.
+      required: false
+      schema:
+        $ref: '#/components/schemas/CreditDebitEnum'
+
+    pagination-page:
+      name: page
+      in: query
+      description: |
+        A página de resultados a ser retornada.
+
+        Se o parâmetro `page` não for especificado, o IF pode retornar:
+        - um conjunto completo de dados não paginados. A flag `paginated` é definida como` false`.
+        - a primeira página de dados paginados. A flag `paginated` é definida como` true`. Opcionalmente, o número de páginas é indicado no atributo `totalPages`.
+
+        ### Optionality
+        Este parâmetro é opcional para suporte.
+
+        Se não for suportado pela IF e o parâmetro for fornecido, a IF deve retornar um erro.
+
+      required: false
+      schema:
+        type: number
+  
+
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
