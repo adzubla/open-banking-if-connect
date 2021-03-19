@@ -1,0 +1,317 @@
+openapi: 3.0.1
+info:
+  title: APIs do Servidor de Autorização
+  description: |
+    Este documento fornece a especificação OAS3 para as APIs fornecidas por Servidor de Autorização.
+    
+    Estas APIs são implementadas pela TecBan e devem ser chamadas pela IF ao fim de seus pedidos de autorização.
+
+    Servidor de Autorização fornece uma interface API para um servidor de autorização OIDC.
+
+    A interface permite que uma IF desenvolva a inteface de usuário para usuários pagadores sem ter que lidar com a complexidade do OIDC e FAPI e sem ter que entender completamnete as restrições imposta pela FAPI.
+ 
+    A inteface consiste nos end-points:
+
+    - O __End-point de Autorização sem Cabeçalho__ `GET /auth` deve ser chamado pela IF no início da concessão de um código de autorização. Normalmente, isso acontece imediatamente após receber uma requisição de autorização do parceiro.  
+    
+    - O __End-point de Confirmação__ `POST /auth/:interactionId/doConfirm` deve ser chamado pela IF para notificar o servidor de autorização que a interação foi concluída com sucesso. 
+
+    - O __End-point de Falha__ `POST /auth/:interactionId/doFail` deve ser chamada pela IF para notificar o servidor de autorização que a interação falhou. 
+    
+  version: Versão 2.2 Lançamento 26.4
+
+
+tags:
+- name: headless-heimdall
+
+paths:
+  /auth:
+    get:
+      tags:
+        - headless-heimdall
+      summary: Iniciar uma interação de autorização
+
+      description: |
+        O end-point de autorização Headless deve ser chamado pela IF no início da interação.
+        
+        O end-point valida todos os parâmetros que são passados a ele para garantir que a solicitação de autorização seja compatível com FAPI, válida, corretamente assinada e tenha o client_id, redirect_uri apropriado etc.
+
+        O end-point responde com um dos três resultados:
+
+        - __Sucesso__: O end-point retorna um status 200. O body contém um objeto JSON com um identificado para interação e todos os parâmetros de consulta extraídos do objeto de requição OIDC. 
+
+        - __Falha não Redirecionável__: Isso indica uma falha ao verificar se o end-point foi chamado atráves de cliente OIDC válido. A IF deverá exibir uma página de erro e finalizar a interação.
+    
+        - __Falha Redirecionável__: Isso indica uma falha em que o end-point foi chamado por um cliente OIDC potencialmente válido. O servidor de autorização responde com um redirecionamento 302. A IF deve responder ao parceiro com o mesmo redirecionamento sem nenhuma modificação.
+
+        ### Processando uma resposta de sucesso
+        Há três campos-chave na resposta de sucesso em que as IFs provavelmente estarão interessadas:
+
+        - `interaction.interactionId`: Este é o identificador de interação que deve ser usado com chamadas subsequentes para o servidor de autorização quando esta requisição de autorização for concluída pela IF.
+
+        - `interaction.params.claims.id_token.openbanking_intent_id`: Se esta interação for para uma autorização de consentimento do OB do Brasil, o Id de consentimento está contido neste campo. A IF pode usar a API gestor de consentimento TecBan para recuperar o consentimento
+
+        - `tpp.directoryRecord`: Onde TecBan é integrada com o serviço diretório, isso contém um registro do parceiro mantido pelo diretório. A estrutura do registro dependerá do diretório.
+        
+        
+        ### Parâmetros
+        O OAS3 não tem uma maneira de indicar um conjunto flexível de parâmetros de consulta.
+        
+        Ao chamar esta API, a IF deve passar todos os parâmetros de consulta ou parâmetros hash recebidos do pareceiro na solicitação de autorização.
+
+      operationId: headlessAuthorization
+
+      responses:
+        200:
+          description: |
+            Isso indica que os parâmetros foram validados com sucesso.
+
+            A IF deve continuar com os próximos estágios da interação, mantendo o controle do interestId retornado.
+
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthSuccessResponse'
+
+        302:
+          description: |
+            Isso indica que os parâmetros não foram verificados com sucesso.
+
+            No entanto, não houve indícios de que a requisição fosse originada de um cliente inválido.
+
+            A IF deve responder ao usuário pagador com um redirecionamento para o URI retornado pela API (incluindo os parâmetros de consulta ou hash incluídos no URL)
+          
+
+
+        400:
+          description: |
+            Isso indica que os parâmetros não foram verificados com sucesso.
+
+            O servidor de autorização não pôde verificar se a solicitação foi originada de um cliente válido.
+
+            A IF deve exibir uma página de erro.
+          
+            A IF __não deve__ redireciona de volta ao parceiro.
+
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthErrorResponse'
+
+      security:
+        - bearerAuth: []
+
+  /auth/:interactionId/doConfirm:
+    post:
+      tags:
+        - headless-heimdall
+      summary: Finaliza uma interação de autorização com uma resposta de sucesso
+
+      description: |
+        O end-point de confirmação deve ser chamado pela IF assim que a interação do usuário for concluída e o proprietário do recurso tiver autorizado o acesso.
+
+        A chamada doConfirm atualiza o estado de interação, gera um `código` OIDC e o resto da resposta que deve ser retornada ao parceiro.
+        
+        A IF pode especificar o conjunto de reinvidicações a serem adicionadas ao id_token. O servidor de autorização cria um id_token com essas reinvidicações junto com quaisquer reinvidicações exigidas pela FAPI e OIDC.
+
+        O servidor de autorização retorna um 302 com um uri de redirecionamento. Este proprietário de recurso deve ser redirecionado para esta URI.
+
+        ### Parâmetros
+        O body da requisição pode conter um conjunto arbitrário de pares nome-valor `application / x-www-form-urlencoded`
+        
+        Eles são adicionados pelo servidor de autorização ao id_token. O nome da reivindicação é definido como o nome do parâmetro e o valor da reivindicação como o valor do parâmetro.
+
+        Nomes de reinvidicações prefixados por `heimdall` atuam como parâmetros de controle para os tokens que são produzidos. Essas reinvidicações não são adicionadas ao id_token.
+
+
+      requestBody:
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                "heimdall.suppressRefreshToken":
+                  type: boolean
+                  description: |
+                    Suprime a geração de um token de atualização.
+
+                    Se definido como verdadeiro, um token de atualização não é gerado.
+
+                    Se definido como falso, um token de atualização é gerado apenas se o servidor de autorização foi configurado para suportar o tipo de concessão refresh_token.
+
+                    Se não for especificado, o servidor de autorização trata isso como falso.
+
+                "heimdall.accessTokenValidity":
+                  type: integer
+                  description: |
+                    Especifica (em segundos) por quanto tempo o token de acesso gerado deve ser válido.
+
+                    Se não for especificado, o padrão do sistema é usado.
+
+                "heimdall.refreshTokenValidity":
+                  type: integer
+                  description: |
+                    Especifica (em segundos) por quanto tempo o token de atualização gerado deve ser válido.
+
+                    Se não for especificado, o padrão do sistema é usado.
+
+              additionalProperties: true
+
+      parameters:
+        - $ref: '#/components/parameters/interactionId'
+
+      responses:
+        302:
+          description: |
+            O servidor de autorização retorna uma uri de redirecionamento que contém um código de autorização junto com parâmetros adicionais, conforme exigido pelo OIDC
+
+            Caso ocorra um erro interno ao processar a solicitação, o servidor de autorização retorna um parâmetro de erro.
+
+            Em ambos os casos, o provedor de UI deve redirecionar o proprietário do recurso para o uri de redirecionamento.
+
+      security:
+        - bearerAuth: []
+
+  /auth/:interactionId/doFail:
+    post:
+      tags:
+        - headless-heimdall
+      summary: Termina uma interação de autorização com uma resposta de falha
+
+      description: |
+        O End-point de falha dever ser chamado pela IF assim que a interação do usuário for concluída e resultar em uma falha ao obter acesso.
+        
+        (ex. quando o usuário se recusa a autorizar, não fornece as credenciais adequadas etc.)
+
+        A chamada doFail atualiza o estado de interação, gera um `erro` OIDC e o resto da resposta que deve ser retornada ao parceiro.
+        
+        A IF pode especificar o `error` e` error_description` como parâmetros x-www-form-urlencoded.
+
+        O servidor de autorização retorna um 302 com um uri de redirecionamento. O proprietário deste recurso deve ser redirecionado para esta URI.
+
+      requestBody:
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                error:
+                  type: string
+                  description: |
+                    Um erro OAuth2.0 ou OIDC   
+
+                error_description:
+                  type: string
+
+      parameters:
+        - $ref: '#/components/parameters/interactionId'
+
+      responses:
+        302:
+          description: |
+            O servidor de autorização retorna um uri de redirecionamento que contém um código de autorização junto com parâmetros adicionais, conforme exigido pelo OIDC.
+
+            Caso ocorra um erro interno durante o processamento da solicitação, o servidor de autorização retorna um parâmetro de erro.
+
+            Em ambos os casos, o provedor de UI deve redirecionar o proprietário do recurso para o uri de redirecionamento.
+
+      security:
+        - bearerAuth: []
+
+components:
+  schemas:
+    AuthSuccessResponse:
+      type: object
+      properties:
+        interaction:
+          type: object
+          properties:
+            interactionId: 
+              type: string
+              description: Um identificador para esta interação
+            params:
+              description: |
+                Parâmetros de consulta desprendido da solicitação de autorização original.
+
+                Isso inclui parâmetros de consulta e parâmetros de hash.
+
+                Isso também inclui parâmetros extraídos do objeto de solicitação OIDC.
+              type: object
+              properties:
+                client_id:
+                  description: |
+                    O clientId que o requisitante afirma ter.
+
+                    Nesta fase, o servidor de autorização verificou que o ID do cliente existe.
+                  type: string
+                response_type:
+                  type: string
+                scope:
+                  type: string
+                request:
+                  type: string
+                scopes:
+                  description: |
+                    O escopo solicitado na requisição de autorização dividido em um array
+                  type: array
+                  items:
+                    type: string
+                claims:
+                  description: |
+                    As reivindicações solicitadas na requisição de autorização.
+
+                    Se a solicitação de autorização for para as APIs Open Banking do Brasil, a propriedade `id_token.openbanking_intent_id` indica o consentimento para ser autorizado.
+                  type: object
+                  properties:
+                    id_token:
+                      type: object
+                      properties:
+                        openbanking_intent_id:
+                          type: object
+                          properties:
+                            value: 
+                              type: string
+              additionalProperties: true            
+            claims:
+              type: object
+            status:
+              type: string
+        tpp:
+          type: object
+          description: |
+            O registro do parceiro, mantido pela TecBan.
+
+            Se a conexão TecBan-Parceiro tiver sido integrado a um diretório, o `directoryRecord` fornece o registro do diretório do parceiro mantido pela TecBan.
+          
+          properties:
+            clientId:
+              type: string
+            orgId:
+              type: string
+            softwareStatementId:
+              type: string
+            directoryRecord:
+              type: object
+              additionalProperties: true
+
+    AuthErrorResponse:
+      type: object
+      properties:
+        noRedirect: 
+          type: boolean
+        error:
+          type: string
+        error_description:
+          type: string
+        interactionId:
+          type: string
+
+
+  parameters:
+    interactionId:
+      name: interactionId
+      in: query
+      schema:
+        type: string
+      required: true
+      description: Identificador para a interação

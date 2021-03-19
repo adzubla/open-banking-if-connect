@@ -132,7 +132,7 @@ Essas APIs são implementadas pela TecBan e devem ser chamadas pelo banco para l
 
 ![Imagem 7](https://raw.githubusercontent.com/Alextnetto/tecban-documentation/main/docs/Images/imagem_7.png)
 
-***Para detalhamento dos campos consultar arquivo Consent Manager APIs.yaml no formato OpenAPI 3**
+***Para detalhamento dos campos consultar arquivo [Consent Manager APIs.yaml](https://tecban.stoplight.io/docs/open-banking/Consent%20Manager%20APIs.yaml)**
 
 ## 3.6. Conectores para o servidor de autorização (Implementação TecBan)
 
@@ -141,7 +141,7 @@ Essas APIs são implementadas pela TecBan e devem ser chamadas pelo banco no fin
 
 ![Imagem 8](https://raw.githubusercontent.com/Alextnetto/tecban-documentation/main/docs/Images/imagem_8.png)
 
-***Para detalhamento dos campos consultar o arquivo Headless Heimdall APIs.yaml no formato OpenAPI 3**
+***Para detalhamento dos campos consultar o arquivo [Headless Heimdall APIs.yaml](https://tecban.stoplight.io/docs/open-banking/Headless%20Heimdall%20APIs.yaml)**
 
 ## 3.7. Conectores para dados do cliente (2º Fase) (Implementação Banco)
 
@@ -149,7 +149,7 @@ APIs que devem ser implementadas pelos bancos para expor informações de contas
 
 ![Imagem 9](https://raw.githubusercontent.com/Alextnetto/tecban-documentation/main/docs/Images/imagem_9.png)
 
-***Para detalhamento dos campos consultar o arquivo Bank_Connect_AIS_APIs.yaml no formato OpenAPI 3**
+***Para detalhamento dos campos consultar [Bank Connect AIS APIs.yaml](https://tecban.stoplight.io/docs/open-banking/Bank%20Connect%20AIS%20APIs.yaml)**
 
 ![Imagem 10](https://raw.githubusercontent.com/Alextnetto/tecban-documentation/main/docs/Images/imagem_10.png)
 
@@ -161,7 +161,7 @@ Essas APIs devem ser implementadas pelos bancos para que a TecBan possa fornecer
 
 ![Imagem 11](https://raw.githubusercontent.com/Alextnetto/tecban-documentation/main/docs/Images/imagem_11.png)
 
-***Para detalhamento dos campos consultar o arquivo Bank_Connect _PIS.yaml no formato OpenAPI 3**
+***Para detalhamento dos campos consultar o [Bank Connect PIS.yaml](https://tecban.stoplight.io/docs/open-banking/Bank%20Connect%20PIS.yaml)**
 
 ![Imagem 12](https://raw.githubusercontent.com/Alextnetto/tecban-documentation/main/docs/Images/imagem_12.png)
 
@@ -171,7 +171,7 @@ A ser especificado.
 
 ## 3.10. Proposta Jornada do usuário
 
-Consultar o Guia em anexo a este documento (Jornadas de usuário.pdf), produzido pelo Grupo de Trabalho do Open Banking e aprovado pelo Banco Central.
+Consultar o Guia [Jornadas de usuário.pdf](https://github.com/Alextnetto/tecban-documentation/blob/main/Integração%20Banco/Jornadas%20de%20usuário.pdf), produzido pelo Grupo de Trabalho do Open Banking e aprovado pelo Banco Central.
 
 ## 3.11. Utilização do Swagger (OpenAPI 3)
 
@@ -267,9 +267,9 @@ Ao consumir as APIs da TecBan, a IF deverá enviar todos os campos respectivos a
 
 | Versão                      | Descrição                                                         |
 |-----------------------------|-------------------------------------------------------------------|
-| Versão 2.2 Lançamento 26.4  | Bank_Connect _PIS.yaml                                            |
-| Versão 2.2 Lançamento 30.1  | Bank_Connect_AIS_APIs.yaml                                        |
-| Versão 2.2 Lançamento 26.4  | Consent Manager APIs.yaml                                         |
-| Versão 2.2 Lançamento 26.4  | Headless Heimdall APIs.yaml                                       |
-| Versão 1.0                  | Plano de disaster recovery, nome do documento Open_Banking_DR.doc |
-| Versão 1.01.01 - 05/03/2021 | Jornadas de usuário.pdf                                           |
+| Versão 2.2 Lançamento 26.4  | [Bank Connect PIS.yaml](https://tecban.stoplight.io/docs/open-banking/Bank%20Connect%20PIS.yaml)                                            |
+| Versão 2.2 Lançamento 30.1  | [Bank Connect AIS APIs.yaml](https://tecban.stoplight.io/docs/open-banking/Bank%20Connect%20AIS%20APIs.yaml)                                       |
+| Versão 2.2 Lançamento 26.4  | [Consent Manager APIs.yaml](https://tecban.stoplight.io/docs/open-banking/Consent%20Manager%20APIs.yaml)                                        |
+| Versão 2.2 Lançamento 26.4  | [Headless Heimdall APIs.yaml](https://tecban.stoplight.io/docs/open-banking/Headless%20Heimdall%20APIs.yaml)                                       |
+| Versão 1.0                  | Plano de disaster recovery, nome do documento [Open_Banking_DR.doc](https://github.com/Alextnetto/tecban-documentation/blob/main/Integração%20Banco/Open_Banking_DR.doc) |
+| Versão 1.01.01 - 05/03/2021 | [Jornadas de usuário.pdf](https://github.com/Alextnetto/tecban-documentation/blob/main/Integração%20Banco/Jornadas%20de%20usuário.pdf)                                           |
