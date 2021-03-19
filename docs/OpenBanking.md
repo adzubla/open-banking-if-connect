@@ -55,30 +55,30 @@
 Os bancos precisam de uma plataforma especializada para realizar a exposição de APIs, de maneira segura e fazer certo as coisas difíceis.
 Os 6 pilares da Plataforma de Open Banking da TecBan, representam a solução para o problema acima.
 
-![Imagem 1](https://raw.githubusercontent.com/Alextnetto/tecban-documentation/main/docs/Images/imagem_1.png)
+![Imagem 1](https://raw.githubusercontent.com/Alextnetto/tecban-documentation/main/Images/imagem_1.png)
 <br />
 
 A figura abaixo representa em cinza os pontos do ecossistema do Open Banking que a Plataforma irá lhe apoiar:
 
-![Imagem 2](https://raw.githubusercontent.com/Alextnetto/tecban-documentation/main/docs/Images/imagem_2.png)
+![Imagem 2](https://raw.githubusercontent.com/Alextnetto/tecban-documentation/main/Images/imagem_2.png)
 
 ## 3.2. Arquitetura
 
-![Imagem 3](https://raw.githubusercontent.com/Alextnetto/tecban-documentation/main/docs/Images/imagem_3.png)
+![Imagem 3](https://raw.githubusercontent.com/Alextnetto/tecban-documentation/main/Images/imagem_3.png)
 
 ### 3.2.1. Visão de Serviços
 
-![Imagem 4](https://raw.githubusercontent.com/Alextnetto/tecban-documentation/main/docs/Images/imagem_4.png)
+![Imagem 4](https://raw.githubusercontent.com/Alextnetto/tecban-documentation/main/Images/imagem_4.png)
 
 ### 3.2.2. Arquitetura de Referência
 
-![Imagem 5](https://raw.githubusercontent.com/Alextnetto/tecban-documentation/main/docs/Images/imagem_5.png)
+![Imagem 5](https://raw.githubusercontent.com/Alextnetto/tecban-documentation/main/Images/imagem_5.png)
 
 ## 3.3. Integração com instituições financeiras
 
 O diagrama a seguir mostra as interfaces necessárias entre a Tecban e a IF.
 
-![Imagem 6](https://raw.githubusercontent.com/Alextnetto/tecban-documentation/main/docs/Images/imagem_6.png)
+![Imagem 6](https://raw.githubusercontent.com/Alextnetto/tecban-documentation/main/Images/imagem_6.png)
 
 É de responsabilidade da IF expor duas APIs:
 
@@ -130,7 +130,7 @@ Este seção fornece a especificação para as APIs fornecidas pela TecBan para 
 
 Essas APIs são implementadas pela TecBan e devem ser chamadas pelo banco para localizar, modificar e excluir consentimentos.
 
-![Imagem 7](https://raw.githubusercontent.com/Alextnetto/tecban-documentation/main/docs/Images/imagem_7.png)
+![Imagem 7](https://raw.githubusercontent.com/Alextnetto/tecban-documentation/main/Images/imagem_7.png)
 
 ***Para detalhamento dos campos consultar arquivo [Consent Manager APIs.yaml](https://tecban.stoplight.io/docs/open-banking/Consent%20Manager%20APIs.yaml)**
 
@@ -139,7 +139,7 @@ Essas APIs são implementadas pela TecBan e devem ser chamadas pelo banco para l
 Este documento fornece a especificação para as APIs de autorização.
 Essas APIs são implementadas pela TecBan e devem ser chamadas pelo banco no final de suas jornadas de autorização.
 
-![Imagem 8](https://raw.githubusercontent.com/Alextnetto/tecban-documentation/main/docs/Images/imagem_8.png)
+![Imagem 8](https://raw.githubusercontent.com/Alextnetto/tecban-documentation/main/Images/imagem_8.png)
 
 ***Para detalhamento dos campos consultar o arquivo [Headless Heimdall APIs.yaml](https://tecban.stoplight.io/docs/open-banking/Headless%20Heimdall%20APIs.yaml)**
 
@@ -147,11 +147,11 @@ Essas APIs são implementadas pela TecBan e devem ser chamadas pelo banco no fin
 
 APIs que devem ser implementadas pelos bancos para expor informações de contas os parceiros.
 
-![Imagem 9](https://raw.githubusercontent.com/Alextnetto/tecban-documentation/main/docs/Images/imagem_9.png)
+![Imagem 9](https://raw.githubusercontent.com/Alextnetto/tecban-documentation/main/Images/imagem_9.png)
 
 ***Para detalhamento dos campos consultar [Bank Connect AIS APIs.yaml](https://tecban.stoplight.io/docs/open-banking/Bank%20Connect%20AIS%20APIs.yaml)**
 
-![Imagem 10](https://raw.githubusercontent.com/Alextnetto/tecban-documentation/main/docs/Images/imagem_10.png)
+![Imagem 10](https://raw.githubusercontent.com/Alextnetto/tecban-documentation/main/Images/imagem_10.png)
 
 ## 3.8. Conectores para iniciação de pagamentos (3º Fase) (Implementação Banco)
 
@@ -159,11 +159,11 @@ Este documento fornece as especificações para que as instituições iniciadora
 
 Essas APIs devem ser implementadas pelos bancos para que a TecBan possa fornecer recursos de iniciação de pagamento para os Terceiros
 
-![Imagem 11](https://raw.githubusercontent.com/Alextnetto/tecban-documentation/main/docs/Images/imagem_11.png)
+![Imagem 11](https://raw.githubusercontent.com/Alextnetto/tecban-documentation/main/Images/imagem_11.png)
 
 ***Para detalhamento dos campos consultar o [Bank Connect PIS.yaml](https://tecban.stoplight.io/docs/open-banking/Bank%20Connect%20PIS.yaml)**
 
-![Imagem 12](https://raw.githubusercontent.com/Alextnetto/tecban-documentation/main/docs/Images/imagem_12.png)
+![Imagem 12](https://raw.githubusercontent.com/Alextnetto/tecban-documentation/main/Images/imagem_12.png)
 
 ## 3.9. Relatórios e Logs
 
@@ -171,7 +171,7 @@ A ser especificado.
 
 ## 3.10. Proposta Jornada do usuário
 
-Consultar o Guia [Jornadas de usuário.pdf](https://github.com/Alextnetto/tecban-documentation/blob/main/Integração%20Banco/Jornadas%20de%20usuário.pdf), produzido pelo Grupo de Trabalho do Open Banking e aprovado pelo Banco Central.
+Consultar o Guia [Jornadas de usuário.pdf](https://github.com/Alextnetto/tecban-documentation/blob/main/Jornadas%20de%20usuário.pdf), produzido pelo Grupo de Trabalho do Open Banking e aprovado pelo Banco Central.
 
 ## 3.11. Utilização do Swagger (OpenAPI 3)
 
@@ -187,17 +187,17 @@ Dessa forma, ao consumir as APIs da TecBan utilizar esse esquema definido no swa
 <br />
 Exemplo:
 
-![Imagem 13](https://raw.githubusercontent.com/Alextnetto/tecban-documentation/main/docs/Images/imagem_13.png)
+![Imagem 13](https://raw.githubusercontent.com/Alextnetto/tecban-documentation/main/Images/imagem_13.png)
 
 # 4. Monitoração
 
 Os ambientes produtivos são monitorados 24x7 por ferramentas de última geração que avisam imediatamente os operadores do centro de controle que conta com uma equipe técnica especializada para o pronto atendimento.
 
-![Imagem 14](https://raw.githubusercontent.com/Alextnetto/tecban-documentation/main/docs/Images/imagem_14.png)
+![Imagem 14](https://raw.githubusercontent.com/Alextnetto/tecban-documentation/main/Images/imagem_14.png)
 
 O processo de monitoria conta com 4 níveis de suporte em caso de falha ou erro das API´s
 
-![Imagem 15](https://raw.githubusercontent.com/Alextnetto/tecban-documentation/main/docs/Images/imagem_15.png)
+![Imagem 15](https://raw.githubusercontent.com/Alextnetto/tecban-documentation/main/Images/imagem_15.png)
 
 # 5. Segurança
 ## 5.1. Introdução
@@ -233,7 +233,7 @@ Durante o projeto deverá ser compartilhado com a TecBan os IPs que irão chamar
 
 Para as Instituições Financeiras que já ingressaram no Banco24Horas® haverá uma avaliação sobre o uso do link já existente.
 
-![Imagem 15](https://raw.githubusercontent.com/Alextnetto/tecban-documentation/main/docs/Images/imagem_15.png)
+![Imagem 16](https://raw.githubusercontent.com/Alextnetto/tecban-documentation/main/Images/imagem_16.png)
 
 ## 5.5. Certificado Digital
 
@@ -271,5 +271,5 @@ Ao consumir as APIs da TecBan, a IF deverá enviar todos os campos respectivos a
 | Versão 2.2 Lançamento 30.1  | [Bank Connect AIS APIs.yaml](https://tecban.stoplight.io/docs/open-banking/Bank%20Connect%20AIS%20APIs.yaml)                                       |
 | Versão 2.2 Lançamento 26.4  | [Consent Manager APIs.yaml](https://tecban.stoplight.io/docs/open-banking/Consent%20Manager%20APIs.yaml)                                        |
 | Versão 2.2 Lançamento 26.4  | [Headless Heimdall APIs.yaml](https://tecban.stoplight.io/docs/open-banking/Headless%20Heimdall%20APIs.yaml)                                       |
-| Versão 1.0                  | Plano de disaster recovery, nome do documento [Open_Banking_DR.doc](https://github.com/Alextnetto/tecban-documentation/blob/main/Integração%20Banco/Open_Banking_DR.doc) |
-| Versão 1.01.01 - 05/03/2021 | [Jornadas de usuário.pdf](https://github.com/Alextnetto/tecban-documentation/blob/main/Integração%20Banco/Jornadas%20de%20usuário.pdf)                                           |
+| Versão 1.0                  | Plano de disaster recovery, nome do documento [Open_Banking_DR.doc](https://github.com/Alextnetto/tecban-documentation/blob/main/Open_Banking_DR.doc) |
+| Versão 1.01.01 - 05/03/2021 | [Jornadas de usuário.pdf](https://github.com/Alextnetto/tecban-documentation/blob/main/Jornadas%20de%20usuário.pdf)                                           |
