@@ -261,7 +261,8 @@ Ao consumir as APIs da TecBan, a IF deverá enviar todos os campos respectivos a
 |--------|------------|------------------------------|------------------------------------|
 | 1.0    | 23/02/2021 | Josué Jofre e Luiz Bonnarder | Criação do documento               |
 | 1.1    | 15/03/2021 | Josué Jofre                  | Adicionado referência ao documento |
-| 1.2    | x/03/2021  | Alexandro T. Netto           | Documentação no Stoplight          |
+| 1.2    | 31/03/2021 | Alexandro T. Netto           | Documentação no Stoplight          |
+| 1.2    | 06/04/2021 | Luiz Gustavo Nugnes          | Adequação à proposta comercial     |
 
 # 9. Documentos de apoio
 
