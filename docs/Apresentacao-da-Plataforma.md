@@ -18,7 +18,6 @@
   - [3.10. Proposta Jornada do usuário](#310-proposta-jornada-do-usuário)
   - [3.11. Utilização do Swagger (OpenAPI 3)](#311-utilização-do-swagger-openapi-3)
   - [3.12. Esquema Swagger Tecban](#312-esquema-swagger-tecban)
-- [6. Ambiente Sandbox](#6-ambiente-sandbox)
 - [7. Premissas e Restrições](#7-premissas-e-restrições)
 - [8. Histórico de Alterações do Documento](#8-histórico-de-alterações-do-documento)
 - [9. Documentos de apoio](#9-documentos-de-apoio)
@@ -187,10 +186,6 @@ Dessa forma, ao consumir as APIs da TecBan utilizar esse esquema definido no swa
 Exemplo:
 
 ![Imagem 13](https://raw.githubusercontent.com/Alextnetto/images/master/imagem_13.jpg)
-
-
-
-
 
 
 # 7. Premissas e Restrições

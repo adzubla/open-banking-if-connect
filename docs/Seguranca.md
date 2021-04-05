@@ -7,7 +7,7 @@
 
 # 1. Padrões de Autenticação
 
-![Imagem 17](https://raw.githubusercontent.com/Alextnetto/images/master/imagem_17.png)
+![Imagem 17](images/imagem_17.png)
 
 ## 1.1 OAuth 2.0
 OAuth 2.0 é um framework que permite que um aplicativo de terceiros obtenha acesso limitado a um serviço HTTP, seja em nome de um proprietário de recurso orquestrando uma interação de aprovação entre o proprietário do recurso e o serviço HTTP ou permitindo que o terceiro aplicativo para obter acesso em seu próprio nome.
