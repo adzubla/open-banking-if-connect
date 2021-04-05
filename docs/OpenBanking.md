@@ -1,4 +1,4 @@
-# Especificação Plataforma de Open Banking
+# Plataforma de Open Banking
 
 - [Especificação Plataforma de Open Banking](#especificação-plataforma-de-open-banking)
 - [1. Identificação do Documento](#1-identificação-do-documento)
