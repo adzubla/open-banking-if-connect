@@ -55,30 +55,30 @@
 Os bancos precisam de uma plataforma especializada para realizar a exposição de APIs, de maneira segura e fazer certo as coisas difíceis.
 Os 6 pilares da Plataforma de Open Banking da TecBan, representam a solução para o problema acima.
 
-![Imagem 1](../images/imagem_1.jpg)
+![Imagem 1](https://raw.githubusercontent.com/Alextnetto/images/master/imagem_1.jpg)
 <br />
 
 A figura abaixo representa em cinza os pontos do ecossistema do Open Banking que a Plataforma irá lhe apoiar:
 
-![Imagem 2](../images/imagem_2.jpg)
+![Imagem 2](https://raw.githubusercontent.com/Alextnetto/images/master/imagem_2.jpg)
 
 ## 3.2. Arquitetura
 
-![Imagem 3](../images/imagem_3.jpg)
+![Imagem 3](https://raw.githubusercontent.com/Alextnetto/images/master/imagem_3.jpg)
 
 ### 3.2.1. Visão de Serviços
 
-![Imagem 4](../images/imagem_4.jpg)
+![Imagem 4](https://raw.githubusercontent.com/Alextnetto/images/master/imagem_4.jpg)
 
 ### 3.2.2. Arquitetura de Referência
 
-![Imagem 5](../images/imagem_5.jpg)
+![Imagem 5](https://raw.githubusercontent.com/Alextnetto/images/master/imagem_5.jpg)
 
 ## 3.3. Integração com instituições financeiras
 
 O diagrama a seguir mostra as interfaces necessárias entre a Tecban e a IF.
 
-![Imagem 6](../images/imagem_6.jpg)
+![Imagem 6](https://raw.githubusercontent.com/Alextnetto/images/master/imagem_6.jpg)
 
 É de responsabilidade da IF expor duas APIs:
 
@@ -130,7 +130,7 @@ Este seção fornece a especificação para as APIs fornecidas pela TecBan para 
 
 Essas APIs são implementadas pela TecBan e devem ser chamadas pelo banco para localizar, modificar e excluir consentimentos.
 
-![Imagem 7](../images/imagem_7.jpg)
+![Imagem 7](https://raw.githubusercontent.com/Alextnetto/images/master/imagem_7.jpg)
 
 ***Para detalhamento dos campos consultar arquivo [Consent Manager APIs.yaml](https://docs.sfa.tecban.com.br/docs/open-banking-if-connect/Consent%20Manager%20APIs.yaml)**
 
@@ -139,7 +139,7 @@ Essas APIs são implementadas pela TecBan e devem ser chamadas pelo banco para l
 Este documento fornece a especificação para as APIs de autorização.
 Essas APIs são implementadas pela TecBan e devem ser chamadas pelo banco no final de suas jornadas de autorização.
 
-![Imagem 8](../images/imagem_8.jpg)
+![Imagem 8](https://raw.githubusercontent.com/Alextnetto/images/master/imagem_8.jpg)
 
 ***Para detalhamento dos campos consultar o arquivo [Headless Heimdall APIs.yaml](https://docs.sfa.tecban.com.br/docs/open-banking-if-connect/Headless%20Heimdall%20APIs.yaml)**
 
@@ -147,11 +147,11 @@ Essas APIs são implementadas pela TecBan e devem ser chamadas pelo banco no fin
 
 APIs que devem ser implementadas pelos bancos para expor informações de contas os parceiros.
 
-![Imagem 9](../images/imagem_9.jpg)
+![Imagem 9](https://raw.githubusercontent.com/Alextnetto/images/master/imagem_9.jpg)
 
 ***Para detalhamento dos campos consultar [Bank Connect AIS APIs.yaml](https://docs.sfa.tecban.com.br/docs/open-banking-if-connect/Bank%20Connect%20AIS%20APIs.yaml)**
 
-![Imagem 10](../images/imagem_10.jpg)
+![Imagem 10](https://raw.githubusercontent.com/Alextnetto/images/master/imagem_10.jpg)
 
 ## 3.8. Conectores para iniciação de pagamentos (3º Fase) (Implementação Banco)
 
@@ -159,11 +159,11 @@ Este documento fornece as especificações para que as instituições iniciadora
 
 Essas APIs devem ser implementadas pelos bancos para que a TecBan possa fornecer recursos de iniciação de pagamento para os Terceiros
 
-![Imagem 11](../images/imagem_11.jpg)
+![Imagem 11](https://raw.githubusercontent.com/Alextnetto/images/master/imagem_11.jpg)
 
 ***Para detalhamento dos campos consultar o [Bank Connect PIS.yaml](https://docs.sfa.tecban.com.br/docs/open-banking-if-connect/Bank%20Connect%20PIS.yaml)**
 
-![Imagem 12](../images/imagem_12.jpg)
+![Imagem 12](https://raw.githubusercontent.com/Alextnetto/images/master/imagem_12.jpg)
 
 ## 3.9. Relatórios e Logs
 
@@ -187,17 +187,17 @@ Dessa forma, ao consumir as APIs da TecBan utilizar esse esquema definido no swa
 <br />
 Exemplo:
 
-![Imagem 13](../images/imagem_13.jpg)
+![Imagem 13](https://raw.githubusercontent.com/Alextnetto/images/master/imagem_13.jpg)
 
 # 4. Monitoração
 
 Os ambientes produtivos são monitorados 24x7 por ferramentas de última geração que avisam imediatamente os operadores do centro de controle que conta com uma equipe técnica especializada para o pronto atendimento.
 
-![Imagem 14](../images/imagem_14.jpg)
+![Imagem 14](https://raw.githubusercontent.com/Alextnetto/images/master/imagem_14.jpg)
 
 O processo de monitoria conta com 4 níveis de suporte em caso de falha ou erro das API´s
 
-![Imagem 15](../images/imagem_15.jpg)
+![Imagem 15](https://raw.githubusercontent.com/Alextnetto/images/master/imagem_15.jpg)
 
 # 5. Segurança
 ## 5.1. Introdução
@@ -233,7 +233,7 @@ Durante o projeto deverá ser compartilhado com a TecBan os IPs que irão chamar
 
 Para as Instituições Financeiras que já ingressaram no Banco24Horas® haverá uma avaliação sobre o uso do link já existente.
 
-![Imagem 16](../images/imagem_16.jpg)
+![Imagem 16](https://raw.githubusercontent.com/Alextnetto/images/master/imagem_16.jpg)
 
 ## 5.5. Certificado Digital
 
