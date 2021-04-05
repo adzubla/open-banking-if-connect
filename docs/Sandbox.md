@@ -1,4 +1,4 @@
-# Ambiente Sandbox
+# Sandbox e Dev Portal
 
 Para auxiliar nos fluxos iniciais de testes, disponibilizaremos um ambiente de Sandbox no decorrer do projeto. 
 

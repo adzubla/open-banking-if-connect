@@ -1,11 +1,13 @@
 # Segurança
-- [1. Padrões de Autenticação](#3-visão-geral)
-  - [1.1 OAuth 2.0](#31-plataforma-de-open-banking)
-  - [1.2 OpenID Connect 2.0](#32-arquitetura)
-  - [1.3 Financial-grade API (FAPI)](#31-plataforma-de-open-banking)
-  - [1.4 Client Initiated Backchannel Authentication (CIBA)](#32-arquitetura)
+- [1. Padrões de Autenticação](#1)
+  - [1.1 OAuth 2.0](#2)
+  - [1.2 OpenID Connect 2.0](#3)
+  - [1.3 Financial-grade API (FAPI)](#3)
+  - [1.4 Client Initiated Backchannel Authentication (CIBA)](#4)
 
 # 1. Padrões de Autenticação
+
+O Financial-grade API (FAPI) define uma serie de regras de como utilizar o OAuth 2.0 e OpenID Connect, de acordo com um padrão seguro para o setor financeiro.
 
 ![Imagem 17](images/imagem_17.png)
 
