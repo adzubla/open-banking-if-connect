@@ -1,4 +1,46 @@
 # Segurança
+- [1. Padrões de Autenticação](#3-visão-geral)
+  - [1.1 OAuth 2.0](#31-plataforma-de-open-banking)
+  - [1.2 OpenID Connect 2.0](#32-arquitetura)
+  - [1.3 Financial-grade API (FAPI)](#31-plataforma-de-open-banking)
+  - [1.4 Client Initiated Backchannel Authentication (CIBA)](#32-arquitetura)
+
+# 1. Padrões de Autenticação
+
+![Imagem 17](https://raw.githubusercontent.com/Alextnetto/images/master/imagem_17.png)
+
+## 1.1 OAuth 2.0
+OAuth 2.0 é um framework que permite que um aplicativo de terceiros obtenha acesso limitado a um serviço HTTP, seja em nome de um proprietário de recurso orquestrando uma interação de aprovação entre o proprietário do recurso e o serviço HTTP ou permitindo que o terceiro aplicativo para obter acesso em seu próprio nome.
+
+As especificações OAuth 2.0 são projetadas para oferecer suporte ao desenvolvimento de protocolos de autenticação e autorização. Ele fornece uma variedade de fluxos de mensagens padronizados baseados em JSON e HTTP; OpenID Connect os usa para fornecer serviços de identidade.
+
+## 1.2 OpenID Connect 2.0
+
+OpenID Connect 2.0 é um protocolo de autenticação interoperável baseado na família OAuth 2.0 de especificações. Ele usa fluxos de mensagens REST / JSON simplificados. O OpenID Connect 2.0 permite que os desenvolvedores autentiquem usuários em sites e aplicativos sem ter que possuir e gerenciar arquivos de senha.
+
+Para criadores de aplicativos, o OpenID Connect 2.0 permite que o JavaScript baseado em navegador e aplicativos móveis nativos iniciem fluxos de entrada e recebam afirmações verificáveis sobre a identidade dos usuários conectados. Em termos simples, é uma resposta a “Qual é a identidade da pessoa que usa atualmente o navegador ou aplicativo nativo que está conectado?”
+
+## 1.3 Financial-grade API (FAPI)
+
+Financial-grade API (FAPI) é uma especificação liderada pelo setor finananceiro para esquemas de dados JSON, protocolos de segurança e privacidade para oferecer suporte a casos de uso para contas bancárias comerciais e de investimento, bem como contas de seguro e cartão de crédito.
+
+FAPI visa fornecer diretrizes de implementação específicas para serviços financeiros online serem adotados por meio do desenvolvimento de um modelo de dados REST/JSON protegido por um perfil OAuth altamente seguro. O perfil de segurança da API de nível financeiro pode ser aplicado a serviços online em qualquer área de mercado que requeira um nível mais alto de segurança do que o fornecido pelo OAuth padrão ou OpenID Connect.
+
+Os desenvolvedores FinTech podem acelerar o Secure Open Banking, por exemplo:
+
+Aplicativos que usam um modelo de dados seguro baseado em padrões (JSON) para níveis de acesso a dados financeiros armazenados em contas.
+Aplicativos que usam uma interface de programa baseada em padrões (REST) para compartilhamento de dados financeiros entre bancos, instituições e terceiros.
+Controles de segurança de aplicativos e usuários e configurações de privacidade a serem implementados de forma consistente com padrões abertos (OAuth) e provedores (OpenID Connect).
+
+## 1.4 Client Initiated Backchannel Authentication (CIBA)
+
+O Financial-grade API (FAPI) inclui uma especificação de autenticação de backchannel iniciada pelo cliente (CIBA) para oferecer suporte a um método seguro de desacoplamento de casos de uso de autenticação e autorização para reduzir os riscos associados à engenharia social ou ameaça interna.
+
+CIBA Core é uma nova especificação escrita pelo MODRNA Working Group da OpenID Foundation. A especificação adiciona três fluxos de autorização. O fluxo do código de autorização tradicional e o fluxo implícito são categorizados como “fluxo de redirecionamento”, enquanto os fluxos CIBA são categorizados como “fluxo desacoplado”. Fluxo desacoplado significa que o dispositivo que acessa a API e o dispositivo onde ocorre a autenticação do usuário e a confirmação do consentimento são distintos. por exemplo:
+
+Aproveitando uma sessão fortemente autenticada "DE" um dispositivo inteligente para conceder autorização "PARA" outro dispositivo.
+Pague COM seu telefone, relógio ou terminal / quiosque de ponto de venda ou qualquer outro tipo de dispositivo inteligente A um terceiro por meio de notificação PUSH.
+Permitir que um agente de call center ou consultor financeiro acesse uma conta em vez de usar perguntas baseadas no conhecimento (por exemplo, nome de solteira da mãe).
 
 # 1. Introdução
 
