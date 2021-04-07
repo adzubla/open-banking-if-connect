@@ -1,6 +1,6 @@
 # Conector com IF
 
-## 3.3. Integração com instituições financeiras
+## 1. Integração com instituições financeiras
 
 O diagrama a seguir mostra as interfaces necessárias entre a Tecban e a IF.
 

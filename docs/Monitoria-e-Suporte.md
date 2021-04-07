@@ -13,6 +13,11 @@ Os ambientes produtivos são monitorados 24x7 por ferramentas de última geraç�
 # 2. Processo de Monitoria
 
 O processo de monitoria conta com 4 níveis de suporte em caso de falha ou erro das API´s
+- Nivel 0 - Monitoração de TI via Splunk
+- Nivel 1 - Produção + Suporte de Sistemas
+- Nivel 2 - Desenvolvimento
+- Nivel 3 - Ozone
+
 
 ![Imagem 15](https://raw.githubusercontent.com/Alextnetto/images/master/imagem_15.jpg)
 

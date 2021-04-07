@@ -1,4 +1,5 @@
 # Segurança
+
 - [1. Padrões de Autenticação](#1)
   - [1.1 OAuth 2.0](#2)
   - [1.2 OpenID Connect 2.0](#3)
@@ -6,6 +7,9 @@
   - [1.4 Client Initiated Backchannel Authentication (CIBA)](#4)
 - [2. Tokens](#4)
   - [2.1 Token ID](#2)
+- [3. JWT](#4)
+- [2. Payload](#4)
+- [2. Assinatura](#4)
 
 # 1. Padrões de Autenticação
 
