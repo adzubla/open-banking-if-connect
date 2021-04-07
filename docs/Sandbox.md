@@ -1,7 +1,7 @@
-# Sandbox e Dev Portal
+# Sandbox e Portal do Desenvolvedor
 
 - [1. Sandbox](#4)
-- [2. Portal do Desenvovedor](#4)
+- [2. Portal do Desenvolvedor](#4)
 
 # 1. Sandbox
 
@@ -9,11 +9,11 @@ A fase de teste e homologação, tem como finalidade, garantir que os participan
 É obrigatório o teste e a homologação para instituição receptora e instituição transmissora. Instituições receptoras devem utilizar o serviço de Sandbox fornecido pelo Diretório.
 As instituição transmissoras devem prover um ambiente de teste que possibilite as instituições receptoras autorizados a realizarem testes de conexão e testes funcionais de seus produtos e serviços. Este recurso deve refletir ao máximo o ambiente de produção e deve fornecer o acesso aos desenvolvedores com os seguintes aspectos:
 
-Funcionalidade: Deve incluir todas as funcionalidades da interface de produção relacionadas aos casos de uso. Deve funcionar de maneira equivalente ou representativa para a interface de produção, incluindo casos de uso negativos e códigos de erro.
+<b>Funcionalidade</b>: Deve incluir todas as funcionalidades da interface de produção relacionadas aos casos de uso. Deve funcionar de maneira equivalente ou representativa para a interface de produção, incluindo casos de uso negativos e códigos de erro.
 Segurança: Deve utilizar o mesmo perfil de segurança das APIs em produção.
 On-boarding: Deve replicar o processo de on-boarding das instalações de produção da instituição transmissora, incluindo o on-boarding e a troca de certificados para identificação e assinatura de mensagem.
 
-Certificados: Deve permitir o uso de certificados de teste (que têm o mesmo formato/estrutura dos certificados de produção) de modo que as instituições receptoras possam replicar a funcionalidade relacionados à troca de certificados para identificação e assinatura de mensagens.
+<b>Certificados</b>: Deve permitir o uso de certificados de teste (que têm o mesmo formato/estrutura dos certificados de produção) de modo que as instituições receptoras possam replicar a funcionalidade relacionados à troca de certificados para identificação e assinatura de mensagens.
 Dados de teste: Não deve incluir quaisquer dados reais de usuários finais. O volume e a variação dos dados devem ser suficientes para dar suporte a todos os testes técnicos e funcionais, incluindo paginação (onde for compatível com a interface dedicada).
 Contas de teste: Deve fornecer para as instituições receptoras um número de contas de teste que habilitem a funcionalidade e o acesso aos dados que os usuários reais experimentarão na produção.
 Autenticação: A instituição transmissora deve fornecer recurso que permita que as instituições receptoras testem os procedimentos de autenticação, inclusive em produção, utilizando suas próprias contas e/ou contas de teste.
@@ -23,7 +23,7 @@ Documentação: Instituição transmissora devem publicar externamente um resumo
 Os testes devem garantir escopo mínimo para cobrir todos os casos de uso e de requisitos de segurança, evidenciados de forma que seja possível garantir que o processo de homologação foi efetuado.
 Os testes para instituições receptoras devem acontecer em 3 etapas:
 
-Testes de integração: Testes utilizando APIs de um Banco de exemplo no Sandbox do Diretório.
+<b>Testes de integração</b>: Testes utilizando APIs de um Banco de exemplo no Sandbox do Diretório.
 Testes no Ecossistema: Testes realizados no ecossistema apenas em Sandbox para validar novas funcionalidades ou melhorias.
 Testes de primeira ocorrência: Testes baseados em acordos entre transmissoras e receptoras efetuados no ambiente de produção.
 Ainda, recomenda-se que seja feito o teste de conformidade ao FAPI, disponível em https://openid.net/certification/fapi_op_testing/.
