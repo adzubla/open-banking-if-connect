@@ -47,24 +47,24 @@ A solução  Open Banking as a Service TecBan foi criada a partir da união das 
 Os bancos precisam de uma plataforma especializada para realizar a exposição de APIs, de maneira segura e fazer certo as coisas difíceis.
 Os 6 pilares da Plataforma de Open Banking da TecBan, representam a solução para o problema acima.
 
-![Imagem 1](https://raw.githubusercontent.com/Alextnetto/images/master/imagem_1.jpg)
+![Imagem 1](../images/imagem_1.jpg)
 <br />
 
 A figura abaixo representa em cinza os pontos do ecossistema do Open Banking que a Plataforma irá lhe apoiar:
 
-![Imagem 2](https://raw.githubusercontent.com/Alextnetto/images/master/imagem_2.jpg)
+![Imagem 1](../images/imagem_2.jpg)
 
 ## 3.2. Arquitetura
 
-![Imagem 3](https://raw.githubusercontent.com/Alextnetto/images/master/imagem_3.jpg)
+![Imagem 1](../images/imagem_3.jpg)
 
 ### 3.2.1. Visão de Serviços
 
-![Imagem 4](https://raw.githubusercontent.com/Alextnetto/images/master/imagem_4.jpg)
+[Imagem 1](../images/imagem_4.jpg)
 
 ### 3.2.2. Arquitetura de Referência
 
-![Imagem 5](https://raw.githubusercontent.com/Alextnetto/images/master/imagem_5.jpg)
+![Imagem 1](../images/imagem_5.jpg)
 
 
 
@@ -90,7 +90,7 @@ Dessa forma, ao consumir as APIs da TecBan utilizar esse esquema definido no swa
 <br />
 Exemplo:
 
-![Imagem 13](https://raw.githubusercontent.com/Alextnetto/images/master/imagem_13.jpg)
+![Imagem 13](../images/imagem_13.jpg)
 
 
 # 7. Premissas e Restrições

@@ -15,20 +15,20 @@
 
 O Financial-grade API (FAPI) define uma serie de regras de como utilizar o OAuth 2.0 e OpenID Connect, de acordo com um padrão seguro para o setor financeiro.
 
-![Imagem 17](../images/imagem_17.png)
+![OpenID](../images/imagem_17.png)
 
-## 1.1 OAuth 2.0
+# 1.1 OAuth 2.0
 OAuth 2.0 é um framework que permite que um aplicativo de terceiros obtenha acesso limitado a um serviço HTTP, seja em nome de um proprietário de recurso orquestrando uma interação de aprovação entre o proprietário do recurso e o serviço HTTP ou permitindo que o terceiro aplicativo para obter acesso em seu próprio nome.
 
 As especificações OAuth 2.0 são projetadas para oferecer suporte ao desenvolvimento de protocolos de autenticação e autorização. Ele fornece uma variedade de fluxos de mensagens padronizados baseados em JSON e HTTP; OpenID Connect os usa para fornecer serviços de identidade.
 
-## 1.2 OpenID Connect 2.0
+# 1.2 OpenID Connect 2.0
 
 OpenID Connect 2.0 é um protocolo de autenticação interoperável baseado na família OAuth 2.0 de especificações. Ele usa fluxos de mensagens REST / JSON simplificados. O OpenID Connect 2.0 permite que os desenvolvedores autentiquem usuários em sites e aplicativos sem ter que possuir e gerenciar arquivos de senha.
 
 Para criadores de aplicativos, o OpenID Connect 2.0 permite que o JavaScript baseado em navegador e aplicativos móveis nativos iniciem fluxos de entrada e recebam afirmações verificáveis sobre a identidade dos usuários conectados. Em termos simples, é uma resposta a “Qual é a identidade da pessoa que usa atualmente o navegador ou aplicativo nativo que está conectado?”
 
-## 1.3 Financial-grade API (FAPI)
+# 1.3 Financial-grade API (FAPI)
 
 Financial-grade API (FAPI) é uma especificação liderada pelo setor finananceiro para esquemas de dados JSON, protocolos de segurança e privacidade para oferecer suporte a casos de uso para contas bancárias comerciais e de investimento, bem como contas de seguro e cartão de crédito.
 
@@ -40,7 +40,7 @@ Aplicativos que usam um modelo de dados seguro baseado em padrões (JSON) para n
 Aplicativos que usam uma interface de programa baseada em padrões (REST) para compartilhamento de dados financeiros entre bancos, instituições e terceiros.
 Controles de segurança de aplicativos e usuários e configurações de privacidade a serem implementados de forma consistente com padrões abertos (OAuth) e provedores (OpenID Connect).
 
-## 1.4 Client Initiated Backchannel Authentication (CIBA)
+# 1.4 Client Initiated Backchannel Authentication (CIBA)
 
 O Financial-grade API (FAPI) inclui uma especificação de autenticação de backchannel iniciada pelo cliente (CIBA) para oferecer suporte a um método seguro de desacoplamento de casos de uso de autenticação e autorização para reduzir os riscos associados à engenharia social ou ameaça interna.
 
@@ -51,7 +51,7 @@ Pague COM seu telefone, relógio ou terminal / quiosque de ponto de venda ou qua
 Permitir que um agente de call center ou consultor financeiro acesse uma conta em vez de usar perguntas baseadas no conhecimento (por exemplo, nome de solteira da mãe).
 
 
-## 2. Tokens
+# 2. Tokens
 O OAuth 2.0 faz o uso de diversos tokens, entre eles, o access token, refresh token e Authorization "code".
 
 Access token: Um token de acesso é utilizado por um client para acessar um recurso, geralmente possuem ciclo de vida curto (minutos ou horas), sendo consumidos durante uma sessão. O Access token indica que o client está autorizado a consumir um recurso protegido, respeitando os scopes para qual o token foi emitido. O token pode ser renovado através de um refresh token. O tipo de Access Token será o "Bearer" OAuth Access Token, referenciado em [RFC 6750].
@@ -79,7 +79,7 @@ Diagrama – Obtendo um Access Token.
 10. Início do Hybrid Flow.
 
 
-## 2.1 Token ID
+# 2.1 Token ID
 
 ID Token
 O OIDC utiliza o authorization code, access token e refresh token descrito na seção anterior sobre OAuth e define um outro tipo de Token, o ID Token.
@@ -115,7 +115,7 @@ QyHE5lcMiKPXfEIQILVq0pc_E2DzL7emopWoaoZTF_m0_N0YzFC6g6EJbOEoRoS
 K5hoDalrcvRYLSrQAZZKflyuVCyixEoV9GfNQC3_osjzw2PAithfubEEBLuVVk4
 XUVrWOLrLl0nx7RkKU8NXNHq-rvKMzqg"}
 
-## 3. JWT
+# 3. JWT
 O formato JWT (JSON Web Token) é projetado para transmitir claims entre duas partes. O JWT consiste em um Header, um payload e uma assinatura. O cabeçalho do ID Token contém informações sobre o tipo de objeto (JWT) e o algoritmo de assinatura utilizado para proteger a integridade dos claims do payload. O algoritmo de assinatura exigido é o PS256 (RSASSA-PSS utilizando SHA-256 e MGF1 com SHA-256). A seção do payload contém as claims sobre um usuário e o evento de autenticação. A seção de assinatura contém uma assinatura digital com base no payload do ID Token e uma chave secreta conhecida pelo provedor OpenID.
 
 O JWT é formado por três seções: Header, Payload e Signature.
@@ -124,7 +124,7 @@ O Header contém somente a informação tipo e algoritmo:
 {"typ": "JWT",
 "alg": " PS256"}
 
-## 4. Payload
+# 4. Payload
 O Payload é um objeto JSON com as Claims da entidade tratada, normalmente o usuário autenticado.
 Claims são informações afirmadas sobre um sujeito, por exemplo um ID Token, pode conter uma claim chamada name que afirma que o usuário autenticado é quem diz ser. Em um JWT uma claim aparece como um par nome/valor em que o nome é sempre uma string e o valor pode conter qualquer conteúdo JSON. Essas claims podem ser de 3 tipos:
 
@@ -165,7 +165,7 @@ Conjunto de claims para um ID Token do Open Banking:
 "at_hash": "Access Token hash value",
 "c_hash": "Code hash value"}
 
-## 5. Assinatura
+# 5. Assinatura
 A assinatura é o header e o payload criptografados com um secret.
 
 PS256(

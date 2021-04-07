@@ -8,7 +8,8 @@
 # 1. Monitoria do Ambiente
 Os ambientes produtivos são monitorados 24x7 por ferramentas de última geração que avisam imediatamente os operadores do centro de controle que conta com uma equipe técnica especializada para o pronto atendimento.
 
-![Imagem 14](https://raw.githubusercontent.com/Alextnetto/images/master/imagem_14.jpg)
+
+![Imagem 14](../images/imagem_14.jpg)
 
 # 2. Processo de Monitoria
 
@@ -19,7 +20,7 @@ O processo de monitoria conta com 4 níveis de suporte em caso de falha ou erro 
 - Nivel 3 - Ozone
 
 
-![Imagem 15](https://raw.githubusercontent.com/Alextnetto/images/master/imagem_15.jpg)
+![Imagem 15](../images/imagem_15.jpg)
 
 # 3. SLA (Service Level Agreement)
 
@@ -34,4 +35,11 @@ Informativamente, esse nível de serviço representa aproximadamente um downtime
 
 A definição de um período de indisponibilidade é qualquer período de tempo em que qualquer um dos endpoints da API definidos na norma é incapaz de fornecer uma resposta confiável a uma solicitação construída de forma apropriada.
 
-# 4. Suporte
+# 4. Suporte aos Desenvolvedores
+
+O Sistema da Tecban é totalmente integrado ao service desk do Openbanking onde todos os chamados dos nossos clientes são direcionados para os clientes e também para a area de suporte da Tecban e o mesmo será atendido dentro dos SLAs acordados com o Bacen contrato vigente com a Instituição Financeira
+
+https://servicedesk.openbankingbrasil.org.br/
+
+![Suporte](../images/imagem_23.jpg)
+
