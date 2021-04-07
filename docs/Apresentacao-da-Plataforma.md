@@ -43,12 +43,12 @@ A figura abaixo representa em cinza os pontos do ecossistema do Open Banking que
 
 
 
-## 3.11. Utilização do Swagger (OpenAPI 3)
+# 3.11. Utilização do Swagger (OpenAPI 3)
 
 Para visualizar o detalhamento dos campos que deseja consultar no swagger, basta acessar no [link](https://editor.swagger.io/).
 Selecione “File/Import File” para importar os arquivos yml disponíveis juntamente com essa Especificação Técnica Funcional.
 
-## 3.12. Esquema Swagger Tecban
+# 3.12. Esquema Swagger Tecban
 
  * **Formato date-time ( GMT +0 )**
 
