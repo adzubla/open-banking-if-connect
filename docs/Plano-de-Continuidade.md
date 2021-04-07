@@ -1,4 +1,4 @@
-# Plano de Continuidade
+# Plano de Continuidade (RTO e RPO)
 
 Foram criadas contas AWS dedicadas ao projeto Open Finance, elas estão integradas ao QRADAR, Splunk, Azure AD, Apptio e outras ferramentas padrão da Tecban para monitoração para fins de auditoria. 
 
