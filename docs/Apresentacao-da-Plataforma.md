@@ -2,9 +2,10 @@
 
 - [1. Visão Geral](#especificação-plataforma-de-open-banking)
 - [2. Plataforma de Open Banking](#1-identificação-do-documento)
-- [3. Papeis e Responsabilidade](#2-definições-e-abreviaturas)
-- [4. Glosario](#3-visão-geral)
-- [5. Documentos de apoio](#3-visão-geral)
+- [3. Sandbox](#2-definições-e-abreviaturas)
+- [4. Papeis e Responsabilidade](#2-definições-e-abreviaturas)
+- [5. Glosario](#3-visão-geral)
+- [6. Documentos de apoio](#3-visão-geral)
 
 
 
@@ -23,15 +24,21 @@ Os 6 pilares da Plataforma de Open Banking da TecBan, representam a solução pa
 
 ![Imagem 1](../images/imagem_1.jpg)
 
+Arquitetura simplificada da plataforma com possibilidade de exposição global no Openbanking de diversos países
+
 ![Imagem 1](../images/imagem_3.jpg)
 
+# 3. Sandbox
 
-# 3. Papeis e Responsabilidade
+![Dashboard](../images/imagem_26.png)
+
+
+# 5. Papeis e Responsabilidade
 
 A figura abaixo representa em cinza os pontos do ecossistema do Open Banking que a Plataforma irá lhe apoiar:
 ![Imagem 1](../images/imagem_2.jpg)
 
-# 4. Glosario
+# 6. Glosario
 
 
 
@@ -70,4 +77,4 @@ A figura abaixo representa em cinza os pontos do ecossistema do Open Banking que
 | Versão 2.2 Lançamento 26.4  | [Consent Manager APIs.yaml](https://docs.sfa.tecban.com.br/docs/open-banking-if-connect/Consent%20Manager%20APIs.yaml)                                        |
 | Versão 2.2 Lançamento 26.4  | [Headless Heimdall APIs.yaml](https://docs.sfa.tecban.com.br/docs/open-banking-if-connect/Headless%20Heimdall%20APIs.yaml)                                       |
 | Versão 1.0                  | Plano de disaster recovery, nome do documento [Open_Banking_DR.doc](https://docs.sfa.tecban.com.br/docs/open-banking-if-connect/Open_Banking_DR.doc) |
-| Versão 1.01.01 - 05/03/2021 | [Jornadas de usuário.pdf](https://docs.sfa.tecban.com.br/docs/open-banking-if-connect/Jornadas%20de%20usuário.pdf)                                           |
+| Versão 1.01.01 - 05/03/2021 | [Jornadas de usuário](../Telas_das_jornadas_de_usuário_-_versão_final.pdf)                                           |
