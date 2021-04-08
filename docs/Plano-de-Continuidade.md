@@ -1,5 +1,11 @@
 # Plano de Continuidade (RTO e RPO)
 
+- [1. Detalhamento da Infraestrutura](#4)
+- [2	Procedimento Operacional](#4)
+- [3.	Backup e Recovery](#4)
+- [4.	Detalhamento da solução de contingência](#4)
+- [5. SPOF (Single point of failure)](#4)
+
 Foram criadas contas AWS dedicadas ao projeto Open Finance, elas estão integradas ao QRADAR, Splunk, Azure AD, Apptio e outras ferramentas padrão da Tecban para monitoração para fins de auditoria. 
 
 Todos os serviços estão alocados no Brasil em 3 datacenters (availability zones) no formato ativo/ativo. Para os serviços globais como IAM e Roles não há região específica. 
