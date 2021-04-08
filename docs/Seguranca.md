@@ -7,9 +7,11 @@
   - [1.4 Client Initiated Backchannel Authentication (CIBA)](#4)
 - [2. Tokens](#4)
   - [2.1 Token ID](#2)
-- [3. JWT](#4)
-- [2. Payload](#4)
-- [2. Assinatura](#4)
+- [3. JWT](#3)
+- [4. Payload](#4)
+- [5. Assinatura](#5)
+- [6. Certificados](#6)
+
 
 # 1. Padrões de Autenticação
 
@@ -187,3 +189,20 @@ SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c -> Signature
 Este token JWT deve ser enviado no cabeçalho Authentication HTTP usando o esquema Bearer. O conteúdo do cabeçalho deve seguir este formato:
 
 Authorization: Bearer
+
+# 6. Certificados
+Dois tipos de certificados serão emitidos pelo ICP-Brasil para serem utilizados no Open Banking com as funções de transporte e assinatura. Atributos comuns a ambos os certificados:
+
+
+| Atributo| Utilização|
+|----------------------------|
+| Data de validade| Intervalo de tempo para qual o certificado será válido.|
+| Data de emissão| Data em que foi emitido o certificado.|
+| Autoridade Certificadora| AC- Autoridade Certificadora, entidade pública ou privada, subordinada à hierarquia da ICP-Brasil, responsável por emitir, distribuir, renovar, revogar e gerenciar certificados digitais.|
+| Chave pública e privada| Chaves públicas e privadas.|
+| Tipo| A1 ou A2 ou A3.|
+| Código de registro do participante| 2.16.76.1.3.3 otherName Código que identifica o participante do Open Banking (CNPJ).|
+| Nome do participante| 2.16.76.1.3.8 otherName Nome que identifica o participante do Open Banking (Nome que consta no CNPJ).|
+| Código do Diretório (OID 2.16.76.1.3.X)| Campo otherName em certificado de pessoa jurídica, contendo identificação do código de participante junto ao diretório do Open Banking. OID a ser definido.|
+
+

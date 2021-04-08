@@ -1,10 +1,11 @@
 # Conector com IF
 
-- [Conectividade entre Redes](#especificação-plataforma-de-open-banking)
-- [1. Link Dedicado](#1-identificação-do-documento)
-- [2. VPN](#2-definições-e-abreviaturas)
-- [3. MTLS](#3-visão-geral)
-- [4. VPC](#4-visão-geral)
+- [1. Integração com instituições financeiras](#especificação-plataforma-de-open-banking)
+- [2. Conectores Com a plataforma de Open Banking](#1-identificação-do-documento)
+- [3. Conectores para gerenciamento do consentimento ](#2-definições-e-abreviaturas)
+- [4. Conectores para o servidor de autorização](#3-visão-geral)
+- [5. Conectores para dados do cliente ](#4-visão-geral)
+- [6. Conectores para iniciação de pagamentos ](#4-visão-geral)
 
 # 1. Integração com instituições financeiras
 
@@ -52,11 +53,11 @@ Funcionalidades:
   * psu
 
 
-# 3.4. Conectores Com a plataforma de Open Banking
+# 2. Conectores Com a plataforma de Open Banking
 
 A TecBan possui um padrão próprio para integração e oferece a possibilidade de customização do formato de troca de mensagens com as instituições financeiras. 
 
-# 3.5. Conectores para gerenciamento do consentimento (Implementação TecBan)
+# 3. Conectores para gerenciamento do consentimento (Implementação TecBan)
 
 Este seção fornece a especificação para as APIs fornecidas pela TecBan para gerenciamento de consentimento.
 
@@ -66,7 +67,7 @@ Essas APIs são implementadas pela TecBan e devem ser chamadas pelo banco para l
 
 ***Para detalhamento dos campos consultar arquivo [Consent Manager APIs.yaml](https://docs.sfa.tecban.com.br/docs/open-banking-if-connect/Consent%20Manager%20APIs.yaml)**
 
-# 3.6. Conectores para o servidor de autorização (Implementação TecBan)
+# 4. Conectores para o servidor de autorização (Implementação TecBan)
 
 Este documento fornece a especificação para as APIs de autorização.
 Essas APIs são implementadas pela TecBan e devem ser chamadas pelo banco no final de suas jornadas de autorização.
@@ -75,7 +76,7 @@ Essas APIs são implementadas pela TecBan e devem ser chamadas pelo banco no fin
 
 ***Para detalhamento dos campos consultar o arquivo [Headless Heimdall APIs.yaml](https://docs.sfa.tecban.com.br/docs/open-banking-if-connect/Headless%20Heimdall%20APIs.yaml)**
 
-# 3.7. Conectores para dados do cliente (2º Fase) (Implementação Banco)
+# 5. Conectores para dados do cliente (2º Fase) (Implementação Banco)
 
 APIs que devem ser implementadas pelos bancos para expor informações de contas os parceiros.
 
@@ -85,7 +86,7 @@ APIs que devem ser implementadas pelos bancos para expor informações de contas
 
 ![Imagem 10](../images/imagem_10.jpg)
 
-# 3.8. Conectores para iniciação de pagamentos (3º Fase) (Implementação Banco)
+# 6. Conectores para iniciação de pagamentos (3º Fase) (Implementação Banco)
 
 Este documento fornece as especificações para que as instituições iniciadoras de pagamento possam utilizer a plataforma
 

@@ -5,6 +5,8 @@
 
 # 1. Sandbox
 
+![Dashboard](../images/imagem_26.png)
+
 A fase de teste e homologação, tem como finalidade, garantir que os participantes que desejam operar no Ecossistema do Open Banking, possam fazer isso de forma assertiva e segura. Isso incluí o suporte para as instituições receptoras com a capacidade de testar seus produtos e serviços desde o lançamento, quanto nas atualizações, fornecendo uma série de ferramentas e infraestrutura no serviço de Diretório para garantir que seus produtos tenham sido testados tempestivamente antes de entrar em produção.
 É obrigatório o teste e a homologação para instituição receptora e instituição transmissora. Instituições receptoras devem utilizar o serviço de Sandbox fornecido pelo Diretório.
 As instituição transmissoras devem prover um ambiente de teste que possibilite as instituições receptoras autorizados a realizarem testes de conexão e testes funcionais de seus produtos e serviços. Este recurso deve refletir ao máximo o ambiente de produção e deve fornecer o acesso aos desenvolvedores com os seguintes aspectos:
