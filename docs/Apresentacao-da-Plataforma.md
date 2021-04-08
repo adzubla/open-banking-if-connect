@@ -31,46 +31,10 @@ A figura abaixo representa em cinza os pontos do ecossistema do Open Banking que
 
 ![Imagem 1](../images/imagem_2.jpg)
 
-# 4. Arquitetura
-
-![Imagem 1](../images/imagem_5.jpg)
-
-
-# 4.1. Desenho dos serviços
-
-![Imagem 1](../images/imagem_4.jpg)
 
 
 
-
-# 3.11. Utilização do Swagger (OpenAPI 3)
-
-Para visualizar o detalhamento dos campos que deseja consultar no swagger, basta acessar no [link](https://editor.swagger.io/).
-Selecione “File/Import File” para importar os arquivos yml disponíveis juntamente com essa Especificação Técnica Funcional.
-
-# 3.12. Esquema Swagger Tecban
-
- * **Formato date-time ( GMT +0 )**
-
-Os swaggers da TecBan utilizam o padrão GMT + 0 nos campos com o formato “date-time”.
-Dessa forma, ao consumir as APIs da TecBan utilizar esse esquema definido no swagger.
-<br />
-Exemplo:
-
-![Imagem 13](../images/imagem_13.jpg)
-
-
-
-# 8. Histórico de Alterações do Documento
-
-| Versão | Data       | Autor                        | Alteração                          |
-|--------|------------|------------------------------|------------------------------------|
-| 1.0    | 23/02/2021 | Josué Jofre e Luiz Nugnes    | Criação do documento               |
-| 1.1    | 15/03/2021 | Josué Jofre                  | Adicionado referência ao documento |
-| 1.2    | 31/03/2021 | Alexandro T. Netto           | Documentação no Stoplight          |
-| 1.2    | 06/04/2021 | Luiz Gustavo Nugnes          | Adequação à proposta comercial     |
-
-# 9. Documentos de apoio
+# 4. Documentos de apoio
 
 | Versão                      | Descrição                                                         |
 |-----------------------------|-------------------------------------------------------------------|
