@@ -11,6 +11,7 @@
 - [4. Payload](#4)
 - [5. Assinatura](#5)
 - [6. Certificados](#6)
+- [7. Armazenamento de chaves criptograficas](#7)
 
 
 # 1. Padrões de Autenticação
@@ -204,5 +205,11 @@ Dois tipos de certificados serão emitidos pelo ICP-Brasil para serem utilizados
 | Código de registro do participante| 2.16.76.1.3.3 otherName Código que identifica o participante do Open Banking (CNPJ).|
 | Nome do participante| 2.16.76.1.3.8 otherName Nome que identifica o participante do Open Banking (Nome que consta no CNPJ).|
 | Código do Diretório (OID 2.16.76.1.3.X)| Campo otherName em certificado de pessoa jurídica, contendo identificação do código de participante junto ao diretório do Open Banking. OID a ser definido.|
+
+# 7. Armazenamento de chaves criptograficas (Cloud HSM)
+
+Todas as chaves criptograficas do sistema são armazenadas no AWS CloudHSM que é um Hardware Security Module (HSM – Módulo de segurança de hardware) baseado na nuvem que permite gerar e usar facilmente suas próprias chaves de criptografia na Nuvem AWS. Com o CloudHSM, você pode gerenciar suas próprias chaves de criptografia usando HSMs validados pelo FIPS 140-2 nível 3. O CloudHSM oferece a flexibilidade de integrar-se aos seus aplicativos usando APIs padrão do setor, como bibliotecas Microsoft CryptoNG (CNG), PKCS#11 e Java Cryptography Extensions (JCE).
+
+O CloudHSM está em conformidade com as normas do setor e permite exportar todas as chaves para a maioria dos outros HSMs disponíveis no mercado, dependendo das suas configurações. Ele é um serviço gerenciado que automatiza para você tarefas administrativas demoradas, como provisionamento de hardware, aplicação de patches de software, alta disponibilidade e backups. O CloudHSM também permite que você ajuste a escala rapidamente ao adicionar e remover capacidade HSM sob demanda, sem custos antecipados.
 
 
