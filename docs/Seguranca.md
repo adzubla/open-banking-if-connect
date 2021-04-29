@@ -208,8 +208,7 @@ Dois tipos de certificados serão emitidos pelo ICP-Brasil para serem utilizados
 
 # 7. Armazenamento de chaves criptograficas (Cloud HSM)
 
-Todas as chaves criptograficas do sistema são armazenadas no AWS CloudHSM que é um Hardware Security Module (HSM – Módulo de segurança de hardware) baseado na nuvem que permite gerar e usar facilmente suas próprias chaves de criptografia na Nuvem AWS. Com o CloudHSM, gerenciamos chaves de criptografia usando HSMs validados pelo FIPS 140-2 nível 3. 
+Todas as chaves criptográficas do sistema são armazenadas no AWS CloudHSM, um Hardware Security Module (HSM – Módulo de segurança de hardware) baseado na nuvem que permite armazenar com total segurança as suas próprias chaves de criptografia na Nuvem AWS. Com o CloudHSM, gerenciamos chaves de criptografia usando HSMs validados pelo FIPS 140-2 nível 3. 
 
-O CloudHSM está em conformidade com as normas do setor e permite exportar todas as chaves para a maioria dos outros HSMs disponíveis no mercado, dependendo das suas configurações. Ele é um serviço gerenciado que automatiza para você tarefas administrativas demoradas, como provisionamento de hardware, aplicação de patches de software, alta disponibilidade e backups. O CloudHSM também permite que você ajuste a escala rapidamente ao adicionar e remover capacidade HSM sob demanda, sem custos antecipados.
 
 
