@@ -16,7 +16,7 @@ Para as Instituições Financeiras que já ingressaram no Banco24Horas® haverá
 
 # 1. Link Dedicado
 
-# 3. Mutual TLS (mTLS) authentication 
+# 2. Mutual TLS (mTLS) authentication 
 
-# 4. VPC (Amazon Virtual Private Cloud)	
+# 3. VPC (Amazon Virtual Private Cloud)	
 ![Imagem 16](../images/imagem_16.jpg)
