@@ -2,9 +2,8 @@
 
 - [Conectividade entre Redes](#especificação-plataforma-de-open-banking)
 - [1. Link Dedicado](#1-identificação-do-documento)
-- [2. VPN](#2-definições-e-abreviaturas)
-- [3. MTLS](#3-visão-geral)
-- [4. VPC](#4-visão-geral)
+- [2. MTLS](#3-visão-geral)
+- [3. VPC](#4-visão-geral)
 
 
 Para as Instituições Financeiras que ingressarem na rede Banco24Horas® será analisado o modelo de conectividade com a TecBan, que poderá envolver a contratação de link físico dedicado ou utilização de VPN. 
@@ -16,8 +15,6 @@ Para as Instituições Financeiras que já ingressaram no Banco24Horas® haverá
 
 
 # 1. Link Dedicado
-
-# 2. VPN (Virtual Private Network)	
 
 # 3. Mutual TLS (mTLS) authentication 
 
