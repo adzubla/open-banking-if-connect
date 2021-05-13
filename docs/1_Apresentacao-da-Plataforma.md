@@ -3,8 +3,8 @@
 - [1. Visão Geral](#especificação-plataforma-de-open-banking)
 - [2. Plataforma de Open Banking](#1-identificação-do-documento)
 - [3. Sandbox](#2-definições-e-abreviaturas)
-- [4. Papeis e Responsabilidade](#2-definições-e-abreviaturas)
-- [5. Glosario](#3-visão-geral)
+- [4. Papéis e Responsabilidade](#2-definições-e-abreviaturas)
+- [5. Glossário](#3-visão-geral)
 - [6. Documentos de apoio](#3-visão-geral)
 
 
@@ -33,12 +33,12 @@ Arquitetura simplificada da plataforma com possibilidade de exposição global n
 ![Dashboard](../images/imagem_26.png)
 
 
-# 5. Papeis e Responsabilidade
+# 4. Papéis e Responsabilidade
 
 A figura abaixo representa em cinza os pontos do ecossistema do Open Banking que a Plataforma irá lhe apoiar:
 ![Imagem 1](../images/imagem_2.jpg)
 
-# 6. Glosario
+# 5. Glossário
 
 
 
@@ -68,7 +68,7 @@ A figura abaixo representa em cinza os pontos do ecossistema do Open Banking que
 
 
 
-# 5. Documentos de apoio
+# 6. Documentos de apoio
 
 | Versão                      | Descrição                                                         |
 |-----------------------------|-------------------------------------------------------------------|
