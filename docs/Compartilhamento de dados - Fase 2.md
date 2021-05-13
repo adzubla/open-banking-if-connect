@@ -11,7 +11,7 @@ Este documento descreve como é o fluxo para Compartilhamento de Dados entre as 
 •	IR – Instituição Receptora (TPP)
 •	IT – Instituição Transmissora (Banco)
 
-Diagrama de sequência para Compartilhamento de Dados
+
 O diagrama de sequência a seguir mostra o fluxo de informações entre os três participantes da solução: Instituição Receptora, TecBan e Instituição Transmissora.
 
 ![Diagrama de sequência](../images/fluxo_compartilhamento.png)
