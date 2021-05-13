@@ -11,7 +11,7 @@
 
 O diagrama a seguir mostra as interfaces necessárias entre a Tecban e a IF.
 
-![Imagem 6](../images/imagem_6.jpg)
+![Imagem 6](../images/imagem_34.jpg)
 
 É de responsabilidade da IF expor duas APIs:
 
