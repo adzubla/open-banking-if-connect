@@ -12,3 +12,7 @@
 
 ![Imagem 1](../images/imagem_4.jpg)
 
+# 3. Arquitetura do portal de consentimento
+
+![Imagem 6](../images/imagem_34.jpg)
+

@@ -13,6 +13,7 @@
 O portal do consentimento é um serviço opcional oferecido pela TecBan para adequar a experiência do Usuário(UX) às recomendações do grupo de trabalho do Openbanking Brasil.
 
 
+
 ![Imagem 27](../images/imagem_27.jpg)
 
 Exemplo:
