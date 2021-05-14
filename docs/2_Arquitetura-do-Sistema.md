@@ -16,3 +16,6 @@
 
 ![Imagem 6](../images/imagem_34.jpg)
 
+# 4. Visão Geral de Arquitetura do Open Finance TecBan:
+
+![Arquitetura](../images/visao_geral_arquitetura.png)
