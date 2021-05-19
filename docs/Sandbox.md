@@ -2,6 +2,7 @@
 
 - [1. Sandbox](#4)
 - [2. Portal do Desenvolvedor](#4)
+- [3. Acesso a Sandbox](#4)
 
 # 1. Sandbox
 
@@ -37,3 +38,15 @@ A Tecban disponibiliza para os cliente um portal de desenvolvedor com toda a doc
 
 ![OpenID](../images/imagem_24.jpg)
 
+# 3. Acesso a Sandbox
+
+
+O vídeo com explicação técnica sobre como se conectar no ambiente está disponível em : 
+
+
+Português: https://patryk40.s3-sa-east-1.amazonaws.com/2020-07-02+08-51-59.mp4
+
+Inglês: https://youtu.be/gNBZ1pTzw08
+
+
+[Download das chaves de acesso ao nosso ambiente de Sandbox](../images/TPP249.zip)
