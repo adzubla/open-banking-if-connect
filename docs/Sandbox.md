@@ -49,4 +49,4 @@ Português: https://patryk40.s3-sa-east-1.amazonaws.com/2020-07-02+08-51-59.mp4
 Inglês: https://youtu.be/gNBZ1pTzw08
 
 
-[Download das chaves de acesso ao nosso ambiente de Sandbox](../images/TPP249.zip)
+[Download das chaves de acesso ao nosso ambiente de Sandbox](https://1drv.ms/u/s!AmMxDxGhYOfggtZhGv78Fye8N8SIpg)
