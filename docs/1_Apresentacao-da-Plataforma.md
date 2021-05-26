@@ -1,15 +1,15 @@
 # Apresentação do Open Banking
 
-- [1. Visão Geral](#especificação-plataforma-de-open-banking)
-- [2. Plataforma de Open Banking](#1-identificação-do-documento)
-- [3. Sandbox](#2-definições-e-abreviaturas)
-- [4. Papéis e Responsabilidade](#2-definições-e-abreviaturas)
-- [5. Glossário](#3-visão-geral)
-- [6. Documentos de apoio](#3-visão-geral)
+- [1. Visão Geral](#visao_geral)
+- [2. Plataforma de Open Banking](#1-plataforma_de_open_Banking)
+- [3. Sandbox](#2-sandbox)
+- [4. Papéis e Responsabilidade](#3-papeis_e_responsabilidades)
+- [5. Glossário](#4-glossario)
+- [6. Documentos de apoio](#5-documentos_de_apoio)
 
 
 
-# 1. Visão Geral
+## 1. Visão Geral
 
 A solução da TecBan foi projetada para permitir a entrada das instituições financeiras de forma segura e eficiente no ecossistema de open banking brasileiro. Ao Aderir essa solução, os bancos conseguirão focar os seus recursos tecnológicos e capital humano em projetos que gerem valor para os seus clientes e acionistas, ao passo que a Tecban se encarrega de manter a instituição compliance perante as demandas regulatórias.
 
@@ -17,7 +17,7 @@ A solução da TecBan foi projetada para permitir a entrada das instituições f
 A solução  Open Banking as a Service TecBan foi criada a partir da união das melhores práticas de open banking desenvolvidas no Reino Unido, com o conhecimento do mercado brasileiro de serviços financeiros da Tecban, a qual atua com muita expertise nesse segmento
 
 
-# 2. Plataforma de Open Banking
+## 2. Plataforma de Open Banking
 
 Os bancos precisam de uma plataforma especializada para realizar a exposição de APIs, de maneira segura e fazer certo as coisas difíceis.
 Os 6 pilares da Plataforma de Open Banking da TecBan, representam a solução para o problema acima.
@@ -28,12 +28,12 @@ Arquitetura simplificada da plataforma com possibilidade de exposição global n
 
 ![Imagem 1](../images/imagem_3.jpg)
 
-# 3. Sandbox
+## 3. Sandbox
 
 ![Dashboard](../images/imagem_26.png)
 
 
-# 4. Papéis e Responsabilidade
+## 4. Papéis e Responsabilidade
 
 A figura abaixo representa em cinza os pontos do ecossistema do Open Banking que a Plataforma irá lhe apoiar:
 ![Imagem 1](../images/imagem_2.jpg)
@@ -68,7 +68,7 @@ A figura abaixo representa em cinza os pontos do ecossistema do Open Banking que
 
 
 
-# 6. Documentos de apoio
+## 6. Documentos de apoio
 
 | Versão                      | Descrição                                                         |
 |-----------------------------|-------------------------------------------------------------------|
