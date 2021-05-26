@@ -73,8 +73,8 @@ A figura abaixo representa em cinza os pontos do ecossistema do Open Banking que
 | Versão                      | Descrição                                                         |
 |-----------------------------|-------------------------------------------------------------------|
 | Versão 2.2 Lançamento 26.4  | [Bank Connect PIS.yaml](https://docs.sfa.tecban.com.br/docs/open-banking-if-connect/assets/files/Bank_Connect_PIS.yaml)                                            |
-| Versão 2.2 Lançamento 30.1  | [Bank Connect AIS APIs.yaml](https://docs.sfa.tecban.com.br/docs/open-banking-if-connect/Bank%20Connect%20AIS%20APIs.yaml)                                       |
-| Versão 2.2 Lançamento 26.4  | [Consent Manager APIs.yaml](https://docs.sfa.tecban.com.br/docs/open-banking-if-connect/Consent%20Manager%20APIs.yaml)                                        |
-| Versão 2.2 Lançamento 26.4  | [Headless Heimdall APIs.yaml](https://docs.sfa.tecban.com.br/docs/open-banking-if-connect/Headless%20Heimdall%20APIs.yaml)                                       |
-| Versão 1.0                  | Plano de disaster recovery, nome do documento [Open_Banking_DR.doc](https://docs.sfa.tecban.com.br/docs/open-banking-if-connect/Open_Banking_DR.doc) |
-| Versão 1.01.01 - 05/03/2021 | [Jornadas de usuário](../Telas_das_jornadas_de_usuário_-_versão_final.pdf)                                           |
+| Versão 2.2 Lançamento 30.1  | [Bank Connect AIS APIs.yaml](https://docs.sfa.tecban.com.br/docs/open-banking-if-connect/assets/files/Bank_Connect%20AIS_APIs.yaml)                                       |
+| Versão 2.2 Lançamento 26.4  | [Consent Manager APIs.yaml](https://docs.sfa.tecban.com.br/docs/open-banking-if-connect/assets/files/Consent_Manager_APIs.yaml)                                        |
+| Versão 2.2 Lançamento 26.4  | [Headless Heimdall APIs.yaml](https://docs.sfa.tecban.com.br/docs/open-banking-if-connect/assets/files/Headless_Heimdall_APIs.yaml)                                       |
+| Versão 1.0                  | Plano de disaster recovery, nome do documento [Open_Banking_DR.doc](https://docs.sfa.tecban.com.br/docs/open-banking-if-connect/assets/files/Open_Banking_DR.doc) |
+| Versão 1.01.01 - 05/03/2021 | [Jornadas de usuário](https://docs.sfa.tecban.com.br/docs/open-banking-if-connect/assets/files/Telas_das_jornadas_de_usuário_-_versão_final.pdf)                                           |
