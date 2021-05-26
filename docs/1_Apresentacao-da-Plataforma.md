@@ -24,7 +24,6 @@ Os 6 pilares da Plataforma de Open Banking da TecBan, representam a solução pa
 
 ![Imagem 1](../images/imagem_1.jpg)
 
-![Imagem](/assets/images/imagem_1.jpg)
 
 Arquitetura simplificada da plataforma com possibilidade de exposição global no Openbanking de diversos países
 
