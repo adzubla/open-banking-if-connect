@@ -1,17 +1,17 @@
 # Segurança
 
-- [1. Padrões de Autenticação](#1)
-  - [1.1 OAuth 2.0](#2)
-  - [1.2 OpenID Connect 2.0](#3)
-  - [1.3 Financial-grade API (FAPI)](#3)
-  - [1.4 Client Initiated Backchannel Authentication (CIBA)](#4)
-- [2. Tokens](#4)
-  - [2.1 Token ID](#2)
-- [3. JWT](#3)
-- [4. Payload](#4)
-- [5. Assinatura](#5)
-- [6. Certificados](#6)
-- [7. Armazenamento de chaves criptograficas](#7)
+- [1. Padrões de Autenticação](#1-padrões-de-autenticação)
+  - [1.1 OAuth 2.0](#11-oauth-2.0)
+  - [1.2 OpenID Connect 2.0](#12-openid-connect-2.0)
+  - [1.3 Financial-grade API (FAPI)](#13-financial-grade-api-(fapi))
+  - [1.4 Client Initiated Backchannel Authentication (CIBA)](#14-client-initiated-backchannel-authentication(ciba))
+- [2. Tokens](#2-tokens)
+  - [2.1 Token ID](#21-token-id)
+- [3. JWT](#3-jwt)
+- [4. Payload](#4-payload)
+- [5. Assinatura](#5-assinatura)
+- [6. Certificados](#6-certificados)
+- [7. Armazenamento de chaves criptograficas](#7-armazenamento-de-chaves-criptograficas)
 
 
 # 1. Padrões de Autenticação
