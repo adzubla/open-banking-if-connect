@@ -2,7 +2,7 @@
 
 - [1. Monitoria do Ambiente](#1-monitoria-do-ambiente)
 - [2. Processo de Monitoria ](#2-processo-de-monitoria)
-- [3. SLA (Service Level Agreement)](#3-sla-service-level-agreement))
+- [3. SLA (Service Level Agreement)](#3-sla-service-level-agreement)
 - [4. Suporte aos Desenvolvedores](#4-suporte-aos-desenvolvedores)
 
 # 1. Monitoria do Ambiente
