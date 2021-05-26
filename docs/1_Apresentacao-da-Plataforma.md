@@ -5,7 +5,7 @@
 - [3. Sandbox](#2-sandbox)
 - [4. Papéis e Responsabilidade](#3-papeis_e_responsabilidades)
 - [5. Glossário](#4-glossario)
-- [6. Documentos de apoio](#5-documentos_de_apoio)
+- [6. Documentos de apoio](#6-documentos_de_apoio)
 
 
 
@@ -68,7 +68,7 @@ A figura abaixo representa em cinza os pontos do ecossistema do Open Banking que
 
 
 
-## 6. Documentos de apoio
+# 6. Documentos de apoio
 
 | Versão                      | Descrição                                                         |
 |-----------------------------|-------------------------------------------------------------------|
