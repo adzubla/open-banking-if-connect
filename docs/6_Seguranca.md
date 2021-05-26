@@ -31,7 +31,7 @@ OpenID Connect 2.0 é um protocolo de autenticação interoperável baseado na f
 
 Para criadores de aplicativos, o OpenID Connect 2.0 permite que o JavaScript baseado em navegador e aplicativos móveis nativos iniciem fluxos de entrada e recebam afirmações verificáveis sobre a identidade dos usuários conectados. Em termos simples, é uma resposta a “Qual é a identidade da pessoa que usa atualmente o navegador ou aplicativo nativo que está conectado?”
 
-# 1.3 Financial-grade API (FAPI)
+## 1.3 Financial-grade API (FAPI)
 
 Financial-grade API (FAPI) é uma especificação liderada pelo setor finananceiro para esquemas de dados JSON, protocolos de segurança e privacidade para oferecer suporte a casos de uso para contas bancárias comerciais e de investimento, bem como contas de seguro e cartão de crédito.
 
