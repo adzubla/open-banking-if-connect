@@ -11,7 +11,7 @@
 - [4. Payload](#4-payload)
 - [5. Assinatura](#5-assinatura)
 - [6. Certificados](#6-certificados)
-- [7. Armazenamento de chaves criptográficas (Cloud HSM)](#7-armazenamento-de-chaves-criptogr-ficas-cloud-hsm)
+- [7. Armazenamento de chaves criptográficas (Cloud HSM)](#7-armazenamento-de-chaves-criptográficas-cloud-hsm)
 
 
 # 1. Padrões de Autenticação
