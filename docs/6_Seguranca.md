@@ -3,15 +3,15 @@
 - [1. Padrões de Autenticação](#1-padrões-de-autenticação)
   - [1.1 OAuth 2.0](#11-oauth-20)
   - [1.2 OpenID Connect 2.0](#12-openid-connect-20)
-  - [1.3 Financial-grade API (FAPI)](#13-financial-grade-api--fapi-)
-  - [1.4 Client Initiated Backchannel Authentication (CIBA)](#14-client-initiated-backchannel-authentication--ciba-)
+  - [1.3 Financial-grade API (FAPI)](#13-financial-grade-api-fapi)
+  - [1.4 Client Initiated Backchannel Authentication (CIBA)](#14-client-initiated-backchannel-authentication-ciba)
 - [2. Tokens](#2-tokens)
   - [2.1 Token ID](#21-token-id)
 - [3. JWT](#3-jwt)
 - [4. Payload](#4-payload)
 - [5. Assinatura](#5-assinatura)
 - [6. Certificados](#6-certificados)
-- [7. Armazenamento de chaves criptográficas (Cloud HSM)](#7-armazenamento-de-chaves-criptogr-ficas--cloud-hsm-)
+- [7. Armazenamento de chaves criptográficas (Cloud HSM)](#7-armazenamento-de-chaves-criptogr-ficas-cloud-hsm)
 
 
 # 1. Padrões de Autenticação
@@ -31,7 +31,7 @@ OpenID Connect 2.0 é um protocolo de autenticação interoperável baseado na f
 
 Para criadores de aplicativos, o OpenID Connect 2.0 permite que o JavaScript baseado em navegador e aplicativos móveis nativos iniciem fluxos de entrada e recebam afirmações verificáveis sobre a identidade dos usuários conectados. Em termos simples, é uma resposta a “Qual é a identidade da pessoa que usa atualmente o navegador ou aplicativo nativo que está conectado?”
 
-## 1.3 Financial-grade API (FAPI)
+# 1.3 Financial-grade API (FAPI)
 
 Financial-grade API (FAPI) é uma especificação liderada pelo setor finananceiro para esquemas de dados JSON, protocolos de segurança e privacidade para oferecer suporte a casos de uso para contas bancárias comerciais e de investimento, bem como contas de seguro e cartão de crédito.
 
