@@ -1,7 +1,7 @@
 # Apresentação do Open Banking
 
 - [1. Visão Geral](#1-visão-geral)
-- [2. Plataforma de Open Banking](#2-plataforma-de-open-Banking)
+- [2. Plataforma de Open Banking](#2-plataforma-de-open-banking)
 - [3. Sandbox](#3-sandbox)
 - [4. Papéis e Responsabilidade](#4-papéis-e-responsabilidades)
 - [5. Glossário](#5-glossário)
