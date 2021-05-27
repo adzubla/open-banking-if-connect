@@ -206,6 +206,8 @@ Dois tipos de certificados serão emitidos pelo ICP-Brasil para serem utilizados
 | Nome do participante| 2.16.76.1.3.8 otherName Nome que identifica o participante do Open Banking (Nome que consta no CNPJ).|
 | Código do Diretório (OID 2.16.76.1.3.X)| Campo otherName em certificado de pessoa jurídica, contendo identificação do código de participante junto ao diretório do Open Banking. OID a ser definido.|
 
+A IF deve gerar um Certificado com algoritmo de assinatura SHA-256 ou superior e chave RSA-2048 ou superior, e compartilhar a chave pública com a TecBan.
+
 # 7. Armazenamento de chaves criptográficas (Cloud HSM)
 
 Todas as chaves criptográficas do sistema são armazenadas no AWS CloudHSM, um Hardware Security Module (HSM – Módulo de segurança de hardware) baseado na nuvem que permite armazenar com total segurança as suas próprias chaves de criptografia na Nuvem AWS. Com o CloudHSM, gerenciamos chaves de criptografia usando HSMs validados pelo FIPS 140-2 nível 3. 
