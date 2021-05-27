@@ -60,9 +60,9 @@ O OAuth 2.0 faz o uso de diversos tokens, entre eles, o access token, refresh to
 Access token: Um token de acesso é utilizado por um client para acessar um recurso, geralmente possuem ciclo de vida curto (minutos ou horas), sendo consumidos durante uma sessão. O Access token indica que o client está autorizado a consumir um recurso protegido, respeitando os scopes para qual o token foi emitido. O token pode ser renovado através de um refresh token. O tipo de Access Token será o "Bearer" OAuth Access Token, referenciado em [RFC 6750].
 Refresh token: Representa uma autorização de longa duração de um client. Esses tokens são trocados entre o client e o Authorization Server e são utilizados para obter (“atualizar”) novos tokens de acesso.
 Authorization code: É um código de autorização que representa o resultado do processo de autorização bem sucedido do usuário final e é utilizado pelo client para obter acesso e atualizar status dos tokens.
-É necessário a implementação de um endpoint adicional no Authorization Server que possibilita a revogação do Access Token e do Refresh Token. Um request de revogação invalidará um ou mais Tokens (se aplicável), baseados na mesma concessão de acesso, conforme [RFC 7009].
-Também será adotado o OAuth Token Introspection que define um método para um recurso protegido consultar um Authorization Server sobre o estado e os metadados de um Token, conforme [RFC 7662].
-Devido a ampla aplicação do uso do OAuth 2.0, as melhores práticas de segurança do OAuth 2.0 estão em constate atualização e podem ser consultadas neste endereço https://tools.ietf.org/html/draft-ietf-oauth-security-topics-16.
+É necessário a implementação de um endpoint adicional no Authorization Server que possibilita a revogação do Access Token e do Refresh Token. Um request de revogação invalidará um ou mais Tokens (se aplicável), baseados na mesma concessão de acesso, conforme [RFC 7009](https://datatracker.ietf.org/doc/html/rfc7009).
+Também será adotado o OAuth Token Introspection que define um método para um recurso protegido consultar um Authorization Server sobre o estado e os metadados de um Token, conforme [RFC 7662](https://datatracker.ietf.org/doc/html/rfc7662).
+Devido a ampla aplicação do uso do OAuth 2.0, as melhores práticas de segurança do OAuth 2.0 estão em constate atualização e podem ser consultadas [aqui](https://tools.ietf.org/html/draft-ietf-oauth-security-topics-16).
 
 Início do fluxo de uma API com a obtenção de um Access Token.
 
