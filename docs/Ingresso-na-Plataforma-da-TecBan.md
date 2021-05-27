@@ -1,4 +1,4 @@
-# Ingresso-na-Plataforma-da-TecBan
+# Ingresso na Plataforma da TecBan
 
 Para se conectar com a plataforma de Open Banking da TecBan por gentileza preencha o formulário abaixo e envie para o e-mail _Grupo_OpenBanking_TI@tecban.com.br
 
