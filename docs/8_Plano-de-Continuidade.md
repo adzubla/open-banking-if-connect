@@ -1,10 +1,10 @@
 # Plano de Continuidade (RTO e RPO)
 
-- [1. Detalhamento da Infraestrutura](#4)
-- [2	Procedimento Operacional](#4)
-- [3.	Backup e Recovery](#4)
-- [4.	Detalhamento da solução de contingência](#4)
-- [5. SPOF (Single point of failure)](#4)
+- [1. Detalhamento da Infraestrutura](#1-detalhamento-da-infraestrutura)
+- [2	Procedimento Operacional](#2-procedimento-operacional)
+- [3.	Backup e Recovery](#3-backup-e-recovery)
+- [4.	Detalhamento da Solução de Contingência](#4-detalhamento-da-solução-de-contingência)
+- [5. SPOF (Single Point of Failure)](#5-spof-single-point-of-failure)
 
 Foram criadas contas AWS dedicadas ao projeto Open Finance, elas estão integradas ao QRADAR, Splunk, Azure AD, Apptio e outras ferramentas padrão da Tecban para monitoração para fins de auditoria. 
 
@@ -67,7 +67,7 @@ Para restauração de um serviço em caso de incidente será necessário reexecu
 
 Como segurança estes templates ficam armazenados no sistema de controle de versões Gitlab a fim de garantir versionamento. 
 
-# 4.	DETALHAMENTO DA SOLUÇÃO DE CONTINGÊNCIA
+# 4.	Detalhamento da Solução de Contingência
 
 A topologia da aplicação está em alta disponibilidade, utilizando zonas de datacenters ativo / ativo seguindo as melhores práticas de arquitetura recomendadas para serviços hospedados na AWS.
 
@@ -75,7 +75,7 @@ A disponibilidade (SLA) dos serviços estão documentadas no link abaixo:
 https://aws.amazon.com/pt/legal/service-level-agreements/
 
 
-# 5	SPOF (Single point of failure)
+# 5	SPOF (Single Point of Failure)
 
 Não foi identificado ponto de falha único na aplicação pois todos os serviços utilizados são gerenciados pela AWS com SLA informado ou pela Tecban e possuem redundância.
 

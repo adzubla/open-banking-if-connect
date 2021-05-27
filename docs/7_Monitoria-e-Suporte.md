@@ -1,9 +1,9 @@
 # Monitoria e Suporte
 
-- [1. Monitoria do Ambiente](#1.-Monitoria)
-- [2. Processo de Monitoria ](#-2.-Processo-de-Monitoria-e-SLA)
-- [3. SLA](#2-definições-e-abreviaturas)
-- [4. Suporte](#3-visão-geral)
+- [1. Monitoria do Ambiente](#1-monitoria-do-ambiente)
+- [2. Processo de Monitoria ](#2-processo-de-monitoria)
+- [3. SLA (Service Level Agreement)](#3-sla-service-level-agreement)
+- [4. Suporte aos Desenvolvedores](#4-suporte-aos-desenvolvedores)
 
 # 1. Monitoria do Ambiente
 Os ambientes produtivos são monitorados 24x7 por ferramentas de última geração que avisam imediatamente os operadores do centro de controle que conta com uma equipe técnica especializada para o pronto atendimento.

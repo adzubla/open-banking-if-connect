@@ -1,7 +1,5 @@
 # Compartilhamento de dados - Fase 2
 
-
-
 Este documento descreve como é o fluxo para Compartilhamento de Dados entre as entidades abaixo:
 
 
