@@ -1,7 +1,7 @@
 # Plano de Continuidade (RTO e RPO)
 
 - [1. Detalhamento da Infraestrutura](#1-detalhamento-da-infraestrutura)
-- [2	Procedimento Operacional](#2-procedimento-operacional)
+- [2.	Procedimento Operacional](#2-procedimento-operacional)
 - [3.	Backup e Recovery](#3-backup-e-recovery)
 - [4.	Detalhamento da Solução de Contingência](#4-detalhamento-da-solução-de-contingência)
 - [5. SPOF (Single Point of Failure)](#5-spof-single-point-of-failure)
@@ -63,7 +63,7 @@ O backup será realizado pela ferramenta de backup da AWS via Snapshot que é ar
 
 Os demais serviços são desacoplados e não armazenam dados, tornando desnecessário a execução de backups.
 
-Para restauração de um serviço em caso de incidente será necessário reexecutar os templates de Cloud Formation descritos na seção [“2 – Procedimento operacional”](8_Plano-de-Continuidade.md#2-procedimento-operacional).
+Para restauração de um serviço em caso de incidente será necessário reexecutar os templates de Cloud Formation descritos na seção [“2.  Procedimento Operacional”](#2-procedimento-operacional).
 
 Como segurança estes templates ficam armazenados no sistema de controle de versões Gitlab a fim de garantir versionamento. 
 
