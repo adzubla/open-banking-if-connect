@@ -4,7 +4,7 @@
 - [2. Relatórios de utilização das APIs](#2-relatórios-de-utilização-das-apis)
 - [3. Gestão de Parceiros](#3-gestão-de-parceiros)
 - [4. Autenticação via Auth0](#4-autenticação-e-federação-do-portal)
-- [5. Autenticação via Auth0](#5-segregação-por-perfis-de-acesso)
+- [5. Segregação por Perfis de Acesso](#5-segregação-por-perfis-de-acesso)
 
 A Plataforma de Open Banking da TecBan conta com um portal administrativo totalmente funcional para controle de parceiros e relatórios acesso à plataforma totalmente parametrizado para um melhor acompanhamento da equipe responsável pelo OpenBanking na Isntituição Financeira.
 
