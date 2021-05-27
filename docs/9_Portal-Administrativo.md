@@ -39,3 +39,4 @@ A Autenticação da plataforma utiliza o Auth0 (https://auth0.com/authentication
 
 # 3. Segregação por Perfis de Acesso
 
+Em contrução
