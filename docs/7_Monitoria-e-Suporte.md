@@ -37,9 +37,9 @@ A definição de um período de indisponibilidade é qualquer período de tempo 
 
 # 4. Suporte aos Desenvolvedores
 
-O Sistema da Tecban é totalmente integrado ao service desk do Openbanking onde todos os chamados dos nossos clientes são direcionados para os clientes e também para a area de suporte da Tecban e o mesmo será atendido dentro dos SLAs acordados com o Bacen contrato vigente com a Instituição Financeira
+O Sistema da Tecban é totalmente integrado ao [service desk do Openbanking](https://servicedesk.openbankingbrasil.org.br/) onde todos os chamados dos nossos clientes são direcionados para os clientes e também para a area de suporte da Tecban e o mesmo será atendido dentro dos SLAs acordados com o Bacen contrato vigente com a Instituição Financeira
 
-https://servicedesk.openbankingbrasil.org.br/
+
 
 ![Suporte](../images/imagem_23.jpg)
 
