@@ -51,11 +51,11 @@ Serviço de criptografia com algoritmos simétricos e assimétricos que entrará
 
 ![Infraestrutura](../images/imagem_25.png)
 
-# 2	Procedimento Operacional
+# 2. Procedimento Operacional
 Referir-se ao documento de passagem para Produção “DIET_Openfinace.doc”
 
 
-# 3.	Backup e Recovery
+# 3. Backup e Recovery
 
 O backup será realizado pela ferramenta de backup da AWS via Snapshot que é armazenado por 30 dias para o banco de Dados DocumentDB.
 
@@ -63,7 +63,7 @@ O backup será realizado pela ferramenta de backup da AWS via Snapshot que é ar
 
 Os demais serviços são desacoplados e não armazenam dados, tornando desnecessário a execução de backups.
 
-Para restauração de um serviço em caso de incidente será necessário reexecutar os templates de Cloud Formation descritos na seção “3.3 – Procedimento operacional”.
+Para restauração de um serviço em caso de incidente será necessário reexecutar os templates de Cloud Formation descritos na seção [“2 – Procedimento operacional”](docs/Plano-de-Continuidade.md#2-procedimento-operacional).
 
 Como segurança estes templates ficam armazenados no sistema de controle de versões Gitlab a fim de garantir versionamento. 
 
@@ -71,8 +71,7 @@ Como segurança estes templates ficam armazenados no sistema de controle de vers
 
 A topologia da aplicação está em alta disponibilidade, utilizando zonas de datacenters ativo / ativo seguindo as melhores práticas de arquitetura recomendadas para serviços hospedados na AWS.
 
-A disponibilidade (SLA) dos serviços estão documentadas no link abaixo:
-https://aws.amazon.com/pt/legal/service-level-agreements/
+A disponibilidade (SLA) dos serviços estão documentadas [aqui](https://aws.amazon.com/pt/legal/service-level-agreements/)
 
 
 # 5	SPOF (Single Point of Failure)
