@@ -87,15 +87,19 @@ Diagrama – Obtendo um Access Token.
 O OIDC utiliza o authorization code, access token e refresh token descrito na seção anterior sobre OAuth e define um outro tipo de Token, o ID Token.
 
 ID Token: Um token utilizado para transmitir claims sobre um evento de autenticação e um usuário autenticado (End-user) para um client. Tokens de identificação são codificados em JSON Web Token (JWT) e deve estar em conformidade com a LGPD.
-{"iss": "http://YOUR_DOMAIN/",
-"sub": "xpto|123456",
-"aud": "YOUR_CLIENT_ID",
-"exp": "1311281970",
-"iat": "1311280970",
-"id": "1234567"}
 
 ```json
+{
+  "iss": "http://YOUR_DOMAIN/",
+  "sub": "xpto|123456",
+  "aud": "YOUR_CLIENT_ID",
+  "exp": "1311281970",
+  "iat": "1311280970",
+  "id": "1234567"
+}
+```
 
+```json
 {
   "iss": "http://YOUR_DOMAIN/",
   "sub": "xpto|123456",
