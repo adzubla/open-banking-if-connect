@@ -1,6 +1,6 @@
 # Portal de Consentimento *
-
-- [1. Fluxos de Autenticação e Autorização](#1-fluxos-de-autenticação-e-autorização)
+- [1. O que é o Portal do Consentimento?](#1-o-que-e-o-portal-do-consentimento-?)
+- [8. Fluxos de Autenticação e Autorização](#1-fluxos-de-autenticação-e-autorização)
 - [2. Fluxo client Credentials](#2-fluxo-client-credentials)
 - [3. Fluxo do Authorization Code](#3-fluxo-do-authorization-code)
 - [4. Fluxo de Consentimento](#4-fluxo-de-consentimento)
@@ -12,7 +12,7 @@
 
 
 # 1. O que é o Portal de Consentimento?
-O Portal do Consentimento é o conjunto de interfaces que permite a gestão dos consentimentos pelos clientes das Instituições Financeiras.
+O Portal do Consentimento é o conjunto de interfaces que permite que os clientes das Istituições Financeiras façam a gestão de seus consentimentos. 
 
 É uma solução opcional oferecida pela Tecban para adequar a experiência do usuário em sua jornada de consentimento, atendendo as recomendações do Grupo de Trabalho do Open Banking Brasil
 
