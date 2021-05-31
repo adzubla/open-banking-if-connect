@@ -1,5 +1,6 @@
-# Portal de Consentimento *
+# Portal de Consentimento 
 - [1. O que é o Portal do Consentimento?](#1-o-que-e-o-portal-do-consentimento-?)
+- [2. Jornada de Usuário](#2-jornada-de-usuario)
 - [8. Fluxos de Autenticação e Autorização](#1-fluxos-de-autenticação-e-autorização)
 - [2. Fluxo client Credentials](#2-fluxo-client-credentials)
 - [3. Fluxo do Authorization Code](#3-fluxo-do-authorization-code)
@@ -12,12 +13,16 @@
 
 
 # 1. O que é o Portal de Consentimento?
-O Portal do Consentimento é o conjunto de interfaces que permite que os clientes das Istituições Financeiras façam a gestão de seus consentimentos. 
+O Portal do Consentimento é o conjunto de interfaces que permite que os clientes das Instituições Financeiras façam a gestão de seus consentimentos. 
 
-É uma solução opcional oferecida pela Tecban para adequar a experiência do usuário em sua jornada de consentimento, atendendo as recomendações do Grupo de Trabalho do Open Banking Brasil
+É uma solução opcional oferecida pela TecBan para adequar a experiência do usuário em sua jornada de consentimento, atendendo as recomendações do Grupo de Trabalho do Open Banking Brasil
 
+# 2. Jornadas de Usuário
 
-![Imagem 27](../images/imagem_27.jpg)
+**Jornada:** **Confirmar Consentimento de Pagamento**
+![Imagem JornadaConfirmaPagto](../images/imagem_27.jpg)
+
+![Imagem 27](../images/JornadaConfirmaPagto.png)
 
 Clique [aqui](https://www.figma.com/proto/2CSuJxStBqSm80KR5yrOWX/Wireframes-e-Jornada?node-id=108%3A902&scaling=min-zoom) para ver um exemplo.
 
