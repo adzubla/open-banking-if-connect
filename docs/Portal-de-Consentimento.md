@@ -10,8 +10,11 @@
   - [5.3 Dupla Alçada](#2)
   - [5.4 Gestão do consentimento](#2)
 
-O portal do consentimento é um serviço opcional oferecido pela TecBan para adequar a experiência do Usuário(UX) às recomendações do grupo de trabalho do Openbanking Brasil.
 
+# 1. O que é o Portal de Consentimento?
+O Portal do Consentimento é o conjunto de interfaces que permite a gestão dos consentimentos pelos clientes das Instituições Financeiras.
+
+É uma solução opcional oferecida pela Tecban para adequar a experiência do usuário em sua jornada de consentimento, atendendo as recomendações do Grupo de Trabalho do Open Banking Brasil
 
 
 ![Imagem 27](../images/imagem_27.jpg)
