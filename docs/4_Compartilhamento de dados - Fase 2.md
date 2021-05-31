@@ -1,4 +1,4 @@
-# Compartilhamento de dados - Fase 2
+# Compartilhamento de Dados - Fase 2
 
 Este documento descreve como é o fluxo para Compartilhamento de Dados entre as entidades abaixo:
 
@@ -7,6 +7,7 @@ Este documento descreve como é o fluxo para Compartilhamento de Dados entre as 
 
 
 •	IR – Instituição Receptora (TPP)
+
 •	IT – Instituição Transmissora (Banco)
 
 
@@ -18,13 +19,13 @@ Na **Instituição Transmissora**, são mostrados três componentes com as segui
 
 •	**App do Banco** – representa a camada de apresentação da IT. É responsável por receber as requisições da IR e mostrar a interface visual ao usuário.
 
-•	**Servidor de Aplicação** – é o backend de serviços da IT. Efetua as operações de autenticação e consentimento. É responsável por acessar as apis internas da plataforma OpenBanking da TecBan.
+•	**Servidor de Aplicação** – é o backend de serviços da IT. Efetua as operações de autenticação e consentimento. É responsável por acessar as APIS internas da plataforma OpenBanking da TecBan.
 
-•	**Servidor de Recursos** – é a API de negócios da IT. É restrita a receber apenas as requisições vindas da plataforma OpenBanking da TecBan. Neste ponto a IT pode realizar a transação com confiança que todo o processo consentimento verificado.
+•	**Servidor de Recursos** – é a API de negócios da IT. É restrita a receber apenas as requisições vindas da plataforma OpenBanking da TecBan. Neste ponto a IT pode realizar a transação com confiança que todo o processo de consentimento foi verificado.
 
 Esse é um modelo lógico, e a implementação concreta pela Instituição Transmissora pode ser diferente.
 
-```json
+```
 É de *responsabilidade da Instituição Transmissora* implementar essas APIs e realizar as chamadas das APIs da Tecban quando necessário, de acordo com o descrito neste documento.
 ```
 
