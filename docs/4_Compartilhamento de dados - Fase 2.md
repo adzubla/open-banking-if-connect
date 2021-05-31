@@ -43,15 +43,18 @@ Todas as APIs estão especificadas usando o padrão OpenAPI Specification 3 (OAS
 
 O passo 4001 do diagrama de sequência não é uma API, mas representa a jornada de consentimento do usuário, que deve ser implementada pela IT.
 
-A comunicação entre APIs da **Tecban** e da **IT** deve ser realizada através de mTLS (certificate-based mutual Transport Layer Security) ou seja, ambos participantes precisam de cerificados X.509 para se autenticar estabelecer a conexão.
+A comunicação entre APIs da **Tecban** e da **IT** deve ser realizada através de mTLS (certificate-based mutual Transport Layer Security) ou seja, ambos participantes precisam de certificados X.509 para se autenticar e estabelecer a conexão.
 
 ## Definições gerais
 
-###### x-fapi-financial-id
+• **x-fapi-financial-id**
+
 O header x-fapi-financial-id, quando presente, é um identificador único da instituição.
 Este id é designado para a instituição pela Autoridade Central, quando ocorrer a adesão ao Open Banking Brasil.
 
-###### x-fapi-interaction-id
+
+• **x-fapi-interaction-id**
+
 O header x-fapi-interaction-id, quando presente, é um identificador único da requisição e deve ser gerado pelo cliente quando chamar os endpoints. A TecBan responderá com o header x-fapi-interaction-id com o mesmo id da requisição.
 O seu uso é opcional. Caso ele não esteja presente na requisição, a TecBan irá gerar um novo id para a resposta.
 
@@ -59,7 +62,8 @@ O seu uso é opcional. Caso ele não esteja presente na requisição, a TecBan i
 
 Neste estágio o cliente (IR) solicita um token para consentimento ao servidor de autorização.
 
-##### [IR→TB] Passo 1000 POST /token
+
+##### (IR→TB) Passo 1000 POST /token
 
 Cliente da **IR** se identifica a TecBan e determina o escopo desejado.
 
