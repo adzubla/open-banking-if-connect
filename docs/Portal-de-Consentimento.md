@@ -1,14 +1,14 @@
 # Portal de Consentimento *
 
-- [1. Fluxos de autenticação e autorização](#1)
-- [2. Fluxo client credentials](#2)
-- [3. Fluxo do Authorization Code](#2)
-- [4. Fluxo de Consentimento](#2)
-- [5. Experiência dos Usuários](#2)
-  - [5.1 Login do cliente](#2)
-  - [5.2 Alçada Única](#2)
-  - [5.3 Dupla Alçada](#2)
-  - [5.4 Gestão do consentimento](#2)
+- [1. Fluxos de Autenticação e Autorização](#1-fluxos-de-autenticação-e-autorização)
+- [2. Fluxo client Credentials](#2-fluxo-client-credentials)
+- [3. Fluxo do Authorization Code](#3-fluxo-do-authorization-code)
+- [4. Fluxo de Consentimento](#4-fluxo-de-consentimento)
+- [5. Experiência dos Usuários](#5-experiência-dos-usuários)
+  - [5.1 Login do Cliente](#51-login-do-cliente)
+  - [5.2 Alçada Única](#52-alçada-única)
+  - [5.3 Dupla Alçada](#53-dupla-alçada)
+  - [5.4 Gestão do Consentimento](#54-gestão-do-consentimento)
 
 
 # 1. O que é o Portal de Consentimento?
@@ -19,10 +19,9 @@ O Portal do Consentimento é o conjunto de interfaces que permite a gestão dos 
 
 ![Imagem 27](../images/imagem_27.jpg)
 
-Exemplo:
-https://www.figma.com/proto/2CSuJxStBqSm80KR5yrOWX/Wireframes-e-Jornada?node-id=108%3A902&scaling=min-zoom
+Clique [aqui](https://www.figma.com/proto/2CSuJxStBqSm80KR5yrOWX/Wireframes-e-Jornada?node-id=108%3A902&scaling=min-zoom) para ver um exemplo.
 
-# 1. Fluxos de autenticação e autorização
+# 1. Fluxos de Autenticação e Autorização
 Um Autorizador deve usar o protocolo OpenID Connect (OIDC) e o OAuth 2.0 Authorization Framework para autenticar usuários e obter sua autorização para acessar recursos protegidos.
 A autenticação e a autorização representam funções fundamentalmente diferentes, conforme comparativo abaixo:
 
@@ -39,7 +38,7 @@ A autenticação e a autorização representam funções fundamentalmente difere
 A comunicação entre os aplicativos terceiros e os recursos protegidos, devem ser sempre protegidas utilizando uma conexão TLS versão 1.2 ou superior. A conexão TLS deve ser estabelecida sempre utilizando o certificado qualificado para a autenticação do site e o certificado deve ser emitido seguindo as normas definidas para o Open Banking
 
 
-# 2. Fluxo client credentials
+# 2. Fluxo Client Credentials
 Com aplicativos machine-to-machine (M2M), como serviços em execução no back-end, o sistema autentica e autoriza o Client em vez de um usuário. Para este cenário, esquemas de autenticação típicos como nome de usuário + senha ou logins sociais não fazem sentido.
 
 Em vez disso, as aplicações M2M usam o fluxo Client Credentials utilizando mTLS (definido em OAuth 2.0 Mutual-TLS Client Authentication and Certificate-Bound RFC 8705) e infraestrutura de chave pública (PKI). No qual o Client, o Authorization Server e o Servidor API são autenticados usando certificados X.509. O Access Token também é vinculado ao Client e validado utilizando certificados X.509.
@@ -93,11 +92,11 @@ O client cria um recurso contendo todos os dados necessários para informar o pr
 O serviço de Lodging Intent responde ao client com um id e/ou link para o recurso criado.
 O client então envia a referência do recurso com o pedido de autorização para o Authorization Server. O Authorization Server obtém os dados da transação do recurso de hospedagem e depois de autenticar o usuário, utiliza-os para apresentar uma interface de consentimento. Por exemplo, no caso de um pagamento, o Authorization Server mostra ao devedor, o valor e informações adicionais sobre a transação de pagamento ao usuário e pede o seu consentimento.
 Se o usuário consentir com a autorização solicitada, o Authorization Server associa os dados de autorização à concessão criada (ou atualizada) e os respectivos Access Tokens emitidos com base nessa concessão. Por último, o Authorization Server precisa fornecer os dados de autorização ao respectivo Resource Server, para que seja incorporado no Access Token ou na resposta de Introspection do Token.
-Mais detalhes sobre o funcionamento do padrão Lodging Intent pode ser consultado em https://bitbucket.org/openid/fapi/src/master/Financial_API_Lodging_Intent.md .
+Mais detalhes sobre o funcionamento do padrão Lodging Intent pode ser consultado [aqui](https://bitbucket.org/openid/fapi/src/master/Financial_API_Lodging_Intent.md).
 
-# 5. Experiência dos usuários
+# 5. Experiência dos Usuários
 
-# 5.1 Login do cliente
+# 5.1 Login do Cliente
 ![Alçada Unica](../images/imagem_30.jpg)
 
 # 5.2 Alçada Única
@@ -106,5 +105,5 @@ Mais detalhes sobre o funcionamento do padrão Lodging Intent pode ser consultad
 # 5.3 Dupla Alçada
 ![Dupla Alçada](../images/imagem_29.jpg)
 
-# 5.4 Gestão do consentimento
+# 5.4 Gestão do Consentimento
 ![Gestão do Consentimento](../images/imagem_31.jpg)

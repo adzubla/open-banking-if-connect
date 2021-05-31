@@ -1,8 +1,8 @@
 # Sandbox e Portal do Desenvolvedor
 
-- [1. Sandbox](#4)
-- [2. Portal do Desenvolvedor](#4)
-- [3. Acesso a Sandbox](#4)
+- [1. Sandbox](#1-sandbox)
+- [2. Portal do Desenvolvedor](#2-portal-do-desenvolvedor)
+- [3. Acesso a Sandbox](#3-acesso-a-sandbox)
 
 # 1. Sandbox
 
@@ -29,7 +29,7 @@ Os testes para instituições receptoras devem acontecer em 3 etapas:
 <b>Testes de integração</b>: Testes utilizando APIs de um Banco de exemplo no Sandbox do Diretório.
 Testes no Ecossistema: Testes realizados no ecossistema apenas em Sandbox para validar novas funcionalidades ou melhorias.
 Testes de primeira ocorrência: Testes baseados em acordos entre transmissoras e receptoras efetuados no ambiente de produção.
-Ainda, recomenda-se que seja feito o teste de conformidade ao FAPI, disponível em https://openid.net/certification/fapi_op_testing/.
+Ainda, recomenda-se que seja feito o teste de conformidade ao FAPI, disponível [aqui](https://openid.net/certification/fapi_op_testing/).
 
 
 # 2. Portal do Desenvolvedor
@@ -38,8 +38,8 @@ A Tecban disponibiliza para os cliente um portal de desenvolvedor com toda a doc
 
 ![OpenID](../images/imagem_24.jpg)
 
-# 3. Acesso a Sandbox
 
+# 3. Acesso a Sandbox
 
 O vídeo com explicação técnica sobre como se conectar no ambiente está disponível em : 
 

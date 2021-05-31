@@ -1,10 +1,10 @@
 # Plano de Continuidade (RTO e RPO)
 
-- [1. Detalhamento da Infraestrutura](#4)
-- [2	Procedimento Operacional](#4)
-- [3.	Backup e Recovery](#4)
-- [4.	Detalhamento da solução de contingência](#4)
-- [5. SPOF (Single point of failure)](#4)
+- [1. Detalhamento da Infraestrutura](#1-detalhamento-da-infraestrutura)
+- [2.	Procedimento Operacional](#2-procedimento-operacional)
+- [3.	Backup e Recovery](#3-backup-e-recovery)
+- [4.	Detalhamento da Solução de Contingência](#4-detalhamento-da-solução-de-contingência)
+- [5. SPOF (Single Point of Failure)](#5-spof-single-point-of-failure)
 
 Foram criadas contas AWS dedicadas ao projeto Open Finance, elas estão integradas ao QRADAR, Splunk, Azure AD, Apptio e outras ferramentas padrão da Tecban para monitoração para fins de auditoria. 
 
@@ -51,11 +51,11 @@ Serviço de criptografia com algoritmos simétricos e assimétricos que entrará
 
 ![Infraestrutura](../images/imagem_25.png)
 
-# 2	Procedimento Operacional
+# 2. Procedimento Operacional
 Referir-se ao documento de passagem para Produção “DIET_Openfinace.doc”
 
 
-# 3.	Backup e Recovery
+# 3. Backup e Recovery
 
 O backup será realizado pela ferramenta de backup da AWS via Snapshot que é armazenado por 30 dias para o banco de Dados DocumentDB.
 
@@ -63,19 +63,18 @@ O backup será realizado pela ferramenta de backup da AWS via Snapshot que é ar
 
 Os demais serviços são desacoplados e não armazenam dados, tornando desnecessário a execução de backups.
 
-Para restauração de um serviço em caso de incidente será necessário reexecutar os templates de Cloud Formation descritos na seção “3.3 – Procedimento operacional”.
+Para restauração de um serviço em caso de incidente será necessário reexecutar os templates de Cloud Formation descritos na seção [“2.  Procedimento Operacional”](#2-procedimento-operacional).
 
 Como segurança estes templates ficam armazenados no sistema de controle de versões Gitlab a fim de garantir versionamento. 
 
-# 4.	DETALHAMENTO DA SOLUÇÃO DE CONTINGÊNCIA
+# 4.	Detalhamento da Solução de Contingência
 
 A topologia da aplicação está em alta disponibilidade, utilizando zonas de datacenters ativo / ativo seguindo as melhores práticas de arquitetura recomendadas para serviços hospedados na AWS.
 
-A disponibilidade (SLA) dos serviços estão documentadas no link abaixo:
-https://aws.amazon.com/pt/legal/service-level-agreements/
+A disponibilidade (SLA) dos serviços estão documentadas [aqui](https://aws.amazon.com/pt/legal/service-level-agreements/)
 
 
-# 5	SPOF (Single point of failure)
+# 5	SPOF (Single Point of Failure)
 
 Não foi identificado ponto de falha único na aplicação pois todos os serviços utilizados são gerenciados pela AWS com SLA informado ou pela Tecban e possuem redundância.
 

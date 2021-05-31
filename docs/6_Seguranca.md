@@ -1,17 +1,17 @@
 # Segurança
 
-- [1. Padrões de Autenticação](#1)
-  - [1.1 OAuth 2.0](#2)
-  - [1.2 OpenID Connect 2.0](#3)
-  - [1.3 Financial-grade API (FAPI)](#3)
-  - [1.4 Client Initiated Backchannel Authentication (CIBA)](#4)
-- [2. Tokens](#4)
-  - [2.1 Token ID](#2)
-- [3. JWT](#3)
-- [4. Payload](#4)
-- [5. Assinatura](#5)
-- [6. Certificados](#6)
-- [7. Armazenamento de chaves criptograficas](#7)
+- [1. Padrões de Autenticação](#1-padrões-de-autenticação)
+  - [1.1 OAuth 2.0](#11-oauth-20)
+  - [1.2 OpenID Connect 2.0](#12-openid-connect-20)
+  - [1.3 Financial-grade API (FAPI)](#13-financial-grade-api-fapi)
+  - [1.4 Client Initiated Backchannel Authentication (CIBA)](#14-client-initiated-backchannel-authentication-ciba)
+- [2. Tokens](#2-tokens)
+  - [2.1 Token ID](#21-token-id)
+- [3. JWT](#3-jwt)
+- [4. Payload](#4-payload)
+- [5. Assinatura](#5-assinatura)
+- [6. Certificados](#6-certificados)
+- [7. Armazenamento de chaves criptográficas (Cloud HSM)](#7-armazenamento-de-chaves-criptográficas-cloud-hsm)
 
 
 # 1. Padrões de Autenticação
@@ -60,9 +60,9 @@ O OAuth 2.0 faz o uso de diversos tokens, entre eles, o access token, refresh to
 Access token: Um token de acesso é utilizado por um client para acessar um recurso, geralmente possuem ciclo de vida curto (minutos ou horas), sendo consumidos durante uma sessão. O Access token indica que o client está autorizado a consumir um recurso protegido, respeitando os scopes para qual o token foi emitido. O token pode ser renovado através de um refresh token. O tipo de Access Token será o "Bearer" OAuth Access Token, referenciado em [RFC 6750].
 Refresh token: Representa uma autorização de longa duração de um client. Esses tokens são trocados entre o client e o Authorization Server e são utilizados para obter (“atualizar”) novos tokens de acesso.
 Authorization code: É um código de autorização que representa o resultado do processo de autorização bem sucedido do usuário final e é utilizado pelo client para obter acesso e atualizar status dos tokens.
-É necessário a implementação de um endpoint adicional no Authorization Server que possibilita a revogação do Access Token e do Refresh Token. Um request de revogação invalidará um ou mais Tokens (se aplicável), baseados na mesma concessão de acesso, conforme [RFC 7009].
-Também será adotado o OAuth Token Introspection que define um método para um recurso protegido consultar um Authorization Server sobre o estado e os metadados de um Token, conforme [RFC 7662].
-Devido a ampla aplicação do uso do OAuth 2.0, as melhores práticas de segurança do OAuth 2.0 estão em constate atualização e podem ser consultadas neste endereço https://tools.ietf.org/html/draft-ietf-oauth-security-topics-16.
+É necessário a implementação de um endpoint adicional no Authorization Server que possibilita a revogação do Access Token e do Refresh Token. Um request de revogação invalidará um ou mais Tokens (se aplicável), baseados na mesma concessão de acesso, conforme [RFC 7009](https://datatracker.ietf.org/doc/html/rfc7009).
+Também será adotado o OAuth Token Introspection que define um método para um recurso protegido consultar um Authorization Server sobre o estado e os metadados de um Token, conforme [RFC 7662](https://datatracker.ietf.org/doc/html/rfc7662).
+Devido a ampla aplicação do uso do OAuth 2.0, as melhores práticas de segurança do OAuth 2.0 estão em constate atualização e podem ser consultadas [aqui](https://tools.ietf.org/html/draft-ietf-oauth-security-topics-16).
 
 Início do fluxo de uma API com a obtenção de um Access Token.
 
@@ -84,16 +84,32 @@ Diagrama – Obtendo um Access Token.
 
 # 2.1 Token ID
 
-ID Token
 O OIDC utiliza o authorization code, access token e refresh token descrito na seção anterior sobre OAuth e define um outro tipo de Token, o ID Token.
 
 ID Token: Um token utilizado para transmitir claims sobre um evento de autenticação e um usuário autenticado (End-user) para um client. Tokens de identificação são codificados em JSON Web Token (JWT) e deve estar em conformidade com a LGPD.
-{"iss": "http://YOUR_DOMAIN/",
-"sub": "xpto|123456",
-"aud": "YOUR_CLIENT_ID",
-"exp": "1311281970",
-"iat": "1311280970",
-"id": "1234567"}
+
+```json
+{
+  "iss": "http://YOUR_DOMAIN/",
+  "sub": "xpto|123456",
+  "aud": "YOUR_CLIENT_ID",
+  "exp": "1311281970",
+  "iat": "1311280970",
+  "id": "1234567"
+}
+```
+
+```json
+{
+  "iss": "http://YOUR_DOMAIN/",
+  "sub": "xpto|123456",
+  "aud": "YOUR_CLIENT_ID",
+  "exp": "1311281970",
+  "iat": "1311280970",
+  "id": "1234567"
+}
+
+```
 
 UserInfo Endpoint: Retorna claims sobre um usuário autenticado. Chamar o endpoint requer um Access Token e as claims retornadas são regidos pelo Access Token.
 Exemplo de resposta bem-sucedida contendo um ID Token assinado:
@@ -103,20 +119,16 @@ Content-Type: application/json
 Cache-Control: no-store
 Pragma: no-cache
 
-{"access_token": "SlAV32hkKG",
-"token_type": "Bearer",
-"refresh_token": "8xLOxBtZp8",
-"expires_in": "3600",
-"id_token": "eyJhbGciOiJSUzI1NiIsImtpZCI6IjFlOWdkazcifQ.ewogImlzc
-yI6ICJodHRwOi8vc2VydmVyLmV4YW1wbGUuY29tIiwKICJzdWIiOiAiMjQ4Mjg5
-NzYxMDAxIiwKICJhdWQiOiAiczZCaGRSa3F0MyIsCiAibm9uY2UiOiAibi0wUzZ
-fV3pBMk1qIiwKICJleHAiOiAxMzExMjgxOTcwLAogImlhdCI6IDEzMTEyODA5Nz
-AKfQ.ggW8hZ1EuVLuxNuuIJKX_V8a_OMXzR0EHR9R6jgdqrOOF4daGU96Sr_P6q
-Jp6IcmD3HP99Obi1PRs-cwh3LO-p146waJ8IhehcwL7F09JdijmBqkvPeB2T9CJ
-NqeGpe-gccMg4vfKjkM8FcGvnzZUN4_KSP0aAp1tOJ1zZwgjxqGByKHiOtX7Tpd
-QyHE5lcMiKPXfEIQILVq0pc_E2DzL7emopWoaoZTF_m0_N0YzFC6g6EJbOEoRoS
-K5hoDalrcvRYLSrQAZZKflyuVCyixEoV9GfNQC3_osjzw2PAithfubEEBLuVVk4
-XUVrWOLrLl0nx7RkKU8NXNHq-rvKMzqg"}
+```json
+{
+  "access_token": "SlAV32hkKG",
+  "token_type": "Bearer",
+  "refresh_token": "8xLOxBtZp8",
+  "expires_in": "3600",                           
+  "id_token":"eyJhbGciOiJSUzI1NiIsImtpZCI6IjFlOWdkazcifQ.ewogImlzcyI6ICJodHRwOi8vc2VydmVyLmV4YW1wbGUuY29t    IiwKICJzdWIiOiAiMjQ4Mjg5NzYxMDAxIiwKICJhdWQiOiAiczZCaGRSa3F0MyIsCiAibm9uY2UiOiAibi0wUzZfV3pBMk1qIiwKICJleHAiOiAxMzExMjgxOTcwLAogImlhdCI6IDEzMTEyODA5NzAKfQ. ggW8hZ1EuVLuxNuuIJKX_V8a_OMXzR0EHR9R6jgdqrOOF4daGU96Sr_P6qJp6IcmD3HP99Obi1PRs-cwh3LO-p146waJ8IhehcwL7F09JdijmBqkvPeB2T9CJNqeGpe-gccMg4vfKjkM8FcGvnzZUN4_KSP0aAp1tOJ1zZwgjxqGByKHiOtX7TpdQyHE5lcMiKPXfEIQILVq0pc_E2DzL7emopWoaoZTF_m0_N0YzFC6g6EJbOEoRoSK5hoDalrcvRYLSrQAZZKflyuVCyixEoV9GfNQC3_osjzw2PAithfubEEBLuVVk4XUVrWOLrLl0nx7RkKU8NXNHq-rvKMzqg"
+}
+```
+
 
 # 3. JWT
 O formato JWT (JSON Web Token) é projetado para transmitir claims entre duas partes. O JWT consiste em um Header, um payload e uma assinatura. O cabeçalho do ID Token contém informações sobre o tipo de objeto (JWT) e o algoritmo de assinatura utilizado para proteger a integridade dos claims do payload. O algoritmo de assinatura exigido é o PS256 (RSASSA-PSS utilizando SHA-256 e MGF1 com SHA-256). A seção do payload contém as claims sobre um usuário e o evento de autenticação. A seção de assinatura contém uma assinatura digital com base no payload do ID Token e uma chave secreta conhecida pelo provedor OpenID.
@@ -124,8 +136,12 @@ O formato JWT (JSON Web Token) é projetado para transmitir claims entre duas pa
 O JWT é formado por três seções: Header, Payload e Signature.
 O Header contém somente a informação tipo e algoritmo:
 
-{"typ": "JWT",
-"alg": " PS256"}
+```json
+{
+  "typ": "JWT",
+  "alg": " PS256"
+}
+```
 
 # 4. Payload
 O Payload é um objeto JSON com as Claims da entidade tratada, normalmente o usuário autenticado.
@@ -133,40 +149,56 @@ Claims são informações afirmadas sobre um sujeito, por exemplo um ID Token, p
 
 Reserved claims: São claims definidas pela especificação do JWT e contém atributos não obrigatórios (mais recomendados) que são usados na validação do token pelos protocolos de segurança das APIs. É possível verificar a lista completa de Reserved Claims em [IANA JSON Web Token Claims Registry].
 
-{"sub": "Subject, entidade à quem o token pertence, normalmente o ID do usuário",
-"iss": "Issuer, emissor do token",
-"exp": "Expiration, timestamp de quando o token irá expirar",
-"iat": "Issued at, timestamp de quando o token foi criado",
-"aud": "Audience, destinatário do token, representa a aplicação que irá usá-lo"}
+```json
+{
+  "sub": "Subject, entidade à quem o token pertence, normalmente o ID do usuário",
+  "iss": "Issuer, emissor do token",
+  "exp": "Expiration, timestamp de quando o token irá expirar",
+  "iat": "Issued at, timestamp de quando o token foi criado",
+  "aud": "Audience, destinatário do token, representa a aplicação que irá usá-lo"
+}
+```
 
 Public claims: atributos utilizados nas aplicações. Normalmente armazenamos as informações do usuário autenticado na aplicação.
 
-{"name": "Joe",
-"roles": "Administrator",
-"permissions": "Full"}
+```json
+{
+  "name": "Joe",
+  "roles": "Administrator",
+  "permissions": "Full"
+}
+```
 
 Private claims: são claims personalizadas e contém atributos definidos para compartilhar informações entre aplicações.
 
-{"sub": "1234567890",
-"name": "Jose Doe"
-"admin": "true"}
+```json
+{
+  "sub": "1234567890",
+  "name": "Jose Doe"
+  "admin": "true"
+}
+```
 
 Conjunto de claims para um ID Token do Open Banking:
 
-{"iss": "Emissor do token",
-"sub": "Identificador único do subject",
-"openbanking_intent_id": "Intent ID da solicitação",
-"aud": "Público alvo para o qual o ID Token é destinado (deve incluir o Client ID)",
-"exp": "Data/hora de expiração do token",
-"iat": "Data/hora de emissão do token",
-"auth_time": "Data/hora de autenticação do End-user",
-"nonce": "Valor string que associa uma sessão do cliente com um ID Token usado para ajudar na mitigação de ataques de replay",
-"acr": "Authentication Context Class Reference",
-"amr": "Authentication Methods References",
-"azp": "Authorized party",
-"s_hash": "State hash value",
-"at_hash": "Access Token hash value",
-"c_hash": "Code hash value"}
+```json
+{
+  "iss": "Emissor do token",
+  "sub": "Identificador único do subject",
+  "openbanking_intent_id": "Intent ID da solicitação",
+  "aud": "Público alvo para o qual o ID Token é destinado (deve incluir o Client ID)",
+  "exp": "Data/hora de expiração do token",
+  "iat": "Data/hora de emissão do token",
+  "auth_time": "Data/hora de autenticação do End-user",
+  "nonce": "Valor string que associa uma sessão do cliente com um ID Token usado para ajudar na mitigação de ataques de replay",
+  "acr": "Authentication Context Class Reference",
+  "amr": "Authentication Methods References",
+  "azp": "Authorized party",
+  "s_hash": "State hash value",
+  "at_hash": "Access Token hash value",
+  "c_hash": "Code hash value"
+}
+```
 
 # 5. Assinatura
 A assinatura é o header e o payload criptografados com um secret.
@@ -206,7 +238,9 @@ Dois tipos de certificados serão emitidos pelo ICP-Brasil para serem utilizados
 | Nome do participante| 2.16.76.1.3.8 otherName Nome que identifica o participante do Open Banking (Nome que consta no CNPJ).|
 | Código do Diretório (OID 2.16.76.1.3.X)| Campo otherName em certificado de pessoa jurídica, contendo identificação do código de participante junto ao diretório do Open Banking. OID a ser definido.|
 
-# 7. Armazenamento de chaves criptograficas (Cloud HSM)
+A IF deve gerar um Certificado com algoritmo de assinatura SHA-256 ou superior e chave RSA-2048 ou superior, e compartilhar a chave pública com a TecBan.
+
+# 7. Armazenamento de chaves criptográficas (Cloud HSM)
 
 Todas as chaves criptográficas do sistema são armazenadas no AWS CloudHSM, um Hardware Security Module (HSM – Módulo de segurança de hardware) baseado na nuvem que permite armazenar com total segurança as suas próprias chaves de criptografia na Nuvem AWS. Com o CloudHSM, gerenciamos chaves de criptografia usando HSMs validados pelo FIPS 140-2 nível 3. 
 

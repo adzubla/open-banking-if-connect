@@ -1,9 +1,9 @@
 # Monitoria e Suporte
 
-- [1. Monitoria do Ambiente](#1.-Monitoria)
-- [2. Processo de Monitoria ](#-2.-Processo-de-Monitoria-e-SLA)
-- [3. SLA](#2-definições-e-abreviaturas)
-- [4. Suporte](#3-visão-geral)
+- [1. Monitoria do Ambiente](#1-monitoria-do-ambiente)
+- [2. Processo de Monitoria ](#2-processo-de-monitoria)
+- [3. SLA (Service Level Agreement)](#3-sla-service-level-agreement)
+- [4. Suporte aos Desenvolvedores](#4-suporte-aos-desenvolvedores)
 
 # 1. Monitoria do Ambiente
 Os ambientes produtivos são monitorados 24x7 por ferramentas de última geração que avisam imediatamente os operadores do centro de controle que conta com uma equipe técnica especializada para o pronto atendimento.
@@ -37,9 +37,9 @@ A definição de um período de indisponibilidade é qualquer período de tempo 
 
 # 4. Suporte aos Desenvolvedores
 
-O Sistema da Tecban é totalmente integrado ao service desk do Openbanking onde todos os chamados dos nossos clientes são direcionados para os clientes e também para a area de suporte da Tecban e o mesmo será atendido dentro dos SLAs acordados com o Bacen contrato vigente com a Instituição Financeira
+O Sistema da Tecban é totalmente integrado ao [service desk do Openbanking](https://servicedesk.openbankingbrasil.org.br/) onde todos os chamados dos nossos clientes são direcionados para os clientes e também para a area de suporte da Tecban e o mesmo será atendido dentro dos SLAs acordados com o Bacen contrato vigente com a Instituição Financeira
 
-https://servicedesk.openbankingbrasil.org.br/
+
 
 ![Suporte](../images/imagem_23.jpg)
 

@@ -8,3 +8,4 @@ Para as Instituições Financeiras que já ingressaram no Banco24Horas® haverá
 
 
 ![Representação dos modelos de conectividade possíveis](../images/conectividade1.jpg)
+
