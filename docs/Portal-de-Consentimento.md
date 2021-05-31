@@ -20,6 +20,8 @@ O Portal do Consentimento é o conjunto de interfaces que permite que os cliente
 # 2. Jornadas de Usuário
 
 **Jornada:** **Confirmar Consentimento de Pagamento**
+![[Imagem JornadaConfirmaPagto](../images/JornadaConfirmaPagto.png)
+
 ![Imagem JornadaConfirmaPagto](../images/imagem_27.jpg)
 
 ![Imagem 27](../images/JornadaConfirmaPagto.png)
