@@ -21,12 +21,9 @@ O Portal do Consentimento é o conjunto de interfaces que permite que os cliente
 Nos fluxos abaixo serão ilustradas as principais funcionalidades da 'Gestão de Consentimentos' pela perspectiva do usuário.
 
 **Fluxo:** **Confirmar Consentimento de Pagamento Único - Alçada Única**
+Navegue pelo protótipo (Clique)[aqui](https://www.figma.com/proto/aWwbavLPVAbx0H2AdnSQxi/Untitled?node-id=1%3A387&scaling=min-zoom&page-id=0%3A1)
 
 ![JornadaConfirmaPagto](../images/JornadaConfirmaPagtoUnico01.png)
-
-
-
-Clique [aqui](https://www.figma.com/proto/aWwbavLPVAbx0H2AdnSQxi/Untitled?node-id=1%3A387&scaling=min-zoom&page-id=0%3A1) para ver um exemplo.
 
 # 1. Fluxos de Autenticação e Autorização
 Um Autorizador deve usar o protocolo OpenID Connect (OIDC) e o OAuth 2.0 Authorization Framework para autenticar usuários e obter sua autorização para acessar recursos protegidos.
