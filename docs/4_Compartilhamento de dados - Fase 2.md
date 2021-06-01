@@ -81,7 +81,7 @@ scope=openid accounts
 
 
 
-- **{{basicToken}}** é um valor codificado em base64 de <clientID>: <clientSecret>. É gerado pela TecBan para a IR durante o processo de adesão.
+- **{{basicToken}}** é um valor codificado em base64 de \<clientID\>: \<clientSecret\>. É gerado pela TecBan para a IR durante o processo de adesão.
 - **grant_type** é o tipo de autorização para obtenção do token de acesso. Neste passo, deve ter o valor “cliente_credentials”.
 - **scope** é a lista de escopos (separados por espaço) que identifica os recursos que o cliente deseja acessar em nome do usuário.
 No caso do fluxo de compartilhamento, deve ter o valor “openid accounts”.
@@ -99,7 +99,7 @@ Body	{
 ```
 
 
-- **access_token: **é uma identificação a ser usada pelo cliente durante o processo de autenticação, no estágio 2. Esse token está atrelado ao certificado do cliente usado para a conexão TLS.
+- **access_token: **é uma identificação a ser usada pelo cliente durante o processo de autenticação no estágio 2. Esse token está atrelado ao certificado do cliente usado para a conexão TLS.
 - **token_type:** indica o tipo do token, que é Bearer (ao portador).
 - **expires_in:** tempo de expiração do token em segundos.
 
@@ -111,8 +111,6 @@ O cliente (IR) usa o token obtido anteriormente para requisitar quais permissõe
 ###### [IR→TB] Passo 2000 POST /account-access-consents
 
 **IR** informa o access token a TecBan para obter um objeto de consentimento com as permissões desejadas.
-
-
 
 ```json
 Request (2000)
