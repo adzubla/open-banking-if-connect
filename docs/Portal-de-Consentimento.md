@@ -18,8 +18,9 @@ O Portal do Consentimento é o conjunto de interfaces que permite que os cliente
 É uma solução opcional oferecida pela TecBan para adequar a experiência do usuário em sua jornada de consentimento, atendendo as recomendações do Grupo de Trabalho do Open Banking Brasil
 
 # 2. Jornadas de Usuário
+Nos fluxos abaixo serão ilustradas as principais funcionalidades da 'Gestão de Consentimentos' pela perspectiva do usuário.
 
-**Fluxo:**Confirmar Consentimento de Pagamento Único - Alçada Única**
+**Fluxo:** **Confirmar Consentimento de Pagamento Único - Alçada Única**
 
 ![JornadaConfirmaPagto](../images/JornadaConfirmaPagtoUnico01.png)
 
