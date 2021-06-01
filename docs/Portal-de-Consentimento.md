@@ -21,7 +21,7 @@ O Portal do Consentimento é o conjunto de interfaces que permite que os cliente
 
 **Confirmar Consentimento de Pagamento Único**
 
-![JornadaConfirmaPagto](../images/TelasMarketPlace.png)
+![JornadaConfirmaPagto](../images/JornadaConfirmaPagtoUnico01.png)
 
 
 
