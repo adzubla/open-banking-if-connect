@@ -26,7 +26,7 @@ Nos fluxos abaixo serão ilustradas as principais funcionalidades da 'Gestão de
 
 
 
-Clique [aqui](https://www.figma.com/proto/K12u9k8mipVShT6iZqzZe0/Untitled?node-id=1%3A478&scaling=min-zoom&page-id=0%3A1) para ver um exemplo.
+Clique [aqui](https://www.figma.com/proto/aWwbavLPVAbx0H2AdnSQxi/Untitled?node-id=1%3A387&scaling=min-zoom&page-id=0%3A1) para ver um exemplo.
 
 # 1. Fluxos de Autenticação e Autorização
 Um Autorizador deve usar o protocolo OpenID Connect (OIDC) e o OAuth 2.0 Authorization Framework para autenticar usuários e obter sua autorização para acessar recursos protegidos.
