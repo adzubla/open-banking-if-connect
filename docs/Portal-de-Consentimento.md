@@ -1,15 +1,15 @@
 # Portal de Consentimento 
 - [1. O que é o Portal do Consentimento?](#1-o-que-e-o-portal-do-consentimento-?)
 - [2. Jornada de Usuário](#2-jornada-de-usuario)
-- [8. Fluxos de Autenticação e Autorização](#1-fluxos-de-autenticação-e-autorização)
-- [2. Fluxo client Credentials](#2-fluxo-client-credentials)
-- [3. Fluxo do Authorization Code](#3-fluxo-do-authorization-code)
-- [4. Fluxo de Consentimento](#4-fluxo-de-consentimento)
-- [5. Experiência dos Usuários](#5-experiência-dos-usuários)
-  - [5.1 Login do Cliente](#51-login-do-cliente)
-  - [5.2 Alçada Única](#52-alçada-única)
-  - [5.3 Dupla Alçada](#53-dupla-alçada)
-  - [5.4 Gestão do Consentimento](#54-gestão-do-consentimento)
+- [3. Fluxos de Autenticação e Autorização](#3-fluxos-de-autenticação-e-autorização)
+- [4. Fluxo client Credentials](#4-fluxo-client-credentials)
+- [5. Fluxo do Authorization Code](#5-fluxo-do-authorization-code)
+- [6. Fluxo de Consentimento](#6-fluxo-de-consentimento)
+- [7. Experiência dos Usuários](#7-experiência-dos-usuários)
+  - [7.1 Login do Cliente](#71-login-do-cliente)
+  - [7.2 Alçada Única](#72-alçada-única)
+  - [7.3 Dupla Alçada](#73-dupla-alçada)
+  - [7.4 Gestão do Consentimento](#74-gestão-do-consentimento)
 
 
 # 1. O que é o Portal de Consentimento?
@@ -25,7 +25,7 @@ Navegue pelo protótipo (Clique)[aqui](https://www.figma.com/proto/aWwbavLPVAbx0
 
 ![JornadaConfirmaPagto](../images/JornadaConfirmaPagtoUnico01.png)
 
-# 1. Fluxos de Autenticação e Autorização
+# 3. Fluxos de Autenticação e Autorização
 Um Autorizador deve usar o protocolo OpenID Connect (OIDC) e o OAuth 2.0 Authorization Framework para autenticar usuários e obter sua autorização para acessar recursos protegidos.
 A autenticação e a autorização representam funções fundamentalmente diferentes, conforme comparativo abaixo:
 
@@ -42,7 +42,7 @@ A autenticação e a autorização representam funções fundamentalmente difere
 A comunicação entre os aplicativos terceiros e os recursos protegidos, devem ser sempre protegidas utilizando uma conexão TLS versão 1.2 ou superior. A conexão TLS deve ser estabelecida sempre utilizando o certificado qualificado para a autenticação do site e o certificado deve ser emitido seguindo as normas definidas para o Open Banking
 
 
-# 2. Fluxo Client Credentials
+# 4. Fluxo Client Credentials
 Com aplicativos machine-to-machine (M2M), como serviços em execução no back-end, o sistema autentica e autoriza o Client em vez de um usuário. Para este cenário, esquemas de autenticação típicos como nome de usuário + senha ou logins sociais não fazem sentido.
 
 Em vez disso, as aplicações M2M usam o fluxo Client Credentials utilizando mTLS (definido em OAuth 2.0 Mutual-TLS Client Authentication and Certificate-Bound RFC 8705) e infraestrutura de chave pública (PKI). No qual o Client, o Authorization Server e o Servidor API são autenticados usando certificados X.509. O Access Token também é vinculado ao Client e validado utilizando certificados X.509.
@@ -63,7 +63,7 @@ O Servidor API responde com o recurso solicitado.
 Conforme definido na Seção 6.1 do RFC8705, os endpoints utilizados para emissão e validação de tokens que requerem uma conexão mTLS são endpoints convencionais separados por hostname ou porta diferente.
 
 
-# 3. Fluxo do Authorization Code
+# 5. Fluxo do Authorization Code
 No Fluxo do Authorization Code, o Client pode recuperar um Access Token e, opcionalmente, um Refresh Token. É considerada a escolha mais segura, pois o Access Token é passado diretamente para o servidor que hospeda o Client, sem passar pelo navegador do usuário e correr o risco de exposição.
 
 Como os Clients são aplicativos do lado do servidor em que o código-fonte não é exposto publicamente, eles podem usar o fluxo do Authorization Code (definido no OAuth 2.0 [RFC 6749], seção 4.1 ), que troca um Authorization Code por um token. Seu Client deve estar no lado do servidor, porque durante essa troca, você também deve passar adiante o client secret do seu Client, que deve ser mantido sempre seguro, e deve armazená-lo em seu client.
@@ -83,7 +83,7 @@ O Authorization Server responde com um ID Token e um Access Token (e, opcionalme
 O Client usa o Access Token para chamar uma API para acessar informações sobre o usuário.
 A API responde com os dados solicitados.
 
-# 4. Fluxo de Consentimento
+# 6. Fluxo de Consentimento
 Pedidos de revogação de consentimentos feitos pelo usuário final por meio de API´s da instituição receptora devem obrigatoriamente implicar na revogação dos tokens de acesso e de consentimento relacionados por meio de chamadas executadas no servidor de autorização da instituição transmissora responsável pelo consentimento e/ou em API de consentimento mantida pelo transmissor.
 A instituição transmissora deve disponibilizar, por meio de API específica para o controle de consentimentos, interface que permita à instituição receptora detentora de consentimentos a verificação do seu estado.
 O acesso à API de consentimento deve ser precedido de autenticação e a consulta deve ser restrita ao consentimento a que a instituição receptora teve autorização prévia para acesso, com vistas a garantir que apenas a instituição receptora que registrou o pedido de consentimento possa realizar a consulta sobre o seu estado. A instituição receptora de dados detentora de consentimentos e de tokens de autorização deve revogá-los, por meio de chamadas específicas às API´s das instituições transmissoras publicadas para esse fim, quando perceber violações à confidencialidade dos tokens ou no fim da prestação dos serviços ao usuário final.
@@ -98,16 +98,16 @@ O client então envia a referência do recurso com o pedido de autorização par
 Se o usuário consentir com a autorização solicitada, o Authorization Server associa os dados de autorização à concessão criada (ou atualizada) e os respectivos Access Tokens emitidos com base nessa concessão. Por último, o Authorization Server precisa fornecer os dados de autorização ao respectivo Resource Server, para que seja incorporado no Access Token ou na resposta de Introspection do Token.
 Mais detalhes sobre o funcionamento do padrão Lodging Intent pode ser consultado [aqui](https://bitbucket.org/openid/fapi/src/master/Financial_API_Lodging_Intent.md).
 
-# 5. Experiência dos Usuários
+# 7. Experiência dos Usuários
 
-# 5.1 Login do Cliente
+# 7.1 Login do Cliente
 ![Alçada Unica](../images/imagem_30.jpg)
 
-# 5.2 Alçada Única
+# 7.2 Alçada Única
 ![Alçada Unica](../images/imagem_28.jpg)
 
-# 5.3 Dupla Alçada
+# 7.3 Dupla Alçada
 ![Dupla Alçada](../images/imagem_29.jpg)
 
-# 5.4 Gestão do Consentimento
+# 7.4 Gestão do Consentimento
 ![Gestão do Consentimento](../images/imagem_31.jpg)
