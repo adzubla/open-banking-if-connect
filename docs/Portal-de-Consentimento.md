@@ -1,6 +1,7 @@
-# Portal de Consentimento *
-
-- [1. Fluxos de Autenticação e Autorização](#1-fluxos-de-autenticação-e-autorização)
+# Portal de Consentimento 
+- [1. O que é o Portal do Consentimento?](#1-o-que-e-o-portal-do-consentimento-?)
+- [2. Jornada de Usuário](#2-jornada-de-usuario)
+- [8. Fluxos de Autenticação e Autorização](#1-fluxos-de-autenticação-e-autorização)
 - [2. Fluxo client Credentials](#2-fluxo-client-credentials)
 - [3. Fluxo do Authorization Code](#3-fluxo-do-authorization-code)
 - [4. Fluxo de Consentimento](#4-fluxo-de-consentimento)
@@ -12,14 +13,19 @@
 
 
 # 1. O que é o Portal de Consentimento?
-O Portal do Consentimento é o conjunto de interfaces que permite a gestão dos consentimentos pelos clientes das Instituições Financeiras.
+O Portal do Consentimento é o conjunto de interfaces que permite que os clientes das Instituições Financeiras façam a gestão de seus consentimentos. 
 
-É uma solução opcional oferecida pela Tecban para adequar a experiência do usuário em sua jornada de consentimento, atendendo as recomendações do Grupo de Trabalho do Open Banking Brasil
+É uma solução opcional oferecida pela TecBan para adequar a experiência do usuário em sua jornada de consentimento, atendendo as recomendações do Grupo de Trabalho do Open Banking Brasil
+
+# 2. Jornadas de Usuário
+
+**Fluxo:**Confirmar Consentimento de Pagamento Único - Alçada Única**
+
+![JornadaConfirmaPagto](../images/JornadaConfirmaPagtoUnico01.png)
 
 
-![Imagem 27](../images/imagem_27.jpg)
 
-Clique [aqui](https://www.figma.com/proto/2CSuJxStBqSm80KR5yrOWX/Wireframes-e-Jornada?node-id=108%3A902&scaling=min-zoom) para ver um exemplo.
+Clique [aqui](https://www.figma.com/proto/K12u9k8mipVShT6iZqzZe0/Untitled?node-id=1%3A478&scaling=min-zoom&page-id=0%3A1) para ver um exemplo.
 
 # 1. Fluxos de Autenticação e Autorização
 Um Autorizador deve usar o protocolo OpenID Connect (OIDC) e o OAuth 2.0 Authorization Framework para autenticar usuários e obter sua autorização para acessar recursos protegidos.
