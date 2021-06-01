@@ -25,7 +25,7 @@ O Portal do Consentimento é o conjunto de interfaces que permite que os cliente
 
 
 
-Clique [aqui](https://www.figma.com/proto/2CSuJxStBqSm80KR5yrOWX/Wireframes-e-Jornada?node-id=108%3A902&scaling=min-zoom) para ver um exemplo.
+Clique [aqui](https://www.figma.com/proto/K12u9k8mipVShT6iZqzZe0/Untitled?node-id=1%3A478&scaling=min-zoom&page-id=0%3A1) para ver um exemplo.
 
 # 1. Fluxos de Autenticação e Autorização
 Um Autorizador deve usar o protocolo OpenID Connect (OIDC) e o OAuth 2.0 Authorization Framework para autenticar usuários e obter sua autorização para acessar recursos protegidos.
