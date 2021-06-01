@@ -21,6 +21,7 @@ O Portal do Consentimento é o conjunto de interfaces que permite que os cliente
 Nos fluxos abaixo serão ilustradas as principais funcionalidades da 'Gestão de Consentimentos' pela perspectiva do usuário.
 
 **Fluxo:** **Confirmar Consentimento de Pagamento Único - Alçada Única**
+
 Navegue pelo protótipo (Clique)[aqui](https://www.figma.com/proto/aWwbavLPVAbx0H2AdnSQxi/Untitled?node-id=1%3A387&scaling=min-zoom&page-id=0%3A1)
 
 ![JornadaConfirmaPagto](../images/JornadaConfirmaPagtoUnico01.png)
