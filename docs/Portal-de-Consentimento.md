@@ -22,7 +22,7 @@ O Portal do Consentimento é o conjunto de interfaces que permite que os cliente
 **Confirmar Consentimento de Pagamento Único**
 
 ![JornadaConfirmaPagto](../images/JornadaConfirmaPgtoUnico.png)
-
+![eeste](../images/teste.png)
 
 
 Clique [aqui](https://www.figma.com/proto/2CSuJxStBqSm80KR5yrOWX/Wireframes-e-Jornada?node-id=108%3A902&scaling=min-zoom) para ver um exemplo.
