@@ -44,7 +44,7 @@ Ainda, recomenda-se que seja feito o teste de conformidade ao FAPI, disponível 
 
 # 2. Portal do Desenvolvedor
 
-A Tecban disponibiliza para os cliente um portal de desenvolvedor com toda a documentação das APIs e totalmente integrado com o Sandbox 
+A TecBan disponibiliza para os cliente um portal de desenvolvedor com toda a documentação das APIs e totalmente integrado com o Sandbox 
 
 ![OpenID](../images/imagem_24.jpg)
 
