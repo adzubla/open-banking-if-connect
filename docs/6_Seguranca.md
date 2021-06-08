@@ -16,8 +16,15 @@ Todas as chaves criptográficas do sistema são armazenadas no AWS CloudHSM, um 
 
 # 2. Geração de certificado por parte da IF
 
-A IF deve gerar dois certificados: Certificado com algoritmo de assinatura SHA-256 ou superior e chave RSA-2048 ou superior, e compartilhar a chave pública com a TecBan.
+A IF deve gerar dois certificados com algoritmo de assinatura SHA-256 ou superior e chave RSA-2048 ou superior, e compartilhar a chave pública com a TecBan.
 Um certificado será utilizado no ambiente não produtivo e o outro no ambiente produtivo.
+
+O certificado para o ambiente não produtivo pode ser enviado para o e-mail _Grupo_OpenBanking_TI@tecban.com.br.
+
+O certificado para o ambiente produtivo deve ser enviado por um representante previamente cadastrado do banco, para o e-mail openfinance@tecban.com.br com cópia para _Grupo_Seg_STR@tecban.com.br
+
+É importante ressaltar que somente a chave pública pode ser compartilhada, caso a chave privada por engano seja enviada junto da pública o certificado deve ser desconsiderado devido a exposição de segurança e um novo certificado deve ser gerado.
+
 
 # 3. Validade dos Certificados Digitais TecBan 
 
