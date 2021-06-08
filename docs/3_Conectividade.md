@@ -28,4 +28,3 @@ Para as Instituições Financeiras que já ingressaram no Banco24Horas® haverá
 
 #### 6. Gostaria de aceitar chamadas somente dos IPs da TecBan, é possível?
 ##### R: Sim, nós iremos enviar os nossos IPs fixos de saída da AWS, para que você possa por exemplo configurar estes IPs em uma camada WAF.
-
