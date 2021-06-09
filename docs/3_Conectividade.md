@@ -29,5 +29,5 @@ Para as Instituições Financeiras que já ingressaram no Banco24Horas® haverá
 #### 6. Gostaria de aceitar chamadas somente dos IPs da TecBan, é possível?
 ##### R: Sim, segue abaixo nossos IPs fixos de saída da AWS (Conectividade via internet), para que você possa por exemplo configurar estes IPs em uma camada WAF.
 - IP de Produção 177.71.135.59
-- IP de homologação 18.229.67.128
-
+- IP de Desenvolvimento 18.229.67.128
+- IP de homologação 177.71.137.212
