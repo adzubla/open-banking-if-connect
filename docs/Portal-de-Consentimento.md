@@ -2,10 +2,11 @@
 - [1. O que é o Portal do Consentimento?](#1-o-que-e-o-portal-do-consentimento-?)
 - [2. Jornada de Usuário](#2-jornada-de-usuario)
 - [3. Experiência dos Usuários](#7-experiência-dos-usuários)
-  - [3.1 Login do Cliente](#71-login-do-cliente)
-  - [3.2 Alçada Única](#72-alçada-única)
-  - [3.3 Dupla Alçada](#73-dupla-alçada)
-  - [3.4 Gestão do Consentimento](#74-gestão-do-consentimento)
+  - [3.1 Login do Cliente](#28-login-do-cliente)
+  - [3.2 Alçada Única](#31-alçada-única)
+  - [3.3 Dupla Alçada](#34-dupla-alçada)
+  - [3.4 Gestão do Consentimento](#37-gestão-do-consentimento)
+  - [4. Fuxo de Autenticação dos Usuários](#40-autenticacao-usuario)
 
 
 # 1. O que é o Portal de Consentimento?
@@ -36,11 +37,15 @@ Navegue pelo protótipo (Clique)[aqui](https://www.figma.com/proto/aWwbavLPVAbx0
 # 3.4 Gestão do Consentimento
 ![Gestão do Consentimento](../images/imagem_31.jpg)
 
-# 4. Fuxo de Autentição dos Usuários
+# 4. Fuxo de Autenticação dos Usuários
+
 
 Para a comunicação entre Internet Banking da IF e Portal de Consentimento, será feito um
 redirecionamento para o portal de consentimento (usando o protocolo HTTPS - Conexão TLS 1.2
 ou superior);
+
+Segue fluxo:
+![Fuxo de Autenticação dos Usuários](../images/autenticacao-ib-portal.png)
 
 Para o envio dos dados do cliente para o correto funcionamento do portal de gestão de consentimento, a solução ultilizara um token JWE (JSON Web Encryption - token encriptado), como segue exemplo abaixo:
 
