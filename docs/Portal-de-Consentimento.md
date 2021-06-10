@@ -6,7 +6,7 @@
   - [3.2 Alçada Única](#31-alçada-única)
   - [3.3 Dupla Alçada](#34-dupla-alçada)
   - [3.4 Gestão do Consentimento](#37-gestão-do-consentimento)
-  - [4. Fuxo de Autenticação dos Usuários](#40-autenticacao-usuario)
+- [4. Fuxo de Autenticação dos Usuários](#40-autenticacao-usuario)
 
 
 # 1. O que é o Portal de Consentimento?
