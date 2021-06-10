@@ -7,7 +7,7 @@ Para as Instituições Financeiras que ingressarem na rede Banco24Horas® será 
 Para as Instituições Financeiras que já ingressaram no Banco24Horas® haverá uma avaliação sobre o uso do link já existente.
 
 
-![Representação dos modelos de conectividade possíveis](../images/conectividade1.jpg)
+![Representação dos modelos de conectividade possíveis](../images/Conectividade_2.png)
 
 > ## FAQ sobre conectividade:                      
 
@@ -27,4 +27,7 @@ Para as Instituições Financeiras que já ingressaram no Banco24Horas® haverá
 ##### R: Sim, a plataforma de Open Banking da TecBan nasceu atendendo aos padrões de segurança da regulação, remover o Mtls seria um downgrade de segurança, e não recomendamos essa prática.
 
 #### 6. Gostaria de aceitar chamadas somente dos IPs da TecBan, é possível?
-##### R: Sim, nós iremos enviar os nossos IPs fixos de saída da AWS, para que você possa por exemplo configurar estes IPs em uma camada WAF.
+##### R: Sim, segue abaixo nossos IPs fixos de saída da AWS (Conectividade via internet), para que você possa por exemplo configurar estes IPs em uma camada WAF.
+- IP de Produção 177.71.135.59
+- IP de Desenvolvimento 18.229.67.128
+- IP de homologação 177.71.137.212
