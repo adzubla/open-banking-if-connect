@@ -1,4 +1,4 @@
-# Administração e relatórios *
+# Administração e Relatórios *
 
 - [1. Dashboard Inicial](#1-dashboard-inicial)
 - [2. Relatórios de utilização das APIs](#2-relatórios-de-utilização-das-apis)
@@ -6,6 +6,8 @@
 - [4. Autenticação via Auth0](#4-autenticação-e-federação-do-portal)
 - [5. Segregação por Perfis de Acesso](#5-segregação-por-perfis-de-acesso)
 - [6. Relatórios para o Banco central](#4)
+
+
 A Plataforma de Open Banking da TecBan conta com um portal administrativo totalmente funcional para controle de parceiros e relatórios, acesso à plataforma totalmente parametrizado para um melhor acompanhamento da equipe responsável pelo OpenBanking na Instituição Financeira.
 
 # 1. Dashboard Inicial

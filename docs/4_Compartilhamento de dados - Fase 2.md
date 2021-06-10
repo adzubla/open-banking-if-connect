@@ -86,6 +86,7 @@ scope=openid accounts
 - **scope** é a lista de escopos (separados por espaço) que identifica os recursos que o cliente deseja acessar em nome do usuário.
 No caso do fluxo de compartilhamento, deve ter o valor “openid accounts”.
 
+</br>
 
 ##### Response (1001)
 
@@ -140,7 +141,10 @@ Body	{
 - O atributo **Data.Permissions** deve conter uma lista de permissões para as quais o cliente deseja o consentimento do usuário.
 - Os atributos **Data.TransactionFromDateTime** e **Data.TransactionToDateTime** determinam o intervalo de tempo onde as operações de negócio das permissões se aplicam.
 
+</br>
+
 ###### Response (2003)
+
 ```json
 Headers	Content-Type: application/json; charset=utf-8
 x-fapi-interaction-id: {{interactionId}}
@@ -185,6 +189,7 @@ A IT responde com a URL que deve ser usada para o usuário se autenticar na IT.
 </br>
 
 ###### Request (3001)
+
 ```json
 Path Params	
 Query Params	scope=openid accounts
@@ -271,7 +276,9 @@ your-256-bit-secret
 TecBan devolve informações do cliente e do token JWT.
 
 </br>
+
 ###### Request (3003) 
+
 ```json
 Path Params	
 Query Params	client_id
@@ -285,7 +292,9 @@ Body
 - Os parâmetros passados neste passo 3003 são os mesmos recebidos no request do passo 3001.
 
 </br>
+
 ###### Response (3004)
+
 ```json
 Headers	Content-Type: application/json; charset=utf-8
 Body	{
@@ -343,6 +352,7 @@ Body	{
 
 
 </br>
+
 ##### [IT→TB] Passo 3005 GET /consent/:consentId
 
 IT consulta TecBan por detalhes do consentimento.
@@ -358,7 +368,9 @@ Body
 - **:consentId é** o atributo Data.ConsentId retornado no passo 2003.
 
 </br>
+
 ###### Response (3006)
+
 ```json
 Headers	Content-Type: application/json; charset=utf-8
 Body	{
@@ -456,6 +468,7 @@ Body	{
 O estágio 4 a **IT** autentica o usuário e seleciona as contas que serão usadas no consentimento.
 
 </br>
+
 ##### [IT→TB] Passo 4003 PATCH /consent/:consentId
 
 Depois que o usuário já foi autenticado, a IT precisa atualizar os atributos do consentimento na TecBan.
@@ -482,7 +495,9 @@ Body	{
 - **ConsentBody.Data.Status:** é o status do consentimento.
 
 </br>
+
 ###### Response (4004)
+
 ```json
 Headers	
 Body	1
@@ -491,13 +506,16 @@ Body	1
 - Response status 204 (No Content)
 
 </br>
+
 ##### [IT→TB] Passo 4005 POST /auth/:interactionId/doConfirm
 
 A IT confirma com a TecBan que o consentimento foi concedido pelo usuário.
 A TecBan responde um HTTP redirect com um header de Location que deve ser usado no passo 5001 para a IT chamar a IR para que ela continue o fluxo.
 
 </br>
+
 ##### Request (4005)
+
 ```json
 Path Params	interactionId
 Query Params	
@@ -515,8 +533,11 @@ heimdall.refreshTokenValidity=7200
 - [opcional] heimdall.refreshTokenValidity
 
 </br>
+
 ###### Response (4006)
+
 Status 302 (Redirect)
+
 ```json
 Path Params	
 Query Params	
@@ -531,11 +552,13 @@ Body
 IT informa o token de acesso para a IR acessar API.
 
 </br>
+
 ##### [IT→IR] Passo 5001 Envio de redirecionamento
 
 A IT chama a url que recebeu na resposta 4006, para que a IR continue o fluxo de compartilhamento.
 
 Request (5001)
+
 ```json
 Path Params	
 Query Params	
@@ -549,9 +572,11 @@ Response
 Status OK
 
 </br>
+
 ##### [IR→TB] Passo 5003 POST /token
 
 Request (5003)
+
 ```json
 Path Params	
 Query Params	
@@ -569,7 +594,9 @@ redirect_uri={{redirectUrl}}
 - redirect_uri é a URL do passo 5001.
 
 </br>
+
 ###### Response (5004)
+
 ```json
 Headers	Content-Type: application/json; charset=utf-8
 Body	{
@@ -598,9 +625,11 @@ Body	{
 IR chama a API de negócio.
 
 </br>
+
 ##### [IR→TB] Passo 6000 GET /accounts
 
 Request (6000)
+
 ```json
 Path Params	
 Query Params	
@@ -614,6 +643,7 @@ Body
 - token-from-auth-code-grant-accounts é o token de resposta do servidor de autorização para o TPP. É o “access_token” do step 5004.
 
 Response (6005)
+
 ```json
 Headers	Content-Type: application/json; charset=utf-8
 x-fapi-interaction-id: c1f8f49a-2e3b-44d2-8f8d-d653c2d79f67
@@ -638,6 +668,7 @@ Body	{
 - Retornar os dados da(s) conta(s)
 
 </br>
+
 ##### [TB→IT] Passo 6002 GET /accounts
 
 ```json
