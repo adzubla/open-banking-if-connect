@@ -31,3 +31,7 @@ Para as Instituições Financeiras que já ingressaram no Banco24Horas® haverá
 - IP de Produção 177.71.135.59
 - IP de Desenvolvimento 18.229.67.128
 - IP de homologação 177.71.137.212
+
+#### 7. Qual a banda necessária para suportar a solução?
+##### R: Depende da previestimativa de volumetria, mas para te apoiar nessa análise tenha em mente que uma mensagem possui um tamanho em média de 2KB.
+
