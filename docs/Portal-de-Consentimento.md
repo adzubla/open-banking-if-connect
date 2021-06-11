@@ -1,17 +1,14 @@
 # Portal de Consentimento 
 - [1. O que é o Portal do Consentimento?](#1-o-que-e-o-portal-do-consentimento-?)
 - [2. Jornada de Usuário](#2-jornada-de-usuario)
-  - [2.1 Fase 03 - Iniciação de Pagamento](#21-iniciação-de-pagamentos)
+  - [2.1 Fase 03 - Iniciação de Pagamento](#2.1-iniciação-de-pagamentos)
 - [3. Diagrama de Sequência de Interface - Macro](#3-diagrama-de-sequência-de-interface---macro)
-- [3. Fluxos de Autenticação e Autorização](#3-fluxos-de-autenticação-e-autorização)
-- [4. Fluxo client Credentials](#4-fluxo-client-credentials)
-- [5. Fluxo do Authorization Code](#5-fluxo-do-authorization-code)
-- [6. Fluxo de Consentimento](#6-fluxo-de-consentimento)
-- [7. Experiência dos Usuários](#7-experiência-dos-usuários)
-  - [7.1 Login do Cliente](#71-login-do-cliente)
-  - [7.2 Alçada Única](#72-alçada-única)
-  - [7.3 Dupla Alçada](#73-dupla-alçada)
-  - [7.4 Gestão do Consentimento](#74-gestão-do-consentimento)
+- [4. Padrão Visual](#4-guia-de-estilo-visual)
+- [5. Fluxos de Autenticação e Autorização](#5-fluxos-de-autenticação-e-autorização)
+- [6. Fluxo client Credentials](#4-fluxo-client-credentials)
+- [7. Fluxo do Authorization Code](#5-fluxo-do-authorization-code)
+- [8. Fluxo de Consentimento](#6-fluxo-de-consentimento)
+
 
 
 # 1. O que é o Portal de Consentimento?
@@ -71,13 +68,25 @@ Após a confirmação, o cliente é redirecionado para o ambiente da 'IP'
 ![DS10](../images/DS10.jpg)
 ![DS11](../images/DS11.jpg)
 
-Se preferir, faça o download da versão em PDF
-[Download do Diagrama de Sequência de Interfae - Visão Macro]
+Se preferir, faça o download da versão em PDF  
+
+[Download do Diagrama de Sequência de Interfae - Visão Macro](https://1drv.ms/b/s!AmMxDxGhYOfggtZuAIZPSnApzrR6_A?e=mHQoHB)
+
 
 **Consentimento Aprovado e Fluxo de Pagamento Realizado:**
 Na etapa anterior o cliente aprovou o consentimento para pagamento e foi redirecionado para o ambiente da 'IP'. Neste momento a 'IP' inicia a solicitação de efetivação do pagamento para a 'Plataforma OpenBanking-TecBan', que então se comunica com a 'ID' para realização do pagamento. 
 Enquanto esta comunicação sistêmica ocorre, fica a critério da 'IP' exibir interfaces da experiência do cliente.
 ![DS12](../images/DS12.jpg)
+
+# 4. Padrão Visual
+Este item serve como guia de customização do 'Portal de Consentimento-TecBan' para Instituições parceiras.
+
+A seguir é apresentado o que é possível customizar no Portal, para que cada Instituição possa oferecer uma melhor experiência ao seu cliente.
+
+Também está disponível para do download o documento na qual as Insituições parceiras irão nos informar o seu padrão visual.
+
+![EstiloVisual01](../images/EstiloVisual01.jpg)
+
 
 # 3. Fluxos de Autenticação e Autorização
 Um Autorizador deve usar o protocolo OpenID Connect (OIDC) e o OAuth 2.0 Authorization Framework para autenticar usuários e obter sua autorização para acessar recursos protegidos.
@@ -149,19 +158,7 @@ O OAuth por si, suporta apenas autorizar ações simples de leitura, o parâmetr
 O client cria um recurso contendo todos os dados necessários para informar o processo de autorização no Authorization Server, a criação do Lodging Intent pode exigir uma autorização própria, nesse caso, o client precisa obter antecipadamente um Access Token com o escopo adequado, normalmente usando a concessão do Client Credentials com o* Authorization Server*.
 O serviço de Lodging Intent responde ao client com um id e/ou link para o recurso criado.
 O client então envia a referência do recurso com o pedido de autorização para o Authorization Server. O Authorization Server obtém os dados da transação do recurso de hospedagem e depois de autenticar o usuário, utiliza-os para apresentar uma interface de consentimento. Por exemplo, no caso de um pagamento, o Authorization Server mostra ao devedor, o valor e informações adicionais sobre a transação de pagamento ao usuário e pede o seu consentimento.
+
 Se o usuário consentir com a autorização solicitada, o Authorization Server associa os dados de autorização à concessão criada (ou atualizada) e os respectivos Access Tokens emitidos com base nessa concessão. Por último, o Authorization Server precisa fornecer os dados de autorização ao respectivo Resource Server, para que seja incorporado no Access Token ou na resposta de Introspection do Token.
 Mais detalhes sobre o funcionamento do padrão Lodging Intent pode ser consultado [aqui](https://bitbucket.org/openid/fapi/src/master/Financial_API_Lodging_Intent.md).
 
-# 7. Experiência dos Usuários
-
-# 7.1 Login do Cliente
-![Alçada Unica](../images/imagem_30.jpg)
-
-# 7.2 Alçada Única
-![Alçada Unica](../images/imagem_28.jpg)
-
-# 7.3 Dupla Alçada
-![Dupla Alçada](../images/imagem_29.jpg)
-
-# 7.4 Gestão do Consentimento
-![Gestão do Consentimento](../images/imagem_31.jpg)
