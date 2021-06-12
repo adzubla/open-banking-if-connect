@@ -1,14 +1,13 @@
-# Compartilhamento de Dados - Fase 2
+# Compartilhamento de Dados (Fase 2)
 
 Este documento descreve como é o fluxo para Compartilhamento de Dados entre as entidades abaixo:
-
 
 ![Fluxo de compartilhamento](../images/Macrofluxocompartilhamento.jpg)
 
 
-•	IR – Instituição Receptora (TPP)
+- **IR** – Instituição Receptora (TPP)
 
-•	IT – Instituição Transmissora (Banco)
+- **IT** – Instituição Transmissora (Banco)
 
 
 O diagrama de sequência a seguir mostra o fluxo de informações entre os três participantes da solução: Instituição Receptora, TecBan e Instituição Transmissora.
@@ -17,112 +16,120 @@ O diagrama de sequência a seguir mostra o fluxo de informações entre os três
 
 Na **Instituição Transmissora**, são mostrados três componentes com as seguintes responsabilidades:
 
-•	**App do Banco** – representa a camada de apresentação da IT. É responsável por receber as requisições da IR e mostrar a interface visual ao usuário.
+- **App do Banco** – representa a camada de apresentação da IT. É responsável por receber as requisições da IR e mostrar a interface visual ao usuário.
 
-•	**Servidor de Aplicação** – é o backend de serviços da IT. Efetua as operações de autenticação e consentimento. É responsável por acessar as APIS internas da plataforma OpenBanking da TecBan.
+- **Servidor de Aplicação** – é o backend de serviços da IT. Efetua as operações de autenticação e consentimento. É responsável por acessar as APIS internas da plataforma OpenBanking da TecBan.
 
-•	**Servidor de Recursos** – é a API de negócios da IT. É restrita a receber apenas as requisições vindas da plataforma OpenBanking da TecBan. Neste ponto a IT pode realizar a transação com confiança que todo o processo de consentimento foi verificado.
+- **Servidor de Recursos** – é a API de negócios da IT. É restrita a receber apenas as requisições vindas da plataforma OpenBanking da TecBan. Neste ponto a IT pode realizar a transação com confiança que todo o processo de consentimento foi verificado.
 
 Esse é um modelo lógico, e a implementação concreta pela Instituição Transmissora pode ser diferente.
 
-```
-É de *responsabilidade da Instituição Transmissora* implementar essas APIs e realizar as chamadas das APIs da Tecban quando necessário, de acordo com o descrito neste documento.
-```
-
-Todas as APIs estão especificadas usando o padrão OpenAPI Specification 3 (OAS3).
+> É de *responsabilidade da Instituição Transmissora* implementar essas APIs e realizar as chamadas das APIs da Tecban quando necessário, de acordo com o descrito neste documento.
 
 
-**API implementada pela IT** | **API usada pela IT**
----------|----------
- Passo 3001 | Passo 3003
- Passo 6002 | Passo 3005
-   | | Passo 4003
-   | | Passo 4005
-   | | Passo 5001
+| **API implementada pela IT** |
+|-------------|
+|  Passo 3001 |
+|  Passo 6002 |
 
+| **API usada pela IT** |
+|------------|
+| Passo 3003 |
+| Passo 3005 |
+| Passo 4003 |
+| Passo 4005 |
+| Passo 5001 |
+
+> Todas as APIs estão especificadas usando o padrão OpenAPI Specification 3 (OAS3).
 
 O passo 4001 do diagrama de sequência não é uma API, mas representa a jornada de consentimento do usuário, que deve ser implementada pela IT.
 
 A comunicação entre APIs da **Tecban** e da **IT** deve ser realizada através de mTLS (certificate-based mutual Transport Layer Security) ou seja, ambos participantes precisam de certificados X.509 para se autenticar e estabelecer a conexão.
 
-## Definições gerais
+<br>
 
-• **x-fapi-financial-id**
+# Definições gerais
 
-O header x-fapi-financial-id, quando presente, é um identificador único da instituição.
+- **x-fapi-financial-id** - é um identificador único da instituição.
 Este id é designado para a instituição pela Autoridade Central, quando ocorrer a adesão ao Open Banking Brasil.
 
-
-• **x-fapi-interaction-id**
-
-O header x-fapi-interaction-id, quando presente, é um identificador único da requisição e deve ser gerado pelo cliente quando chamar os endpoints. A TecBan responderá com o header x-fapi-interaction-id com o mesmo id da requisição.
+- **x-fapi-interaction-id** - é um identificador único da requisição e deve ser gerado pelo cliente quando chamar os endpoints.
+A TecBan responderá com o header x-fapi-interaction-id com o mesmo id da requisição.
 O seu uso é opcional. Caso ele não esteja presente na requisição, a TecBan irá gerar um novo id para a resposta.
 
-### Estágio 1
+<br>
+
+# Estágio 1
 
 Neste estágio o cliente (IR) solicita um token para consentimento ao servidor de autorização.
 
+---
 
-##### (IR→TB) Passo 1000 POST /token
+## [IR→TB] Passo 1000 POST /token
 
 Cliente da **IR** se identifica a TecBan e determina o escopo desejado.
 
-**Request (1000)**
+### Request (1000)
 
-
-```json
-Path Params	
-Query Params	
-Headers	Content-Type: application/x-www-form-urlencoded
+#### Headers:
+```
+Content-Type: application/x-www-form-urlencoded
 Authorization: Basic {{basicToken}}
-Body	grant_type=client_credentials
+```
+#### Body:
+```
+grant_type=client_credentials
 scope=openid accounts
 ```
 
-
-
-- **{{basicToken}}** é um valor codificado em base64 de \<clientID\>: \<clientSecret\>. É gerado pela TecBan para a IR durante o processo de adesão.
+- **{{basicToken}}** é um valor codificado em base64 de `<clientID>:<clientSecret>`. É gerado pela TecBan para a IR durante o processo de adesão.
 - **grant_type** é o tipo de autorização para obtenção do token de acesso. Neste passo, deve ter o valor “cliente_credentials”.
 - **scope** é a lista de escopos (separados por espaço) que identifica os recursos que o cliente deseja acessar em nome do usuário.
 No caso do fluxo de compartilhamento, deve ter o valor “openid accounts”.
 
-</br>
+### Response (1001)
 
-##### Response (1001)
-
+#### Headers:
+```
+Content-Type: application/json; charset=utf-8
+```
+#### Body:
 ```json
-Headers	Content-Type: application/json; charset=utf-8
-Body	{
+{
     "access_token": "b6b62919-5368-4cc2-ac4d-228d3208c7c4",
     "token_type": "Bearer",
     "expires_in": 3600
 }
 ```
 
-
-- **access_token: **é uma identificação a ser usada pelo cliente durante o processo de autenticação no estágio 2. Esse token está atrelado ao certificado do cliente usado para a conexão TLS.
+- **access_token:** é uma identificação a ser usada pelo cliente durante o processo de autenticação no estágio 2. Esse token está atrelado ao certificado do cliente usado para a conexão TLS.
 - **token_type:** indica o tipo do token, que é Bearer (ao portador).
 - **expires_in:** tempo de expiração do token em segundos.
 
- 
-### Estágio 2
+<br>
+
+# Estágio 2
 
 O cliente (IR) usa o token obtido anteriormente para requisitar quais permissões ele necessita. Se a requisição for válida, será devolvido um id de consentimento com o status de “aguardando consentimento”. O consentimento só será efetivado ao final do estágio 5.
 
+-----------------------------------------------------------
 
-###### [IR→TB] Passo 2000 POST /account-access-consents
+## [IR→TB] Passo 2000 POST /account-access-consents
 
-**IR** informa o access token a TecBan para obter um objeto de consentimento com as permissões desejadas.
+A IR informa o access token a TecBan para obter um objeto de consentimento com as permissões desejadas.
 
-```json
-Request (2000)
-Path Params	
-Query Params	
-Headers	Content-Type: application/json
+### Request (2000)
+
+#### Headers:
+```
+Content-Type: application/json
 Authorization: Bearer {{accessToken}}
 x-fapi-financial-id: {{obParticipantId}}
 x-fapi-interaction-id: {{interactionId}}
-Body	{
+```
+#### Body:
+```json
+{
     "Data": {
         "Permissions": [
             "ReadAccountsBasic",
@@ -141,14 +148,16 @@ Body	{
 - O atributo **Data.Permissions** deve conter uma lista de permissões para as quais o cliente deseja o consentimento do usuário.
 - Os atributos **Data.TransactionFromDateTime** e **Data.TransactionToDateTime** determinam o intervalo de tempo onde as operações de negócio das permissões se aplicam.
 
-</br>
+### Response (2003)
 
-###### Response (2003)
-
-```json
-Headers	Content-Type: application/json; charset=utf-8
+#### Headers:
+```
+Content-Type: application/json; charset=utf-8
 x-fapi-interaction-id: {{interactionId}}
-Body	{
+```
+#### Body:
+```json
+{
     "Data": {
         "Permissions": [
             "ReadAccountsBasic",
@@ -175,61 +184,69 @@ Body	{
 - **Data.Status** indica o estado do consentimento, que neste passo deve ser “esperando pela autorização do usuário”.
 - **Data.StatusUpdateDateTime** data de atualização do status do consentimento
 
+<br>
 
- 
-### Estágio 3
+# Estágio 3
 
 No estágio 3 a IT conversa com a TecBan para confirmar a autenticação do usuário. Aqui a IT descobre o que a IR está requisitando.
 
-###### [IR→IT] Passo 3001 GET /auth
+-----------------------------------------------------------
+
+## [IR→IT] Passo 3001 GET /auth
 
 IR consulta a IT para obter a URL de autenticação.
 A IT responde com a URL que deve ser usada para o usuário se autenticar na IT.
 
-</br>
+### Request (3001)
 
-###### Request (3001)
-
-```json
-Path Params	
-Query Params	scope=openid accounts
-                alg=ps256
-                login_hint=foo
-Headers	Authorization: Basic {{basicToken}}
-Body
-```	
+#### Query Params:
+```
+scope=openid accounts
+alg=ps256
+login_hint=foo
+```
+#### Headers:
+```
+Authorization: Basic {{basicToken}}
+```
 
 - **scope** é o mesmo escopo usado no passo 1000.
 - **alg** os algoritmos válidos são PS256, RS256, HS256 ou none. Para ser de compatível com FAPI o algoritmo deve ser “ps256”.
 - **login_hint** quando o aplicativo sabe qual usuário está tentando autenticar, ele pode fornecer esse parâmetro como uma dica para o servidor de autenticação. Opcional.
 - **{{basicToken}}** é o mesmo usado no passo 1000.
 
-</br>
-
-###### Response
+### Response
 
 Esta resposta ocorre depois que os passos 3003 e 3005 forem concluídos com sucesso.
 
-```json
-Headers	Content-Type: text/html; charset=utf-8
-Body	https://examplebank.com.br/auth
-        ?client_id={{client_id}}
-        &response_type=code
-        &scope=openid%20accounts
-        &request={{request_object}}
+#### Headers:
+```
+Content-Type: text/html; charset=utf-8
+```
+#### Body:
+```
+https://examplebank.com.br/auth
+?client_id={{client_id}}
+&response_type=code
+&scope=openid%20accounts
+&request={{request_object}}
 ```
 
-- {{client_id}} é o id recebido pelo parceiro quando se cadastra na plataforma.
-- {{response_type}} é o valor “code” que indica que estamos no “Authorization Code Flow” do OpenId.
-- {{scope}} é o request_scope com o protocolo de autenticação escopo da autenticação, para esse caso a autenticação é para ter acesso aos dados de contas.
-- {{request}} é um JWT contendo o seguinte conteúdo:	
+- **{{client_id}}** é o id recebido pelo parceiro quando se cadastra na plataforma.
+- **{{response_type}}** é o valor “code” que indica que estamos no “Authorization Code Flow” do OpenId.
+- **{{scope}}** é o request_scope com o protocolo de autenticação escopo da autenticação, para esse caso a autenticação é para ter acesso aos dados de contas.
+- **{{request}}** é um JWT contendo o seguinte conteúdo:	
 
+#### JWT Header
 ```json
-JWT Header	{
+{
   "alg": "none"
 }
-JWT
-payload	{
+```
+
+#### JWT payload
+```json
+{
   "aud": "https://auth1.dev.ozoneapi-br.com",
   "exp": 1617649685.175,
   "iss": "0603ab28-3f68-4ddd-8567-50d9eba73052",
@@ -248,8 +265,9 @@ payload	{
 }
 ```
 
+#### JWT Signature
 ```json
-JWT Signature	HMACSHA256(
+HMACSHA256(
   base64UrlEncode(header) + "." +
   base64UrlEncode(payload),
   
@@ -267,37 +285,34 @@ your-256-bit-secret
 - **state:** é passado na uri que retorna o UUID.
 - **id_token:** contém o valor do id da intenção.  O "value" dentro do "openbanking_intent_id" é o id do consentimento.
 
+-----------------------------------------------------------
 
+## [IT→TB] Passo 3003 GET /auth
 
- 
-##### [IT→TB] Passo 3003 GET /auth
-
-**IT **notifica a TecBan do início de uma autenticação para consentimento.
+A IT notifica a TecBan do início de uma autenticação para consentimento.
 TecBan devolve informações do cliente e do token JWT.
 
-</br>
+### Request (3003) 
 
-###### Request (3003) 
-
-```json
-Path Params	
-Query Params	client_id
+#### Query Params:
+```
+client_id
 response_type
 scope
 request
-Headers	
-Body	
 ```
 
 - Os parâmetros passados neste passo 3003 são os mesmos recebidos no request do passo 3001.
 
-</br>
+### Response (3004)
 
-###### Response (3004)
-
+#### Headers:
+```
+Content-Type: application/json; charset=utf-8
+```
+#### Body:
 ```json
-Headers	Content-Type: application/json; charset=utf-8
-Body	{
+{
     "interaction": {
         "interactionId": "ee76c31d-41f7-45ac-8ab5-3f8bc2451fdd",
         "params": {
@@ -350,30 +365,30 @@ Body	{
 - **tpp.obieSoftwareStatementName** é o nome do  Software Statement a ser usado pelo cliente.
 - Os outros campos são os mesmos recebidos no response do passo 3002.
 
+-----------------------------------------------------------
 
-</br>
-
-##### [IT→TB] Passo 3005 GET /consent/:consentId
+## [IT→TB] Passo 3005 GET /consent/:consentId
 
 IT consulta TecBan por detalhes do consentimento.
 
-```json
-Request (3005)
-Path Params	:consentId
-Query Params	
-Headers	
-Body
-```	
+### Request (3005)
+
+#### Query Params:
+```
+:consentId
+```
 
 - **:consentId é** o atributo Data.ConsentId retornado no passo 2003.
 
-</br>
+### Response (3006)
 
-###### Response (3006)
-
+#### Headers:
+```
+Content-Type: application/json; charset=utf-8
+```
+#### Body:
 ```json
-Headers	Content-Type: application/json; charset=utf-8
-Body	{
+{
     "consentType": "account-access-consents",
     "requestHeaders": {
         "host": "rs1.dev.ozoneapi-br.com",
@@ -461,24 +476,33 @@ Body	{
 
 - **consentBody:** contém as informações do consentimento requisitado.
 
+<br>
 
- 
-### Estágio 4
+# Estágio 4
 
-O estágio 4 a **IT** autentica o usuário e seleciona as contas que serão usadas no consentimento.
+No estágio 4 a IT autentica o usuário e seleciona as contas que serão usadas no consentimento.
 
-</br>
+-----------------------------------------------------------
 
-##### [IT→TB] Passo 4003 PATCH /consent/:consentId
+## [IT→TB] Passo 4003 PATCH /consent/:consentId
 
 Depois que o usuário já foi autenticado, a IT precisa atualizar os atributos do consentimento na TecBan.
 
+### Request (4003)
+
+#### Path Params:
+```
+:consentId
+```
+
+#### Headers:
+```
+Content-Type: application/json
+```
+
+#### Body:
 ```json
-Request (4003)
-Path Params	:consentId
-Query Params	
-Headers	Content-Type: application/json
-Body	{
+{
     "psuIdentifiers": {
         "userId": "{{userId}}"
     },
@@ -487,119 +511,112 @@ Body	{
     "consentBody.Data.Status": "Authorised"
 }
 ```
-	
 
 - **:consentId:** é o atributo Data.ConsentId retornado no passo 2003.
 - **psuIdentifiers.userId:** é o identificador do usuário do serviço de pagamento (iss). ((esclarecer))
 - **accountIds:** é um array de id das contas.
 - **ConsentBody.Data.Status:** é o status do consentimento.
 
-</br>
+### Response (4004)
 
-###### Response (4004)
-
+#### Body:
 ```json
-Headers	
-Body	1
+1
 ```
 
 - Response status 204 (No Content)
 
-</br>
+-----------------------------------------------------------
 
-##### [IT→TB] Passo 4005 POST /auth/:interactionId/doConfirm
+## [IT→TB] Passo 4005 POST /auth/:interactionId/doConfirm
 
 A IT confirma com a TecBan que o consentimento foi concedido pelo usuário.
 A TecBan responde um HTTP redirect com um header de Location que deve ser usado no passo 5001 para a IT chamar a IR para que ela continue o fluxo.
 
-</br>
+### Request (4005)
 
-##### Request (4005)
-
-```json
-Path Params	interactionId
-Query Params	
-Headers	Content-Type: application/x-www-form-urlencoded
-Body	openbanking_intent_id= {{consentId}}
-heimdall.suppressRefreshToken=false
-heimdall.accessTokenValidity=3600
-heimdall.refreshTokenValidity=7200
+#### Path Params:
+```
+:interactionId
+```
+#### Headers:
+```
+Content-Type: application/x-www-form-urlencoded
+```
+#### Body:
+```
+openbanking_intent_id={{consentId}}
 ```
 
 - **interactionId:** é o parâmetro recebido no passo 3004 (AuthSuccessResponseInteraction. interactionId)
 - **openbanking_intent_id:** é o atributo Data.ConsentId retornado no passo 2003.
-- [opcional] heimdall.suppressRefreshToken
-- [opcional] heimdall.accessTokenValidity
-- [opcional] heimdall.refreshTokenValidity
 
-</br>
 
-###### Response (4006)
+### Response (4006)
 
 Status 302 (Redirect)
 
+#### Headers:
 ```json
-Path Params	
-Query Params	
-Headers	Location: tppdomain.com
-Body	
+Location: tppdomain.com
 ```
 
+<br>
 
- 
-### Estágio 5
+# Estágio 5
 
 IT informa o token de acesso para a IR acessar API.
 
-</br>
 
-##### [IT→IR] Passo 5001 Envio de redirecionamento
+-----------------------------------------------------------
+
+## [IT→IR] Passo 5001 Envio de redirecionamento
 
 A IT chama a url que recebeu na resposta 4006, para que a IR continue o fluxo de compartilhamento.
 
-Request (5001)
+### Request (5001)
 
-```json
-Path Params	
-Query Params	
-Headers	
-Body
-```	
+- Os parâmetros desta requisição devem ser os mesmos recebidos no passo 4006
 
-- Os parâmetros desta requisição devem ser os recebidos no passo 4006
+### Response
 
-Response
 Status OK
 
-</br>
+-----------------------------------------------------------
 
-##### [IR→TB] Passo 5003 POST /token
+## [IR→TB] Passo 5003 POST /token
 
-Request (5003)
+### Request (5003)
 
-```json
-Path Params	
-Query Params	
-Headers	Content-Type: application/x-www-form-urlencoded
+#### Headers:
+```
+Content-Type: application/x-www-form-urlencoded
 Authorization: Basic {{basicToken}}
-Body	grant_type=authorization_code
+```
+#### Body:
+```json
+grant_type=authorization_code
 scope=accounts
 code={{authorizationCode}}
 redirect_uri={{redirectUrl}}
 ```
 
-- grant_type é o tipo de autorização para obtenção do token de acesso. Neste passo, deve ter o valor “authorization_code”.
-- scope é o escopo da operação.
-- code é o código de autorização recebido pela IR na chamada do passo 5001.
-- redirect_uri é a URL do passo 5001.
+- **grant_type** é o tipo de autorização para obtenção do token de acesso. Neste passo, deve ter o valor “authorization_code”.
+- **scope** é o escopo da operação.
+- **code** é o código de autorização recebido pela IR na chamada do passo 5001.
+- **redirect_uri** é a URL do passo 5001.
 
-</br>
 
-###### Response (5004)
+### Response (5004)
+
+#### Headers:
+```
+Content-Type: application/json; charset=utf-8
+```
+#### Body:
 
 ```json
-Headers	Content-Type: application/json; charset=utf-8
-Body	{
+{
     "access_token": "6132399a-5ba7-4179-a2e9-2917d8817dcf",
     "expires_in": 388800,
     "token_type": "Bearer",
@@ -618,36 +635,38 @@ Body	{
 - **refresh_token:** é um token com expiração maior, para que caso o token principal expire, não seja necessário redirecionar novamente para a tela de login, mas seu uso é opcional
 - **id_token:** é o ID do token, é um JWT.
 
+<br>
 
- 
-### Estágio 6
+# Estágio 6
 
-IR chama a API de negócio.
+IR chama as APIs de negócio.
 
-</br>
+-----------------------------------------------------------
 
-##### [IR→TB] Passo 6000 GET /accounts
+## [IR→TB] Passo 6000 GET /accounts
 
-Request (6000)
+### Request (6000)
 
-```json
-Path Params	
-Query Params	
-Headers	Content-Type: application/json
-Authorization: Bearer {{token-from-auth-code-grant-accounts}}
+#### Headers:
+```
+Content-Type: application/json
+Authorization: Bearer {{access-token}}
 x-fapi-financial-id: {{obParticipantId}}
 x-fapi-interaction-id: {{interactionId}}
-Body	
 ```
 
-- token-from-auth-code-grant-accounts é o token de resposta do servidor de autorização para o TPP. É o “access_token” do step 5004.
+- **access-token** é o token de resposta do servidor de autorização para o TPP. É o “access_token” do step 5004.
 
-Response (6005)
+### Response (6005)
 
-```json
-Headers	Content-Type: application/json; charset=utf-8
+#### Headers:
+```
+Content-Type: application/json; charset=utf-8
 x-fapi-interaction-id: c1f8f49a-2e3b-44d2-8f8d-d653c2d79f67
-Body	{
+```
+#### Body:
+```json
+{
     "Data": {
         "Account": [
             { ... },
@@ -666,28 +685,3 @@ Body	{
 ```
 
 - Retornar os dados da(s) conta(s)
-
-</br>
-
-##### [TB→IT] Passo 6002 GET /accounts
-
-```json
-Request (6002)
-Path Params	
-Query Params	
-Headers	
-Body	
-```
-
-- Xxx xxxx
-
-Response (6003)
-Headers	
-Body	
-
-- Xxxx
-
-
-
-
-

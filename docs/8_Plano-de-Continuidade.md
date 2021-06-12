@@ -1,9 +1,9 @@
 # Plano de Continuidade (RTO e RPO)
 
 - [1. Detalhamento da Infraestrutura](#1-detalhamento-da-infraestrutura)
-- [2.	Procedimento Operacional](#2-procedimento-operacional)
-- [3.	Backup e Recovery](#3-backup-e-recovery)
-- [4.	Detalhamento da Solução de Contingência](#4-detalhamento-da-solução-de-contingência)
+- [2. Procedimento Operacional](#2-procedimento-operacional)
+- [3. Backup e Recovery](#3-backup-e-recovery)
+- [4. Detalhamento da Solução de Contingência](#4-detalhamento-da-solução-de-contingência)
 - [5. SPOF (Single Point of Failure)](#5-spof-single-point-of-failure)
 
 Foram criadas contas AWS dedicadas ao projeto Open Finance, elas estão integradas ao QRADAR, Splunk, Azure AD, Apptio e outras ferramentas padrão da TecBan para monitoração para fins de auditoria. 
@@ -18,37 +18,38 @@ Toda infraestrutura é provisionada como código e serão detalhados neste docum
 
 Os templates estão disponibilizados no repositório do Gitlab.
 
-•	VPC
+* VPC -
 Para o projeto Open Finance são criadas 3 novas VPCs em cada respectiva nova conta AWS e nomeadas seguindo a segmentação de cadeias da TecBan de DEV, HML, PROD.
  
-•	Route 53
+* Route 53 -
 Mantém os registros dos endereços públicos e privados da aplicação.
 
-•	Certificate Manager
+* Certificate Manager -
 Criação de certificados SSL que são usados para manter criptografadas as informações enviadas pela Internet para os endereços API criados pela aplicação.
 
-•	Network LoadBalancer
+* Network LoadBalancer -
 Garante a alta disponibilidade e balanceamento de carga para as EC2. Possui interface em 3 Availability Zones.
 
-•	Application Load Balancer
+* Application Load Balancer -
 Garante a alta disponibilidade e balanceamento de carga para as EC2. Possui interface em 3 Availability Zones.
 
-•	S3
+* S3 -
 Repositório de arquivos no formato JSON para processamento da aplicação.
 
-•	EC2
+* EC2 -
 Servidores virtuais que hospedam a aplicação. Os servidores virtuais estão distribuídos em 3 Availabilty Zones a fim de garantir a alta disponibilidade da aplicação.
 
-•	DocumentDB
+* DocumentDB -
 Há um 1 cluster com 2 instâncias distribuídas em 2 Availability Zones para garantir a alta disponibilidade do banco de dados. 
 
-•	Cloud Formation
+* Cloud Formation -
 Os serviços são provisionados através de templates, o deploy de todos os serviços requeridos pela aplicação é efetuado através de scripts.
 
-•	CloudHSM
+* CloudHSM -
 Serviço de criptografia com algoritmos simétricos e assimétricos que entrará somente na Fase 2 do OpenFinance.
 
 ![Infraestrutura](../images/imagem_25.png)
+
 
 # 2. Procedimento Operacional
 Referir-se ao documento de passagem para Produção “DIET_Openfinace.doc”
@@ -64,7 +65,7 @@ Para restauração de um serviço em caso de incidente será necessário reexecu
 
 Por segurança, estes templates ficam armazenados no sistema de controle de versões Gitlab a fim de garantir versionamento. 
 
-# 4.	Detalhamento da Solução de Contingência
+# 4. Detalhamento da Solução de Contingência
 
 A topologia da aplicação está em alta disponibilidade, utilizando zonas de datacenters ativo / ativo seguindo as melhores práticas de arquitetura recomendadas para serviços hospedados na AWS.
 
@@ -74,4 +75,3 @@ A disponibilidade (SLA) dos serviços estão documentadas [aqui](https://aws.ama
 # 5	SPOF (Single Point of Failure)
 
 Não foi identificado ponto de falha único na aplicação, pois todos os serviços utilizados são gerenciados pela AWS com SLA informado ou pela Tecban e possuem redundância.
-
