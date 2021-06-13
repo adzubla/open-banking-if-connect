@@ -1,0 +1,680 @@
+openapi: 3.0.1
+info:
+  title: Ozone Bank Connect - PIS APIs
+  description: |
+    This document provides the OAS3 specification for PIS APIs for Ozone Bank Connect.
+
+    These APIs should be implemented by an ASPSP so that Ozone
+    can deliver PIS capabilities to TPPs
+
+  version: Version 2.2 Release 35.1
+
+tags:
+- name: payments
+  description: |
+    APIs that should be implemented by ASPSPs to expose PIS capability to TPPs.
+
+paths:
+  /payments-consent/action/validate:
+    post:
+      tags:
+        - payments
+      summary: Payment action validation
+      description: |
+        The API is called by Ozone to allow an ASPSP to carry out additional validations
+        before a payment consent is created.
+
+        The request body contains the entire payment consent along with contextual information.
+
+        Typically this could be used for situations like:
+        - soft validation of the debtor account (e.g. to ensure that it is a debtor account managed by the ASPSP)
+        - populating charges and exchange rate information (in future versions)
+
+        Note that an ASPSP only need to implement this API where it needs to correlate information in the consent payload
+        with data held in its systems. If this is not the case, "local" validations can be configured in Ozone that do not
+        require a remote call.
+
+        The ASPSP must return a `PaymentConsentValidateResponse` which includes a status. If the status is set to `valid`, the
+        consent is saved and processing continues.
+
+        If the status is set to `invalid` the processing fails and an error response is sent to the TPP.
+
+      operationId: validatePaymentConsent
+
+      parameters:
+        # common header parameters that set context
+        - $ref: '#/components/parameters/aspspId'
+        - $ref: '#/components/parameters/callerOrgId'
+        - $ref: '#/components/parameters/callerClientId'
+        - $ref: '#/components/parameters/callerSoftwareStatementId'
+        - $ref: '#/components/parameters/apiUri'
+        - $ref: '#/components/parameters/apiOperation'
+        - $ref: '#/components/parameters/consentId'
+        - $ref: '#/components/parameters/callerInteractionId'
+        - $ref: '#/components/parameters/ozoneInteractionId'
+        - $ref: '#/components/parameters/psuIdentifier'
+
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PaymentConsentValidateRequest'
+
+      responses:
+        200:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaymentConsentValidateResponse'
+        400:
+          description: failed operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /payments:
+    post:
+      tags:
+        - payments
+      summary: Make a payment
+      description: |
+        This API is called by Ozone Bank Connect to instruct an ASPSP to initiate a payment once it has received a payment
+        instruction from a TPP that has passed all local validations.
+
+        The ASPSP must process the payment and indicate a failure response (if the payment fails technical validation) or a
+        success response (if the payment passess technical validation and is submitted to the payment rails for processing)
+
+        The ASPSP must generate a unique `PaymentId` that can be sent on to the TPP as a reference for the payment.
+
+      operationId: makePayment
+      parameters:
+        # common header parameters that set context
+        - $ref: '#/components/parameters/aspspId'
+        - $ref: '#/components/parameters/callerOrgId'
+        - $ref: '#/components/parameters/callerClientId'
+        - $ref: '#/components/parameters/callerSoftwareStatementId'
+        - $ref: '#/components/parameters/apiUri'
+        - $ref: '#/components/parameters/apiOperation'
+        - $ref: '#/components/parameters/consentId'
+        - $ref: '#/components/parameters/callerInteractionId'
+        - $ref: '#/components/parameters/ozoneInteractionId'
+        - $ref: '#/components/parameters/psuIdentifier'
+
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PaymentRequest'
+
+      responses:
+        201:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaymentResponse'
+        400:
+          description: failed operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      security:
+        - bearerAuth: []
+
+  /payments/:paymentId:
+    get:
+      tags:
+        - payments
+      summary: Get a payment
+      description: |
+        Ozone can call this API from ASPSPs to retrieve payment information.
+      parameters:
+        # common header parameters that set context
+        - $ref: '#/components/parameters/aspspId'
+        - $ref: '#/components/parameters/callerOrgId'
+        - $ref: '#/components/parameters/callerClientId'
+        - $ref: '#/components/parameters/callerSoftwareStatementId'
+        - $ref: '#/components/parameters/apiUri'
+        - $ref: '#/components/parameters/apiOperation'
+        - $ref: '#/components/parameters/consentId'
+        - $ref: '#/components/parameters/callerInteractionId'
+        - $ref: '#/components/parameters/ozoneInteractionId'
+        - $ref: '#/components/parameters/psuIdentifier'
+
+      responses:
+        200:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaymentResponse'
+        400:
+          description: failed operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /payments/:paymentId/details:
+    get:
+      tags:
+        - payments
+      summary: Get payment details
+      description: |
+        In situations where an API supports retrieval of detailed payment information,
+        Ozone can call this API from ASPSPs to retrieve detailed information.
+
+      parameters:
+        # common header parameters that set context
+        - $ref: '#/components/parameters/aspspId'
+        - $ref: '#/components/parameters/callerOrgId'
+        - $ref: '#/components/parameters/callerClientId'
+        - $ref: '#/components/parameters/callerSoftwareStatementId'
+        - $ref: '#/components/parameters/apiUri'
+        - $ref: '#/components/parameters/apiOperation'
+        - $ref: '#/components/parameters/consentId'
+        - $ref: '#/components/parameters/callerInteractionId'
+        - $ref: '#/components/parameters/ozoneInteractionId'
+        - $ref: '#/components/parameters/psuIdentifier'
+      responses:
+        200:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaymentDetailsResponse'
+        400:
+          description: failed operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+
+components:
+  schemas:
+    PaymentConsentValidateRequest:
+      type: object
+      oneOf:
+        - $ref: '#/components/schemas/ConsentGetResponse'
+
+    ConsentGetResponse:
+      type: object
+      description: |
+
+        A consent in its current state.
+
+        If the consent has been authorised, then it can be expected that the ASPSP
+        would have patched in `accountIds` and `psuIdentifier` fields.
+
+        Additionally, the ASPSP may also patch in an arbitrary set of fields along with consent
+        in the `supplementaryInformation` field.
+
+      properties:
+        id:
+          type: string
+          description: |
+            A unique identifier for the consent in uuid-v4 format.
+
+            This is distinct from the ConsentId that is communicated back to PSUs and TPPs.
+
+        consentType:
+          $ref: '#/components/schemas/ConsentType'
+
+        request:
+          $ref: '#/components/schemas/Request'
+
+        requestHeaders:
+          $ref: '#/components/schemas/RequestHeaders'
+
+        consentBody:
+          $ref: '#/components/schemas/ConsentBody'
+
+        tpp:
+          $ref: '#/components/schemas/TPP'
+
+        psuIdentifiers:
+          $ref: '#/components/schemas/PSUIdentifiers'
+
+        accountIds:
+          $ref: '#/components/schemas/AccountIds'
+
+      required:
+        - id
+        - consentType
+        - request
+        - requestHeaders
+        - tpp
+
+      additionalProperties: false
+
+    ConsentType:
+      type: string
+      description: |
+        The type of the consent that is being created.
+
+        Each ASPSP's instance may support a different set of consent types
+        The Consent Manager supports the creation of consents of different consent types
+        depending on the standards supported.
+
+        For example, for the UK OBIE standards, the following consent types are available:
+          - account-access-consents
+          - domestic-payment-consents
+          - future-dated-payment-consents
+          - standing-order-consents
+          - international-payment-consents
+          - international-future-dated-payment-consents
+          - international-standing-order-consents
+
+    Request:
+      type: object
+      description: |
+        The entire HTTP request body that was received by Ozone from the TPP.
+
+        The type can be used to identify the schema
+        that should be used to validate the request. (These schemas are defined by the
+        underlying standard)
+      additionalProperties: true
+
+    RequestHeaders:
+      type: object
+      description: |
+        The entire set of HTTP request headers that was received by Ozone from the TPP
+      additionalProperties: true
+
+    ConsentBody:
+      type: object
+      description: |
+        An object representing the current state of the consent.
+        This includes the entire request, augmented by additional computed properties
+        (e.g. ids, charges etc)
+
+        The Ozone Consent Manager caters to consents from various standards. The actual schema
+        for each consentBody would be determined by the underlying standard.
+
+      oneOf:
+        - $ref: '#/components/schemas/OBIEConsentBody'
+
+    OBIEConsentBody:
+      type: object
+      description: |
+        A representation of a consent body for a consent from the OBIE RW-API standards.
+
+        It should be noted that the entire content payload (not just the fields listed below) is stored.
+
+        The list of fields below identifies the common fields across all OBIE consents.
+
+      properties:
+        Data:
+          type: object
+          properties:
+            ConsentId:
+              type: string
+              description: |
+                A ConsentId generated by the ASPSP for the consent.
+
+                This is different from the top-level `id` field which is used by Consent Manager.
+
+            CreationDateTime:
+              type: string
+              format: date-time
+              description: An ISO date-time representing when the consent was created
+
+            Status:
+              $ref: '#/components/schemas/ConsentStatusEnum'
+
+            StatusUpdateDateTime:
+              type: string
+              format: date-time
+              description: An ISO date-time representing when the consent status was last updated
+
+          required:
+            - ConsentId
+            - CreationDateTime
+            - Status
+            - StatusUpdateDateTime
+          additionalProperties: true
+
+      required:
+        - Data
+      additionalProperties: true
+
+    ConsentStatusEnum:
+      type: string
+      enum:
+        - AwaitingAuthorisation
+        - Authorised
+        - Consumed
+        - Rejected
+        - Revoked
+      description: The current status of the consent
+
+    TPP:
+      type: object
+      description: |
+        The TPP record as held by Ozone.
+
+        If Ozone TPP Connect has been integrated into a directory, the `directoryRecord`
+        provides the TPP's directory record as held by Ozone.
+      properties:
+        clientId:
+          type: string
+        orgId:
+          type: string
+        softwareStatementId:
+          type: string
+        directoryRecord:
+          type: object
+          additionalProperties: true
+
+    PSUIdentifiers:
+      type: object
+      description: |
+        The PSU that is associated with this consent.
+
+        The `PSUIdentifiers` object may have artitrary custom fields that an ASPSP may use to
+        identify the PSU.
+
+        However, all `PSUIdentifiers` must have a mandatory `userId` field that provides a unique
+        user id for the PSU.
+
+        The consent is initially created without a PSU identified.
+
+        The value must be specified once the consent is authorised.
+
+      properties:
+        userId:
+          type: string
+
+      required:
+        - userId
+
+      additionalProperties: true
+
+    AccountIds:
+      type: array
+      items:
+        type: string
+      minItems: 1
+      description: |-
+        An array of account ids associated with the consent. The array must be populated once consent has been authorised.
+        For payment consents, the array must always have one element - the debtor account from which the payment will be made
+        For CBPII consents, the array must always have one element - the account for which CoF requests will be answered
+        For AIS requests, the array may contain multiple values, representing each of the payment accounts for which an AIS service will be provided.
+
+    PaymentConsentValidateResponse:
+      type: object
+      properties:
+        data:
+          type: object
+          properties:
+            status:
+              $ref: '#/components/schemas/ValidateResponseStatusEnum'
+            code:
+              type: string
+            description:
+              type: string
+
+        meta:
+          $ref: '#/components/schemas/Meta'
+
+    ValidateResponseStatusEnum:
+      type: string
+      enum:
+        - valid
+        - invalid
+
+    PaymentRequest:
+      type: object
+      properties:
+        requestUrl:
+          type: string
+          description: |
+            The (Ozone) URL at which the TPP requested for the payment
+
+        paymentType:
+          $ref: '#/components/schemas/PaymentType'
+
+        request:
+          $ref: '#/components/schemas/Request'
+
+        requestHeaders:
+          $ref: '#/components/schemas/RequestHeaders'
+
+        tpp:
+          $ref: '#/components/schemas/TPP'
+
+      required:
+        - paymentType
+        - request
+        - requestHeaders
+        - tpp
+
+      additionalProperties: false
+
+    PaymentType:
+      type: string
+      description: |
+        The type of the payment that is being created.
+
+        Each ASPSP's instance may support a different set of payment types
+        depending on the standards supported.
+
+        For example, for the UK OBIE standards, the following payment types are available:
+          - domestic-payment-consents
+          - future-dated-payment-consents
+          - standing-order-consents
+          - international-payment-consents
+          - international-future-dated-payment-consents
+          - international-standing-order-consents
+
+    PaymentResponse:
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/Payment'
+        meta:
+          $ref: '#/components/schemas/Meta'
+
+    Payment:
+      type: object
+      description: |
+        A descriptor for a Payment.
+
+        This is a composite object that may be expanded in the future to support
+        additional payment types for new API standards and payment types.
+      oneOf:
+        - $ref: '#/components/schemas/GenericPaymentResponse'
+
+
+    GenericPaymentResponse:
+      type: object
+      properties:
+        id:
+          type: string
+        status:
+          $ref: '#/components/schemas/PaymentStatusEnum'
+        creationDateTime:
+          type: string
+          format: date-time
+        statusUpdateDateTime:
+          type: string
+          format: date-time
+      required:
+        - id
+        - status
+        - creationDateTime
+        - statusUpdateDateTime
+
+      additionalProperties: false
+
+    PaymentDetails:
+      type: object
+      properties:
+        id:
+          type: string
+        status:
+          $ref: '#/components/schemas/PaymentStatusEnum'
+        statusUpdateDateTime:
+          type: string
+          format: date-time
+        statusDetails:
+          type: array
+          items:
+            $ref: '#/components/schemas/PaymentStatusDetails'
+      required:
+        - id
+        - status
+        - statusUpdateDateTime
+
+    PaymentStatusDetails:
+      type: object
+      properties:
+        localInstrament:
+          type: string
+        status:
+          $ref: '#/components/schemas/PaymentStatusEnum'
+        statusReason:
+          type: string
+        statusReasonDescriptio:
+          type: string
+      required:
+        - status
+      additionalProperties: false
+
+    PaymentStatusEnum:
+      type: string
+      enum:
+        - Pending
+        - Rejected
+        - AcceptedSettlementInProcess
+        - AcceptedSettlementCompleted
+        - AcceptedWithoutPosting
+        - AcceptedCreditSettlementCompleted
+
+    PaymentDetailsResponse:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/PaymentDetails'
+        meta:
+          $ref: '#/components/schemas/Meta'
+
+    #
+    # Common types
+    #
+    Meta:
+      type: object
+      additionalProperties: false
+
+    Error:
+      type: object
+      properties:
+        errorCode:
+          type: string
+          description: Error code identifying the problem occured
+        errorMessage:
+          type: string
+          description: Message describing what problem has occured
+
+  parameters:
+    aspspId:
+      name: o3-aspsp-id
+      in: header
+      schema:
+        type: string
+      required: true
+      description: Identifier for the ASPSP that the request is targetted to
+
+    callerOrgId:
+      name: o3-caller-org-id
+      in: header
+      schema:
+        type: string
+      required: false
+      description: An identifier for the organization calling the API
+
+    callerClientId:
+      name: o3-caller-client-id
+      in: header
+      schema:
+        type: string
+      required: false
+      description: An identifier for the OIDC clientId calling the API
+
+    callerSoftwareStatementId:
+      name: o3-caller-software-statement-id
+      in: header
+      schema:
+        type: string
+      required: false
+      description: An identifier for the software statement calling the API
+
+    apiUri:
+      name: o3-api-uri
+      in: header
+      schema:
+        type: string
+      required: true
+      description: The parameterised URL of the API being called by the caller
+
+    apiOperation:
+      name: o3-api-operation
+      in: header
+      schema:
+        type: string
+      required: true
+      description: The API operation carried out by the caller (e.g. GET, POST, PUT, DELETE, PATCH)
+
+    consentId:
+      name: o3-consent-id
+      in: header
+      schema:
+        type: string
+      required: false
+      description: The consentId for which this call is being made
+
+    callerInteractionId:
+      name: o3-caller-interaction-id
+      in: header
+      schema:
+        type: string
+      required: false
+      description: The interaction ID passed in by the caller, if any
+
+    ozoneInteractionId:
+      name: o3-ozone-interaction-id
+      in: header
+      schema:
+        type: string
+      required: true
+      description: An interaction ID generated by Ozone if the caller did not send in one. If the callerInteractionId is specified, this takes the same value.
+
+    psuIdentifier:
+      name: o3-psu-identifier
+      in: header
+      schema:
+        type: string
+      required: false
+      description: A Base64 encoded representation of the psuIdentifier JSON object.
+
+    pageNumber:
+      name: page
+      in: query
+      schema:
+        type: string
+      required: false
+      description: Page number to be returned
+
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT

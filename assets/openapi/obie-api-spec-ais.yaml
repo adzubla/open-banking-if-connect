@@ -1,0 +1,5480 @@
+openapi: 3.0.1
+info:
+  title: Ozone Bank Connect - AIS APIs
+  description: |
+    This document provides the OAS3 specification for AIS APIs for Ozone Bank Connect.
+
+    These APIs should be implemented by an ASPSP so that Ozone
+    can expose these end-points to TPPs.
+
+    #### Document Structure
+    The documentation contains a number of references of the form `XXX-999-999`. These are references
+    to test case numbers in the Ozone test harness that ASPSPs may use to test their Bank Connect implementations.
+
+    We recognise that building a Bank Connector is not a small task. In designing these APIs, we have
+    considered that different Banks will have different capabilities for pulling out data from their
+    systems of record, the depth to which field validations may be possible etc.
+
+    We have provided alternatives where possible and indicated these within `Optionality` sections in the API operation.
+
+    Finally, we have categories validations into `must`, `should` and `may` to provide some prioritisation of validations
+    that ASPSPs should implement.
+
+  version: Version 2.2 Release 34.1
+
+tags:
+- name: accounts
+  description: |
+    APIs that should be implemented by ASPSPs to expose `accounts` information to TPPs.
+
+- name: balances
+  description: |
+    APIs that should be implemented by ASPSPs to expose `balances` information to TPPs.
+
+- name: transactions
+  description: |
+    APIs that should be implemented by ASPSPs to expose `transactions` information to TPPs.
+
+- name: customer
+  description: |
+    APIs that should be implemented by ASPSPs to expose `customer` information to TPPs.
+
+- name: direct-debits
+  description: |
+    APIs that should be implemented by ASPSPs to expose `direct debit` information to TPPs.
+
+- name: scheduled-payments
+  description: |
+    APIs that should be implemented by ASPSPs to expose `scheduled payment` information to TPPs.
+
+- name: standing-orders
+  description: |
+    APIs that should be implemented by ASPSPs to expose `standing order` information to TPPs.
+
+- name: offers
+  description: |
+    APIs that should be implemented by ASPSPs to expose `offer` information to TPPs.
+
+- name: products
+  description: |
+    APIs that should be implemented by ASPSPs to expose `product` information to TPPs.
+
+paths:
+  /accounts:
+    get:
+      tags:
+        - accounts
+      summary: Fetch accounts
+      description: |
+
+        ###### ACC-010-010
+
+        The API must return all the accounts specified by the `:accountIds` query parameter.
+
+        ###### ACC-010-030
+
+        If one or more specified accountIds does not exist or cannot be retrieved the call should continue to return other accounts.
+
+        ###### ACC-010-040
+
+        If no accounts are found, the call must return a success status code `200` with an empty `data` array.
+
+        ## Optionality
+        At least one of `/accounts` or `/accounts/:accountId` must be implemented.
+
+        If not implemented, Ozone will use the `/accounts/:accountId` end-point.
+        However, that is not as performant an alternative and ASPSPs are encouraged to implement this end-point.
+
+      operationId: findAccounts
+      parameters:
+        # common header parameters that set context
+        - $ref: '#/components/parameters/aspspId'
+        - $ref: '#/components/parameters/callerOrgId'
+        - $ref: '#/components/parameters/callerClientId'
+        - $ref: '#/components/parameters/callerSoftwareStatementId'
+        - $ref: '#/components/parameters/apiUri'
+        - $ref: '#/components/parameters/apiOperation'
+        - $ref: '#/components/parameters/consentId'
+        - $ref: '#/components/parameters/callerInteractionId'
+        - $ref: '#/components/parameters/ozoneInteractionId'
+        - $ref: '#/components/parameters/psuIdentifier'
+
+        # query parameters
+        - name: accountIds
+          in: query
+          description: Comma separated ids of the accounts to be returned
+          schema:
+            type: string
+            minimum: 1
+      responses:
+        200:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AccountsResponse'
+        400:
+          description: |
+            The operation __must__ be failed with a status of `400` under the following error conditions:
+
+            - ###### ACC-010-020
+              If the `:accountsIds` query parameter is not supplied.
+
+            - ###### ACC-010-050
+              The `o3-psu-identifier` header parameter are not specified.
+
+            - ###### ACC-010-060
+              The `o3-aspsp-id` header is missing or has an unexpected value
+
+
+            The operation __may__ be failed with a status of `400` under the following error conditions:
+
+            - ###### ACC-010-070, ACC-010-080, ACC-010-090
+              One or more of the mandatory header parameters is not specified or has an unexpected value
+              - `o3-api-uri`,
+              - `o3-api-operation`,
+              - `o3-ozone-interaction-id`
+
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+        401:
+          description: |
+            The operation __must__ be failed with a status of `401` under the following error conditions:
+
+            - ###### ACC-010-100
+              The API consumer is not authorised.
+
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      security:
+        - bearerAuth: []
+
+  /accounts/{accountId}:
+    get:
+      tags:
+      - accounts
+      summary: Fetch the account specified by the account id
+
+      description: |
+        ###### ACC-020-010
+
+        The API must return the account specified by the `:accountId` path parameter.
+
+        ## Optionality
+        At least one of `/accounts` or `/accounts/:accountId` must be implemented.
+
+      operationId: findByAccountId
+      parameters:
+        # common header parameters that set context
+        - $ref: '#/components/parameters/aspspId'
+        - $ref: '#/components/parameters/callerOrgId'
+        - $ref: '#/components/parameters/callerClientId'
+        - $ref: '#/components/parameters/callerSoftwareStatementId'
+        - $ref: '#/components/parameters/apiUri'
+        - $ref: '#/components/parameters/apiOperation'
+        - $ref: '#/components/parameters/consentId'
+        - $ref: '#/components/parameters/callerInteractionId'
+        - $ref: '#/components/parameters/ozoneInteractionId'
+        - $ref: '#/components/parameters/psuIdentifier'
+
+
+        # Path param definitions
+        - name: accountId
+          in: path
+          description: Id of the account to be queried
+          required: true
+          schema:
+            type: string
+
+      responses:
+        200:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AccountResponse'
+        400:
+          description: |
+            The operation __must__ be failed with a status of `400` under the following error conditions:
+
+            - ###### ACC-020-020
+              The account corresponding to the `:accountId` query parameter does not exist or is under a bar
+
+            - ###### ACC-020-030
+              The `o3-aspsp-id` header is missing or has an unexpected value
+
+            The operation __should__ be failed with a status of `400` under the following error conditions:
+
+            - ###### ACC-020-040
+              The ASPSP should fail the call if the `o3-psu-identifier` header is not specified.
+
+            - ###### ACC-020-050
+              The ASPSP should fail the call if the `:accountId` does not refer to an account that
+              is accessible by a the PSU identified by the `o3-psu-identifier` header.
+
+            The operation __may__ be failed with a status of `400` under the following error conditions:
+
+            - ###### ACC-020-060, ACC-020-070, ACC-020-080
+              One or more of the mandatory header parameters is not specified or has an unexpected value
+              - `o3-api-uri`,
+              - `o3-api-operation`,
+              - `o3-ozone-interaction-id`
+
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+        401:
+          description: |
+            The operation __must__ be failed with a status of `401` under the following error conditions:
+
+            - ###### ACC-020-090
+              The API consumer is not authorised.
+
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+      security:
+        - bearerAuth: []
+
+  /balances:
+    get:
+      tags:
+      - balances
+      summary: Fetch balances
+      operationId: findBalancesByAccountIds
+      description: |
+
+        ###### BAL-010-010
+
+        The API must return all the balances for accounts specified by the `:accountIds` query parameter.
+
+        ###### BAL-010-030
+
+        If one or more specified accountIds does not exist or cannot be retrieved the call should continue to return balances of other accounts.
+
+        ###### BAL-010-040
+
+        If no accounts are found, the call must return a success status code `200` with an empty `data` array.
+
+        ###### BAL-010-110
+
+        If the `balanceType` is specified, the ASPSP must return the specified balance type only.
+
+        ###### BAL-010-120
+        If the `balanceType` is not specified, the ASPSP may return more than one balance record for each account. Each row would represent a balance of a different type.
+
+        ## Optionality
+        At least one of `/balances` or `/accounts/:accountId/balances` must be implemented.
+
+        If not implemented, Ozone will use the `/accounts/:accountId/balances` end-point.
+
+        However, that is not as performant an alternative and ASPSPs are encouraged to implement this end-point.
+
+      parameters:
+        # common header parameters that set context
+        - $ref: '#/components/parameters/aspspId'
+        - $ref: '#/components/parameters/callerOrgId'
+        - $ref: '#/components/parameters/callerClientId'
+        - $ref: '#/components/parameters/callerSoftwareStatementId'
+        - $ref: '#/components/parameters/apiUri'
+        - $ref: '#/components/parameters/apiOperation'
+        - $ref: '#/components/parameters/consentId'
+        - $ref: '#/components/parameters/callerInteractionId'
+        - $ref: '#/components/parameters/ozoneInteractionId'
+        - $ref: '#/components/parameters/psuIdentifier'
+
+        # query parameters
+        - name: accountIds
+          in: query
+          description: Comma separated ids of the accounts to be returned
+          schema:
+            type: string
+            minimum: 1
+
+        - name: balanceType
+          in: query
+          description: Type of balance to be returned
+          required: false
+          schema:
+            type: string
+      responses:
+        200:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BalancesResponse'
+        400:
+
+          description: |
+            The operation __must__ be failed with a status of `400` under the following error conditions:
+
+            - ###### BAL-010-020
+              If the `:accountsIds` query parameter is not supplied
+
+            - ###### BAL-010-050
+              The ASPSP should fail the call if the `o3-psu-identifier` header is not specified.
+
+            - ###### BAL-010-060
+              The `o3-aspsp-id` header is missing or has an unexpected value
+
+            - ###### BAL-010-130
+              The `balanceType` query parameter has an unexpected value or is not supported by the connector.
+
+            The operation __may__ be failed with a status of `400` under the following error conditions:
+
+            - ###### BAL-010-070, BAL-010-080, BAL-010-090
+              One or more of the mandatory header parameters is not specified or has an unexpected value
+              - `o3-api-uri`,
+              - `o3-api-operation`,
+              - `o3-ozone-interaction-id`
+
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        401:
+          description: |
+            The operation __must__ be failed with a status of `401` under the following error conditions:
+
+            - ###### BAL-010-100
+              The API consumer is not authorised.
+
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+      security:
+        - bearerAuth: []
+
+  /accounts/{accountId}/balances:
+    get:
+      tags:
+      - balances
+      summary: Fetch the balances for the account specified by the account id.
+      operationId: findBalancesByAccountId
+
+      description: |
+        ###### BAL-020-010
+
+        Retrieves the balance for account specified by the `accountId` parameter.
+
+        ###### BAL-020-100
+
+        If the `balanceType` is specified, the ASPSP must return the specified balance type only.
+
+        ###### BAL-010-110
+        If the balanceType is not specified, the ASPSP may return more than one balance record for each account. Each row would represent a balance of a different type.
+
+        ## Optionality
+        At least one of `/balances` or `/accounts/:accountId/balances` must be implemented.
+
+      parameters:
+        # common header parameters that set context
+        - $ref: '#/components/parameters/aspspId'
+        - $ref: '#/components/parameters/callerOrgId'
+        - $ref: '#/components/parameters/callerClientId'
+        - $ref: '#/components/parameters/callerSoftwareStatementId'
+        - $ref: '#/components/parameters/apiUri'
+        - $ref: '#/components/parameters/apiOperation'
+        - $ref: '#/components/parameters/consentId'
+        - $ref: '#/components/parameters/callerInteractionId'
+        - $ref: '#/components/parameters/ozoneInteractionId'
+        - $ref: '#/components/parameters/psuIdentifier'
+
+        # Path param definitions
+        - name: accountId
+          in: path
+          description: Id of the account to be queried
+          required: true
+          schema:
+            type: string
+
+        - name: balanceType
+          in: query
+          description: Type of balance to be returned
+          required: false
+          schema:
+            type: string
+      responses:
+        200:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BalancesResponse'
+        400:
+          description: |
+            The operation __must__ be failed with a status of `400` under the following error conditions:
+
+            - ###### BAL-020-020
+              The balance for account corresponding to the `:accountId` query parameter does not exist or is under a bar
+
+            - ###### BAL-020-030
+              The `o3-aspsp-id` header is missing or has an unexpected value
+
+            - ###### BAL-010-120
+              The `balanceType` query parameter has an unexpected value or is not supported by the connector.
+
+            The operation __should__ be failed with a status of `400` under the following error conditions:
+
+            - ###### BAL-020-040
+              The ASPSP should fail the call if the `o3-psu-identifier` header is not specified.
+
+            - ###### BAL-020-050
+              The ASPSP should fail the call if the `:accountId` does not refer to an account that
+              is accessibleby a the PSU identified by the `o3-psu-identifier` header.
+
+            The operation __may__ be failed with a status of `400` under the following error conditions:
+
+            - ###### BAL-020-060, BAL-020-070, BAL-020-080
+              One or more of the mandatory header parameters is not specified or has an unexpected value
+              - `o3-api-uri`,
+              - `o3-api-operation`,
+              - `o3-ozone-interaction-id`
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+        401:
+          description: |
+            The operation __must__ be failed with a status of `401` under the following error conditions:
+
+            - ###### BAL-020-090
+              The API consumer is not authorised.
+
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+      security:
+        - bearerAuth: []
+
+  /transactions:
+    get:
+      tags:
+      - transactions
+      summary: Fetch transactions
+      description: |
+        One of the `psuIdentifier` header parameter or `accountIds` query parameter would always be specified.
+
+        The field `creditDebitIndicator` should contain "Credit" if it is incoming transaction / adding money to account, or "Debit" if it is outgoing transaction / paying someone.
+
+        The term `creditor` refers to the one receiving the money. So, when the account holder is the one sending the money, the field `creditorAccount` needs to contain the information about the receiving side, and the field `creditorAgent` needs to contain the information about the financial institution that serves the creditor.
+
+        The term `debtor` refers to the one sending the money. So, when the account holder is the one receiving the money, the field `debtorAccount` needs to contain the information about the sender, and the field `debtorAgent` needs to contain information about the financial institution that serves the debtor.
+
+        For the field `balance`, “Credit” is 0 or positive balance and “Debit” is when customer has negative balance on their account. The `amount` in the `balance` field is always a positive value.
+
+        `transactionInformation` should match up with the narration (description) seen on the direct channels and statements.
+
+        Populate `bankTransactionCode` when using ISO codes in direct channels. Populate `proprietaryBankTransactionCode` when not using ISO codes in direct channels.
+
+        `currencyExchange` section is used where Forex transactions are made off pre-negotiated treasury or forex contracts with "call off" rates. Usually only used with mid to high-end corporate accounts
+
+        Most of those fields are optional, the bank would typically provide those they are included on the online transactions or statements.
+
+        For e.g. CreditorAgent / PostalAddress is typically found on inward foreign remittances (on SWIFT messages)
+
+        General rule of thumb: shouldn't have to compute data / find data from multiple systems because the information expected is what would "match" the direct channels. If there are situations where data is not readily available, chances are that that information is already stretching beyond regulatory needs.
+
+        ###### TXN-020-010
+        Retrieves all the transactions for the accounts specified.
+
+        If `accountIds` is specified, transactions for the specified accounts.
+
+        If only `psuIdentifier` is specified, return transactions for all the accounts for the PSU.
+
+        ###### TXN-020-011
+        Retrieves the transactions for the list of accounts specified, either as accountIds in the query params, or the psuIdentified in the header, starting from the specified valid `fromBookingDateTime` query parameter, until today.
+
+        ###### TXN-020-012
+        Retrieves the transactions for the account specified, starting from the begining, and ending at the specified valid `toBookingDateTime` query parameter.
+
+        ###### TXN-020-013
+        Retrieves the transactions for the account specified, starting from the the specified valid `fromBookingDateTime` query parameter, and ending at the specified valid `toBookingDateTime` query parameter.
+
+        ###### TXN-020-020
+        If one or more specified accountIds does not exist or cannot be retrieved, the call should continue to return transactions for other accounts.
+
+        ## Optionality
+        At least one of `/transactions` or `/accounts/:accountId/transactions` must be implemented.
+
+        ## Optionality
+        At least one of `/transactions` or `/accounts/:accountId/transactions` must be implemented.
+
+        If not implemented, Ozone will use the `/accounts/:accountId/transactions` end-point.
+
+        However, that is not as performant an alternative and ASPSPs are encouraged to implement this end-point.
+
+      operationId: findTransactions
+      parameters:
+        # common header parameters that set context
+        - $ref: '#/components/parameters/aspspId'
+        - $ref: '#/components/parameters/callerOrgId'
+        - $ref: '#/components/parameters/callerClientId'
+        - $ref: '#/components/parameters/callerSoftwareStatementId'
+        - $ref: '#/components/parameters/apiUri'
+        - $ref: '#/components/parameters/apiOperation'
+        - $ref: '#/components/parameters/consentId'
+        - $ref: '#/components/parameters/callerInteractionId'
+        - $ref: '#/components/parameters/ozoneInteractionId'
+        - $ref: '#/components/parameters/psuIdentifier'
+        - $ref: '#/components/parameters/pagination-page'
+
+        # query parameters
+        - name: accountIds
+          in: query
+          description: Comma separated ids of the accounts to be returned
+          schema:
+            type: string
+            minimum: 1
+
+        - $ref: '#/components/parameters/transaction-status'
+        - $ref: '#/components/parameters/transaction-fromBookingDateTime'
+        - $ref: '#/components/parameters/transaction-toBookingDateTime'
+        - $ref: '#/components/parameters/transaction-creditDebitIndicator'
+
+      responses:
+        200:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TransactionsResponse'
+        400:
+          description: |
+            The operation __must__ be failed with a status of `400` under the following error conditions:
+
+            - ###### TXN-020-090
+              Both the `:accountIds` query parameter and the `o3-psu-identifier` header parameter are not specified.
+
+            - ###### TXN-020-030
+              The `o3-aspsp-id` header is missing or has an unexpected value
+
+            - ###### TXN-020-070
+              The `fromBookingDateTime` is not in ISO Date format
+
+            - ###### TXN-020-080
+              The `toBookingDateTime` is not in ISO Date format
+
+            The operation __may__ be failed with a status of `400` under the following error conditions:
+
+            - ###### TXN-020-040, TXN-020-050, TXN-020-060
+              One or more of the mandatory header parameters is not specified or has an unexpected value
+              - `o3-api-uri`,
+              - `o3-api-operation`,
+              - `o3-ozone-interaction-id`
+
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        401:
+          description: |
+            The operation __must__ be failed with a status of `401` under the following error conditions:
+
+            - ###### TXN-010-100
+              The API consumer is not authorised.
+
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      security:
+        - bearerAuth: []
+
+  /accounts/{accountId}/transactions:
+    get:
+      tags:
+      - transactions
+      summary: Fetch transactions for the account specified by the accountId
+      description: |
+        For details on the data to be returned in the response, refer to the `/transactions` endpoint documentation above.
+
+        ###### TXN-010-010
+        Retrieves all the transactions for the account specified by the `accountId` in the URL.
+
+        ###### TXN-010-011
+        Retrieves the transactions for the account specified, starting from the specified valid `fromBookingDateTime` query parameter, until today.
+
+        ###### TXN-010-012
+        Retrieves the transactions for the account specified, starting from the begining, and ending at the specified valid `toBookingDateTime` query parameter.
+
+        ###### TXN-010-013
+        Retrieves the transactions for the account specified, starting from the the specified valid `fromBookingDateTime` query parameter, and ending at the specified valid `toBookingDateTime` query parameter.
+
+        ###### TXN-010-020
+        If the account does not exist or is under a bar, then the ASPSP should return an error with status 400.
+
+        ## Optionality
+        At least one of `/transactions` or `/accounts/:accountId/transactions` must be implemented.
+
+      operationId: findTransactionsByAccountId
+      parameters:
+        # common header parameters that set context
+        - $ref: '#/components/parameters/aspspId'
+        - $ref: '#/components/parameters/callerOrgId'
+        - $ref: '#/components/parameters/callerClientId'
+        - $ref: '#/components/parameters/callerSoftwareStatementId'
+        - $ref: '#/components/parameters/apiUri'
+        - $ref: '#/components/parameters/apiOperation'
+        - $ref: '#/components/parameters/consentId'
+        - $ref: '#/components/parameters/callerInteractionId'
+        - $ref: '#/components/parameters/ozoneInteractionId'
+        - $ref: '#/components/parameters/psuIdentifier'
+        - $ref: '#/components/parameters/pagination-page'
+
+        # Path param definitions
+        - name: accountId
+          in: path
+          description: Id of the account to be queried
+          required: true
+          schema:
+            type: string
+          example: abc-123
+
+        - $ref: '#/components/parameters/transaction-status'
+        - $ref: '#/components/parameters/transaction-fromBookingDateTime'
+        - $ref: '#/components/parameters/transaction-toBookingDateTime'
+        - $ref: '#/components/parameters/transaction-creditDebitIndicator'
+
+      responses:
+        200:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TransactionsResponse'
+        400:
+          description: |
+            The operation __must__ be failed with a status of `400` under the following error conditions:
+
+            - ###### TXN-010-030
+              The `o3-aspsp-id` header is missing or has an unexpected value
+
+            - ###### TXN-010-060
+              The `fromBookingDateTime` is not in ISO Date format
+
+            - ###### TXN-010-080
+              The `toBookingDateTime` is not in ISO Date format
+
+            The operation __may__ be failed with a status of `400` under the following error conditions:
+
+            - ###### TXN-010-040, TXN-010-050, TXN-010-060
+              One or more of the mandatory header parameters is not specified or has an unexpected value
+              - `o3-api-uri`,
+              - `o3-api-operation`,
+              - `o3-ozone-interaction-id`
+
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        401:
+          description: |
+            The operation __must__ be failed with a status of `401` under the following error conditions:
+
+            - ###### TXN-010-100
+              The API consumer is not authorised.
+
+      security:
+        - bearerAuth: []
+
+  /direct-debits:
+    get:
+      tags:
+        - direct-debits
+      summary: Fetch direct debits
+      description: |
+
+        ###### DBT-010-010
+
+        The API must return all the direct debits specified by the `:accountIds` query parameter.
+
+        ###### DBT-010-020
+
+        If the `:accountsIds` query parameter is not specified, the API must return all the direct debits for
+        the PSU identified by the `o3-psu-identifier` header.
+
+        ###### DBT-010-030
+
+        If one or more specified accountIds does not exist or cannot be retrieved the call should continue to return other accounts.
+
+        ###### DBT-010-040
+
+        If no accounts are found, the call must return a success status code `200` with an empty `data` array.
+
+        ## Optionality
+        At least one of `/direct-debits` or `/accounts/:accountId/direct-debits` must be implemented.
+
+        If not implemented, Ozone will use the `/accounts/:accountId/direct-debits` end-point.
+        However, that is not as performant an alternative and ASPSPs are encouraged to implement this end-point.
+
+      operationId: findDirectDebits
+      parameters:
+        # common header parameters that set context
+        - $ref: '#/components/parameters/aspspId'
+        - $ref: '#/components/parameters/callerOrgId'
+        - $ref: '#/components/parameters/callerClientId'
+        - $ref: '#/components/parameters/callerSoftwareStatementId'
+        - $ref: '#/components/parameters/apiUri'
+        - $ref: '#/components/parameters/apiOperation'
+        - $ref: '#/components/parameters/consentId'
+        - $ref: '#/components/parameters/callerInteractionId'
+        - $ref: '#/components/parameters/ozoneInteractionId'
+        - $ref: '#/components/parameters/psuIdentifier'
+
+        # query parameters
+        - name: accountIds
+          in: query
+          description: Comma separated ids of the accounts to be returned
+          schema:
+            type: string
+            minimum: 1
+      responses:
+        200:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DirectDebitsResponse'
+        400:
+          description: |
+            The operation __must__ be failed with a status of `400` under the following error conditions:
+
+            - ###### DBT-010-050
+              Both the `:accountIds` query parameter and the `o3-psu-identifier` header parameter are not specified.
+
+            - ###### DBT-010-060
+              The `o3-aspsp-id` header is missing or has an unexpected value
+
+
+            The operation __may__ be failed with a status of `400` under the following error conditions:
+
+            - ###### DBT-010-070, DBT-010-080, DBT-010-090
+              One or more of the mandatory header parameters is not specified or has an unexpected value
+              - `o3-api-uri`,
+              - `o3-api-operation`,
+              - `o3-ozone-interaction-id`
+
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+        401:
+          description: |
+            The operation __must__ be failed with a status of `401` under the following error conditions:
+
+            - ###### DBT-010-100
+              The API consumer is not authorised.
+
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      security:
+        - bearerAuth: []
+
+  /accounts/{accountId}/direct-debits:
+    get:
+      tags:
+      - direct-debits
+      summary: Fetch the direct debits specified by the account id
+
+      description: |
+        ###### DBT-020-010
+
+        Retrieves the direct debits specified by the `accountId` parameter.
+
+        ## Optionality
+        At least one of `/direct-debits` or `/accounts/:accountId/direct-debits` must be implemented.
+
+      operationId: findDirectDebitByAccountId
+      parameters:
+        # common header parameters that set context
+        - $ref: '#/components/parameters/aspspId'
+        - $ref: '#/components/parameters/callerOrgId'
+        - $ref: '#/components/parameters/callerClientId'
+        - $ref: '#/components/parameters/callerSoftwareStatementId'
+        - $ref: '#/components/parameters/apiUri'
+        - $ref: '#/components/parameters/apiOperation'
+        - $ref: '#/components/parameters/consentId'
+        - $ref: '#/components/parameters/callerInteractionId'
+        - $ref: '#/components/parameters/ozoneInteractionId'
+        - $ref: '#/components/parameters/psuIdentifier'
+
+
+        # Path param definitions
+        - name: accountId
+          in: path
+          description: Id of the account to be queried
+          required: true
+          schema:
+            type: string
+
+      responses:
+        200:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DirectDebitsResponse'
+        400:
+          description: |
+            The operation __must__ be failed with a status of `400` under the following error conditions:
+
+            - ###### DBT-020-020
+              The account corresponding to the `:accountId` query parameter does not exist or is under a bar
+
+            - ###### DBT-020-030
+              The `o3-aspsp-id` header is missing or has an unexpected value
+
+            The operation __should__ be failed with a status of `400` under the following error conditions:
+
+            - ###### DBT-020-040
+              The ASPSP should fail the call if the `o3-psu-identifier` header is not specified.
+
+            - ###### DBT-020-050
+              The ASPSP should fail the call if the `:accountId` does not refer to an account that
+              is accessible by a the PSU identified by the `o3-psu-identifier` header.
+
+            The operation __may__ be failed with a status of `400` under the following error conditions:
+
+            - ###### DBT-020-060, DBT-020-070, DBT-020-080
+              One or more of the mandatory header parameters is not specified or has an unexpected value
+              - `o3-api-uri`,
+              - `o3-api-operation`,
+              - `o3-ozone-interaction-id`
+
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+        401:
+          description: |
+            The operation __must__ be failed with a status of `401` under the following error conditions:
+
+            - ###### DBT-020-090
+              The API consumer is not authorised.
+
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+      security:
+        - bearerAuth: []
+
+  /scheduled-payments:
+    get:
+      tags:
+        - scheduled-payments
+      summary: Fetch scheduled payments
+      description: |
+
+        ###### FDP-010-010
+
+        The API must return all the scheduled payments specified by the `:accountIds` query parameter.
+
+        ###### FDP-010-020
+
+        If the `:accountsIds` query parameter is not specified, the API must return all the scheduled payments for
+        the PSU identified by the `o3-psu-identifier` header.
+
+        ###### FDP-010-030
+
+        If one or more specified accountIds does not exist or cannot be retrieved the call should continue to return other accounts.
+
+        ###### FDP-010-040
+
+        If no accounts are found, the call must return a success status code `200` with an empty `data` array.
+
+        ## Optionality
+        At least one of `/scheduled-payments` or `/accounts/:accountId/scheduled-payments` must be implemented.
+
+        If not implemented, Ozone will use the `/accounts/:accountId/scheduled-payments` end-point.
+        However, that is not as performant an alternative and ASPSPs are encouraged to implement this end-point.
+
+      operationId: findScheduledPayments
+      parameters:
+        # common header parameters that set context
+        - $ref: '#/components/parameters/aspspId'
+        - $ref: '#/components/parameters/callerOrgId'
+        - $ref: '#/components/parameters/callerClientId'
+        - $ref: '#/components/parameters/callerSoftwareStatementId'
+        - $ref: '#/components/parameters/apiUri'
+        - $ref: '#/components/parameters/apiOperation'
+        - $ref: '#/components/parameters/consentId'
+        - $ref: '#/components/parameters/callerInteractionId'
+        - $ref: '#/components/parameters/ozoneInteractionId'
+        - $ref: '#/components/parameters/psuIdentifier'
+
+        # query parameters
+        - name: accountIds
+          in: query
+          description: Comma separated ids of the accounts to be returned
+          schema:
+            type: string
+            minimum: 1
+      responses:
+        200:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ScheduledPaymentsResponse'
+        400:
+          description: |
+            The operation __must__ be failed with a status of `400` under the following error conditions:
+
+            - ###### FDP-010-050
+              Both the `:accountIds` query parameter and the `o3-psu-identifier` header parameter are not specified.
+
+            - ###### FDP-010-060
+              The `o3-aspsp-id` header is missing or has an unexpected value
+
+
+            The operation __may__ be failed with a status of `400` under the following error conditions:
+
+            - ###### FDP-010-070, FDP-010-080, FDP-010-090
+              One or more of the mandatory header parameters is not specified or has an unexpected value
+              - `o3-api-uri`,
+              - `o3-api-operation`,
+              - `o3-ozone-interaction-id`
+
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+        401:
+          description: |
+            The operation __must__ be failed with a status of `401` under the following error conditions:
+
+            - ###### FDP-010-100
+              The API consumer is not authorised.
+
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      security:
+        - bearerAuth: []
+
+  /accounts/{accountId}/scheduled-payments:
+    get:
+      tags:
+      - scheduled-payments
+      summary: Fetch the scheduled payments specified by the account id
+
+      description: |
+        ###### FDP-020-010
+
+        Retrieves the scheduled payments  specified by the `accountId` parameter.
+
+        ## Optionality
+        At least one of `/scheduled-payments` or `/accounts/:accountId/scheduled-payments` must be implemented.
+
+      operationId: findScheduledPaymentByAccountId
+      parameters:
+        # common header parameters that set context
+        - $ref: '#/components/parameters/aspspId'
+        - $ref: '#/components/parameters/callerOrgId'
+        - $ref: '#/components/parameters/callerClientId'
+        - $ref: '#/components/parameters/callerSoftwareStatementId'
+        - $ref: '#/components/parameters/apiUri'
+        - $ref: '#/components/parameters/apiOperation'
+        - $ref: '#/components/parameters/consentId'
+        - $ref: '#/components/parameters/callerInteractionId'
+        - $ref: '#/components/parameters/ozoneInteractionId'
+        - $ref: '#/components/parameters/psuIdentifier'
+
+
+        # Path param definitions
+        - name: accountId
+          in: path
+          description: Id of the account to be queried
+          required: true
+          schema:
+            type: string
+
+      responses:
+        200:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ScheduledPaymentsResponse'
+        400:
+          description: |
+            The operation __must__ be failed with a status of `400` under the following error conditions:
+
+            - ###### FDP-020-020
+              The account corresponding to the `:accountId` query parameter does not exist or is under a bar
+
+            - ###### FDP-020-030
+              The `o3-aspsp-id` header is missing or has an unexpected value
+
+            The operation __should__ be failed with a status of `400` under the following error conditions:
+
+            - ###### FDP-020-040
+              The ASPSP should fail the call if the `o3-psu-identifier` header is not specified.
+
+            - ###### FDP-020-050
+              The ASPSP should fail the call if the `:accountId` does not refer to an account that
+              is accessible by a the PSU identified by the `o3-psu-identifier` header.
+
+            The operation __may__ be failed with a status of `400` under the following error conditions:
+
+            - ###### FDP-020-060, FDP-020-070, FDP-020-080
+              One or more of the mandatory header parameters is not specified or has an unexpected value
+              - `o3-api-uri`,
+              - `o3-api-operation`,
+              - `o3-ozone-interaction-id`
+
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+        401:
+          description: |
+            The operation __must__ be failed with a status of `401` under the following error conditions:
+
+            - ###### FDP-020-090
+              The API consumer is not authorised.
+
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+      security:
+        - bearerAuth: []
+
+  /standing-orders:
+    get:
+      tags:
+        - standing-orders
+      summary: Fetch standing orders
+      description: |
+
+        ###### STO-010-010
+
+        The API must return all the standing orders specified by the `:accountIds` query parameter.
+
+        ###### STO-010-020
+
+        If the `:accountsIds` query parameter is not specified, the API must return all the standing orders for
+        the PSU identified by the `o3-psu-identifier` header.
+
+        ###### STO-010-030
+
+        If one or more specified accountIds does not exist or cannot be retrieved the call should continue to return other accounts.
+
+        ###### STO-010-040
+
+        If no accounts are found, the call must return a success status code `200` with an empty `data` array.
+
+        ## Optionality
+        At least one of `/standing-orders` or `/accounts/:accountId/standing-orders` must be implemented.
+
+        If not implemented, Ozone will use the `/accounts/:accountId/standing-orders` end-point.
+        However, that is not as performant an alternative and ASPSPs are encouraged to implement this end-point.
+
+      operationId: findStandingOrders
+      parameters:
+        # common header parameters that set context
+        - $ref: '#/components/parameters/aspspId'
+        - $ref: '#/components/parameters/callerOrgId'
+        - $ref: '#/components/parameters/callerClientId'
+        - $ref: '#/components/parameters/callerSoftwareStatementId'
+        - $ref: '#/components/parameters/apiUri'
+        - $ref: '#/components/parameters/apiOperation'
+        - $ref: '#/components/parameters/consentId'
+        - $ref: '#/components/parameters/callerInteractionId'
+        - $ref: '#/components/parameters/ozoneInteractionId'
+        - $ref: '#/components/parameters/psuIdentifier'
+
+        # query parameters
+        - name: accountIds
+          in: query
+          description: Comma separated ids of the accounts to be returned
+          schema:
+            type: string
+            minimum: 1
+
+      responses:
+        200:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StandingOrdersResponse'
+        400:
+          description: |
+            The operation __must__ be failed with a status of `400` under the following error conditions:
+
+            - ###### STO-010-050
+              Both the `:accountIds` query parameter and the `o3-psu-identifier` header parameter are not specified.
+
+            - ###### STO-010-060
+              The `o3-aspsp-id` header is missing or has an unexpected value
+
+
+            The operation __may__ be failed with a status of `400` under the following error conditions:
+
+            - ###### STO-010-070, STO-010-080, STO-010-090
+              One or more of the mandatory header parameters is not specified or has an unexpected value
+              - `o3-api-uri`,
+              - `o3-api-operation`,
+              - `o3-ozone-interaction-id`
+
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+        401:
+          description: |
+            The operation __must__ be failed with a status of `401` under the following error conditions:
+
+            - ###### STO-010-100
+              The API consumer is not authorised.
+
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      security:
+        - bearerAuth: []
+
+  /accounts/{accountId}/standing-orders:
+    get:
+      tags:
+      - standing-orders
+      summary: Fetch the standing orders specified by the account id
+
+      description: |
+        ###### STO-020-010
+
+        Retrieves the standing orders specified by the `accountId` parameter.
+
+        ## Optionality
+        At least one of `/standing-orders` or `/accounts/:accountId/standing-orders` must be implemented.
+
+      operationId: findStandingOrderByAccountId
+      parameters:
+        # common header parameters that set context
+        - $ref: '#/components/parameters/aspspId'
+        - $ref: '#/components/parameters/callerOrgId'
+        - $ref: '#/components/parameters/callerClientId'
+        - $ref: '#/components/parameters/callerSoftwareStatementId'
+        - $ref: '#/components/parameters/apiUri'
+        - $ref: '#/components/parameters/apiOperation'
+        - $ref: '#/components/parameters/consentId'
+        - $ref: '#/components/parameters/callerInteractionId'
+        - $ref: '#/components/parameters/ozoneInteractionId'
+        - $ref: '#/components/parameters/psuIdentifier'
+
+
+        # Path param definitions
+        - name: accountId
+          in: path
+          description: Id of the account to be queried
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StandingOrdersResponse'
+        400:
+          description: |
+            The operation __must__ be failed with a status of `400` under the following error conditions:
+
+            - ###### STO-020-020
+              The account corresponding to the `:accountId` query parameter does not exist or is under a bar
+
+            - ###### STO-020-030
+              The `o3-aspsp-id` header is missing or has an unexpected value
+
+            The operation __should__ be failed with a status of `400` under the following error conditions:
+
+            - ###### STO-020-040
+              The ASPSP should fail the call if the `o3-psu-identifier` header is not specified.
+
+            - ###### STO-020-050
+              The ASPSP should fail the call if the `:accountId` does not refer to an account that
+              is accessible by a the PSU identified by the `o3-psu-identifier` header.
+
+            The operation __may__ be failed with a status of `400` under the following error conditions:
+
+            - ###### STO-020-060, STO-020-070, STO-020-080
+              One or more of the mandatory header parameters is not specified or has an unexpected value
+              - `o3-api-uri`,
+              - `o3-api-operation`,
+              - `o3-ozone-interaction-id`
+
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+        401:
+          description: |
+            The operation __must__ be failed with a status of `401` under the following error conditions:
+
+            - ###### STO-020-090
+              The API consumer is not authorised.
+
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+      security:
+        - bearerAuth: []
+
+  /customer:
+    get:
+      tags:
+        - customer
+      summary: Fetch customer
+      description: |
+
+        ###### CUS-010-010
+
+        The API must return the customer for the PSU identified by the `o3-psu-identifier` header.
+
+        ###### CUS-010-020
+
+        If no customer is found, the call must return a success status code `200` with an empty `data` object.
+
+        ## Optionality
+
+
+      operationId: findCustomer
+      parameters:
+        # common header parameters that set context
+        - $ref: '#/components/parameters/aspspId'
+        - $ref: '#/components/parameters/callerOrgId'
+        - $ref: '#/components/parameters/callerClientId'
+        - $ref: '#/components/parameters/callerSoftwareStatementId'
+        - $ref: '#/components/parameters/apiUri'
+        - $ref: '#/components/parameters/apiOperation'
+        - $ref: '#/components/parameters/consentId'
+        - $ref: '#/components/parameters/callerInteractionId'
+        - $ref: '#/components/parameters/ozoneInteractionId'
+        - name: o3-psu-identifier
+          in: header
+          schema:
+            type: string
+          required: true
+          description: A Base64 encoded representation of the psuIdentifier JSON object.
+
+      responses:
+        200:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomerResponse'
+        400:
+          description: |
+            The operation __must__ be failed with a status of `400` under the following error conditions:
+
+            - ###### CUS-010-030
+              The `o3-psu-identifier` header parameter are not specified.
+
+            - ###### CUS-010-040
+              The `o3-aspsp-id` header is missing or has an unexpected value
+
+
+            The operation __may__ be failed with a status of `400` under the following error conditions:
+
+            - ###### CUS-010-050, CUS-010-060, CUS-010-070
+              One or more of the mandatory header parameters is not specified or has an unexpected value
+              - `o3-api-uri`,
+              - `o3-api-operation`,
+              - `o3-ozone-interaction-id`
+
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+        401:
+          description: |
+            The operation __must__ be failed with a status of `401` under the following error conditions:
+
+            - ###### CUS-010-080
+              The API consumer is not authorised.
+
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      security:
+        - bearerAuth: []
+
+  /accounts/{accountId}/customer:
+    get:
+      tags:
+        - customer
+      summary: Fetch the customers specified by the account id
+      description: |
+
+        ###### CUS-020-010
+
+        The API must return the customer for the PSU identified by the `o3-psu-identifier` header.
+
+        ###### CUS-020-020
+
+        If no customer is found, the call must return a success status code `200` with an empty `data` object.
+
+        ## Optionality
+
+
+      operationId: findCustomerByAccountId
+      parameters:
+        # common header parameters that set context
+        - $ref: '#/components/parameters/aspspId'
+        - $ref: '#/components/parameters/callerOrgId'
+        - $ref: '#/components/parameters/callerClientId'
+        - $ref: '#/components/parameters/callerSoftwareStatementId'
+        - $ref: '#/components/parameters/apiUri'
+        - $ref: '#/components/parameters/apiOperation'
+        - $ref: '#/components/parameters/consentId'
+        - $ref: '#/components/parameters/callerInteractionId'
+        - $ref: '#/components/parameters/ozoneInteractionId'
+        - name: o3-psu-identifier
+          in: header
+          schema:
+            type: string
+          required: true
+          description: A Base64 encoded representation of the psuIdentifier JSON object.
+
+        # Path param definitions
+        - name: accountId
+          in: path
+          description: Id of the account to be queried
+          required: true
+          schema:
+            type: string
+          example: abc-123
+
+      responses:
+        200:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomersResponse'
+        400:
+          description: |
+            The operation __must__ be failed with a status of `400` under the following error conditions:
+
+            - ###### CUS-020-030
+              The `o3-psu-identifier` header parameter are not specified.
+
+            - ###### CUS-020-040
+              The `o3-aspsp-id` header is missing or has an unexpected value
+
+
+            The operation __may__ be failed with a status of `400` under the following error conditions:
+
+            - ###### CUS-020-050, CUS-020-060, CUS-020-070
+              One or more of the mandatory header parameters is not specified or has an unexpected value
+              - `o3-api-uri`,
+              - `o3-api-operation`,
+              - `o3-ozone-interaction-id`
+
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+        401:
+          description: |
+            The operation __must__ be failed with a status of `401` under the following error conditions:
+
+            - ###### CUS-020-080
+              The API consumer is not authorised.
+
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      security:
+        - bearerAuth: []
+
+  /offers:
+    get:
+      tags:
+      - offers
+      summary: Fetch offers
+      operationId: findOffers
+      description: |
+        ###### OFF-010-010
+
+        The API must return all the offers for accounts consented to by the psu - identifed by the `o3-psu-identifier` header.
+
+        ###### OFF-010-020
+        If the PSU identifed by `o3-psu-identifier` header exists but has no offers, the call must return a success status code 200 with an empty data array.
+
+        ###### OFF-010-030
+
+        If the PSU identified by `o3-psu-identifier` header does not exist, the call must return a success status code 200 with an empty data array.
+
+      parameters:
+        # common header parameters that set context
+        - $ref: '#/components/parameters/aspspId'
+        - $ref: '#/components/parameters/callerOrgId'
+        - $ref: '#/components/parameters/callerClientId'
+        - $ref: '#/components/parameters/callerSoftwareStatementId'
+        - $ref: '#/components/parameters/apiUri'
+        - $ref: '#/components/parameters/apiOperation'
+        - $ref: '#/components/parameters/consentId'
+        - $ref: '#/components/parameters/callerInteractionId'
+        - $ref: '#/components/parameters/ozoneInteractionId'
+        - name: o3-psu-identifier
+          in: header
+          schema:
+            type: string
+          required: true
+          description: A Base64 encoded representation of the psuIdentifier JSON object.
+
+        # query parameters
+        - name: accountIds
+          in: query
+          description: Comma separated ids of the accounts to be returned
+          schema:
+            type: string
+            minimum: 1
+
+      responses:
+        200:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OffersResponse'
+        400:
+
+          description: |
+            The operation __must__ be failed with a status of `400` under the following error conditions:
+
+            ###### OFF-010-040
+
+            The `o3-psu-identifier` header parameter is not specified.
+
+            ###### OFF-010-050
+
+            The o3-aspsp-id header is missing or has an unexpected value
+
+            ###### OFF-010-060
+            The o3-api-uri header is missing or has an unexpected value
+
+            The operation __may__ be failed with a status of `400` under the following error conditions:
+
+            - ###### OFF-010-060, OFF-010-070, OFF-010-080
+              One or more of the mandatory header parameters is not specified or has an unexpected value
+              - `o3-api-uri`,
+              - `o3-api-operation`,
+              - `o3-ozone-interaction-id`
+
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        401:
+          description: |
+            The operation __must__ be failed with a status of `401` under the following error conditions:
+
+            - ###### OFF-010-090
+              The API consumer is not authorised
+
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+      security:
+        - bearerAuth: []
+
+  /accounts/{accountId}/offers:
+    get:
+      tags:
+      - offers
+      summary: Fetch the offers for the account specified by the account id.
+      operationId: findOffersByAccountId
+
+      description: |
+        ###### OFF-020-010
+
+        Retrieves the offers for account specified by the `accountId` parameter.
+
+        ## Optionality
+
+      parameters:
+        # common header parameters that set context
+        - $ref: '#/components/parameters/aspspId'
+        - $ref: '#/components/parameters/callerOrgId'
+        - $ref: '#/components/parameters/callerClientId'
+        - $ref: '#/components/parameters/callerSoftwareStatementId'
+        - $ref: '#/components/parameters/apiUri'
+        - $ref: '#/components/parameters/apiOperation'
+        - $ref: '#/components/parameters/consentId'
+        - $ref: '#/components/parameters/callerInteractionId'
+        - $ref: '#/components/parameters/ozoneInteractionId'
+        - name: o3-psu-identifier
+          in: header
+          schema:
+            type: string
+          required: true
+          description: A Base64 encoded representation of the psuIdentifier JSON object.
+
+        # Path param definitions
+        - name: accountId
+          in: path
+          description: Id of the account to be queried
+          required: true
+          schema:
+            type: string
+          example: abc-123
+      responses:
+        200:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OffersResponse'
+        400:
+          description: |
+            The operation __must__ be failed with a status of `400` under the following error conditions:
+
+              ###### OFF-020-020
+              The account corresponding to the :accountId query parameter does not exist or is under a bar.
+
+              ###### OFF-020-040
+              The ASPSP should fail the call if the `o3-psu-identifier` header is not specified.
+
+              ###### OFF-020-040
+              The ASPSP should fail the call if the `o3-psu-identifier` header is not specified.
+
+              ###### OFF-020-050
+              The ASPSP should fail the call if the `:accountId` does not refer to an account that
+              is accessible by the PSU identified by the `o3-psu-identifier` header.
+
+            The operation __may__ be failed with a status of `400` under the following error conditions:
+
+              ###### OFF-020-060, OFF-020-070, OFF-020-080
+              One or more of the mandatory header parameters is not specified or has an unexpected value
+              - `o3-api-uri`,
+              - `o3-api-operation`,
+              - `o3-ozone-interaction-id`
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+        401:
+          description: |
+            The operation __must__ be failed with a status of `401` under the following error conditions:
+
+              ###### OFF-020-090
+              The API consumer is not authorised.
+
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+      security:
+        - bearerAuth: []
+
+  /beneficiaries:
+    get:
+      tags:
+        - beneficiaries
+      summary: Fetch beneficiaries
+      description: |
+
+        ###### BEN-010-010
+
+        The API must return all the beneficiaries specified by the `:accountIds` query parameter.
+
+        ###### BEN-010-020
+
+        If the `:accountsIds` query parameter is not specified, the API must return all the beneficiaries for
+        the PSU identified by the `o3-psu-identifier` header.
+
+        ###### BEN-010-030
+
+        If one or more specified accountIds does not exist or cannot be retrieved the call should continue to return other accounts.
+
+        ###### BEN-010-040
+
+        If no accounts are found, the call must return a success status code `200` with an empty `data` array.
+
+        ## Optionality
+        At least one of `/beneficiaries` or `/accounts/:accountId/beneficiaries` must be implemented.
+
+      operationId: findBeneficiaries
+      parameters:
+        # common header parameters that set context
+        - $ref: '#/components/parameters/aspspId'
+        - $ref: '#/components/parameters/callerOrgId'
+        - $ref: '#/components/parameters/callerClientId'
+        - $ref: '#/components/parameters/callerSoftwareStatementId'
+        - $ref: '#/components/parameters/apiUri'
+        - $ref: '#/components/parameters/apiOperation'
+        - $ref: '#/components/parameters/consentId'
+        - $ref: '#/components/parameters/callerInteractionId'
+        - $ref: '#/components/parameters/ozoneInteractionId'
+        - $ref: '#/components/parameters/psuIdentifier'
+
+        # query parameters
+        - name: accountIds
+          in: query
+          description: Comma separated ids of the accounts to be returned
+          schema:
+            type: string
+            minimum: 1
+
+      responses:
+        200:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BeneficiariesResponse'
+        400:
+          description: |
+            The operation __must__ be failed with a status of `400` under the following error conditions:
+
+            - ###### BEN-010-080
+              The `o3-aspsp-id` header is missing or has an unexpected value
+
+            The operation __may__ be failed with a status of `400` under the following error conditions:
+
+            - ###### BEN-010-090, BEN-010-100, BEN-010-110
+              One or more of the mandatory header parameters is not specified or has an unexpected value
+              - `o3-api-uri`,
+              - `o3-api-operation`,
+              - `o3-ozone-interaction-id`
+
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+        401:
+          description: |
+            The operation __must__ be failed with a status of `401` under the following error conditions:
+
+            - ###### BEN-010-120
+              The API consumer is not authorised.
+
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      security:
+        - bearerAuth: []
+
+  /accounts/{accountId}/beneficiaries:
+    get:
+      tags:
+      - beneficiaries
+      summary: Fetch the beneficiaries specified by the account id
+
+      description: |
+        ###### BEN-020-010
+
+        Retrieves the beneficiaries specified by the `accountId` parameter.
+
+        ###### BEN-020-020
+
+        The account corresponding to the `:accountId` query parameter does not exist or is under a bar
+
+        ## Optionality
+        At least one of `/beneficiaries` or `/accounts/:accountId/beneficiaries` must be implemented.
+
+      operationId: findBeneficiariesByAccountId
+      parameters:
+        # common header parameters that set context
+        - $ref: '#/components/parameters/aspspId'
+        - $ref: '#/components/parameters/callerOrgId'
+        - $ref: '#/components/parameters/callerClientId'
+        - $ref: '#/components/parameters/callerSoftwareStatementId'
+        - $ref: '#/components/parameters/apiUri'
+        - $ref: '#/components/parameters/apiOperation'
+        - $ref: '#/components/parameters/consentId'
+        - $ref: '#/components/parameters/callerInteractionId'
+        - $ref: '#/components/parameters/ozoneInteractionId'
+        - $ref: '#/components/parameters/psuIdentifier'
+
+
+        # Path param definitions
+        - name: accountId
+          in: path
+          description: Id of the account to be queried
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BeneficiariesResponse'
+        400:
+          description: |
+            The operation __must__ be failed with a status of `400` under the following error conditions:
+
+
+            - ###### BEN-020-030
+              The `o3-aspsp-id` header is missing or has an unexpected value
+
+            The operation __should__ be failed with a status of `400` under the following error conditions:
+
+            - ###### BEN-020-040
+              The ASPSP should fail the call if the `o3-psu-identifier` header is not specified.
+
+            - ###### BEN-020-050
+              The ASPSP should fail the call if the `:accountId` does not refer to an account that
+              is accessible by a the PSU identified by the `o3-psu-identifier` header.
+
+            The operation __may__ be failed with a status of `400` under the following error conditions:
+
+            - ###### BEN-020-060, BEN-020-070, BEN-020-080
+              One or more of the mandatory header parameters is not specified or has an unexpected value
+              - `o3-api-uri`,
+              - `o3-api-operation`,
+              - `o3-ozone-interaction-id`
+
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+        401:
+          description: |
+            The operation __must__ be failed with a status of `401` under the following error conditions:
+
+            - ###### BEN-020-090
+            The API consumer is not authorised.
+
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+      security:
+        - bearerAuth: []
+
+  /customer/beneficiaries:
+    get:
+      tags:
+      - beneficiaries
+      summary: Fetch the beneficiaries specified by the `o3-psu-identifier` header
+
+      description: |
+        ###### BEN-030-010
+
+        Retrieves the beneficiaries specified by the `o3-psu-identifier` header
+
+
+      operationId: findBeneficiariesByCustomerId
+      parameters:
+        # common header parameters that set context
+        - $ref: '#/components/parameters/aspspId'
+        - $ref: '#/components/parameters/callerOrgId'
+        - $ref: '#/components/parameters/callerClientId'
+        - $ref: '#/components/parameters/callerSoftwareStatementId'
+        - $ref: '#/components/parameters/apiUri'
+        - $ref: '#/components/parameters/apiOperation'
+        - $ref: '#/components/parameters/consentId'
+        - $ref: '#/components/parameters/callerInteractionId'
+        - $ref: '#/components/parameters/ozoneInteractionId'
+        - $ref: '#/components/parameters/psuIdentifier'
+
+      responses:
+        200:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BeneficiariesResponse'
+        400:
+          description: |
+            The operation __must__ be failed with a status of `400` under the following error conditions:
+
+            - ###### BEN-030-030
+              The `o3-aspsp-id` header is missing or has an unexpected value
+
+            The operation __should__ be failed with a status of `400` under the following error conditions:
+
+            - ###### BEN-030-040
+              The ASPSP should fail the call if the `o3-psu-identifier` header is not specified.
+
+            The operation __may__ be failed with a status of `400` under the following error conditions:
+
+            - ###### BEN-030-060, BEN-030-070, BEN-030-080
+              One or more of the mandatory header parameters is not specified or has an unexpected value
+              - `o3-api-uri`,
+              - `o3-api-operation`,
+              - `o3-ozone-interaction-id`
+
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+        401:
+          description: |
+            The operation __must__ be failed with a status of `401` under the following error conditions:
+
+            - ###### BEN-030-090
+              The API consumer is not authorised.
+
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+      security:
+        - bearerAuth: []
+
+  /products:
+    get:
+      tags:
+        - products
+      summary: Fetch products. Currently only used for BOBF standards.
+      description: |
+
+        The API must return all the products that are provided by the ASPSP.
+
+        If no products are found, the call must return a success status code `200` with an empty `data` array.
+
+        It should be noted that the TPP calling the standards based API may not do so under a consent. The PSU is not identifiable and the `o3-consent-id` and `o3-psu-identifier` headers should not be expected.
+
+        ## Optionality
+        This end-point must be implemented by ASPSPs that would like to expose APIs to the BOBF (Bahrain) standard.
+
+      operationId: findProducts
+      parameters:
+        # common header parameters that set context
+        - $ref: '#/components/parameters/aspspId'
+        - $ref: '#/components/parameters/callerOrgId'
+        - $ref: '#/components/parameters/callerClientId'
+        - $ref: '#/components/parameters/callerSoftwareStatementId'
+        - $ref: '#/components/parameters/apiUri'
+        - $ref: '#/components/parameters/apiOperation'
+        # - $ref: '#/components/parameters/consentId'
+        - $ref: '#/components/parameters/callerInteractionId'
+        - $ref: '#/components/parameters/ozoneInteractionId'
+        # - $ref: '#/components/parameters/psuIdentifier'
+
+        # query parameters
+        # none!
+
+      responses:
+        200:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProductsResponse'
+        400:
+          description: |
+            The operation __must__ be failed with a status of `400` under the following error conditions:
+
+            - ###### PRD-010-080
+              The `o3-aspsp-id` header is missing or has an unexpected value
+
+            The operation __may__ be failed with a status of `400` under the following error conditions:
+
+            - ###### PRD-010-090, PRD-010-100, PRD-010-110
+              One or more of the mandatory header parameters is not specified or has an unexpected value
+              - `o3-api-uri`,
+              - `o3-api-operation`,
+              - `o3-ozone-interaction-id`
+
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+        401:
+          description: |
+            The operation __must__ be failed with a status of `401` under the following error conditions:
+
+            - ###### PRD-010-120
+              The API consumer is not authorised.
+
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      security:
+        - bearerAuth: []
+
+  /loans:
+    get:
+      tags:
+      - Brazil Loans
+      summary: Get the list of loan agreements for the customer
+      description: |
+        Retrieves the list of loan agreements for the customer identified by the `o3-psu-identifier` header
+      operationId: findBrcbLoan
+      parameters:
+        # common header parameters that set context
+        - $ref: '#/components/parameters/aspspId'
+        - $ref: '#/components/parameters/callerOrgId'
+        - $ref: '#/components/parameters/callerClientId'
+        - $ref: '#/components/parameters/callerSoftwareStatementId'
+        - $ref: '#/components/parameters/apiUri'
+        - $ref: '#/components/parameters/apiOperation'
+        - $ref: '#/components/parameters/consentId'
+        - $ref: '#/components/parameters/callerInteractionId'
+        - $ref: '#/components/parameters/ozoneInteractionId'
+        - $ref: '#/components/parameters/psuIdentifier'
+
+      responses:
+        200:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BRCBBase'
+        400:
+          description: |
+            The operation __must__ be failed with a status of `400` under the following error conditions:
+            The `o3-aspsp-id` header is missing or has an unexpected value
+            The operation __should__ be failed with a status of `400` under the following error conditions:
+            The ASPSP should fail the call if the `o3-psu-identifier` header is not specified.
+            The operation __may__ be failed with a status of `400` under the following error conditions:
+            One or more of the mandatory header parameters is not specified or has an unexpected value
+              - `o3-api-uri`,
+              - `o3-api-operation`,
+              - `o3-ozone-interaction-id`
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+        401:
+          description: |
+            The operation __must__ be failed with a status of `401` under the following error conditions:
+            The API consumer is not authorised.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+      security:
+        - bearerAuth: []
+
+  /loans/{contractId}:
+    get:
+      tags:
+      - Brazil Loans
+      summary: Get a loan agreement
+      description: |
+        Retrieves the loan agreements for the contractId specified
+      operationId: findBrcbLoanSingle
+      parameters:
+        # common header parameters that set context
+        - $ref: '#/components/parameters/aspspId'
+        - $ref: '#/components/parameters/callerOrgId'
+        - $ref: '#/components/parameters/callerClientId'
+        - $ref: '#/components/parameters/callerSoftwareStatementId'
+        - $ref: '#/components/parameters/apiUri'
+        - $ref: '#/components/parameters/apiOperation'
+        - $ref: '#/components/parameters/consentId'
+        - $ref: '#/components/parameters/callerInteractionId'
+        - $ref: '#/components/parameters/ozoneInteractionId'
+        - $ref: '#/components/parameters/psuIdentifier'
+
+        # Path param definitions
+        - name: contractId
+          in: path
+          description: contractId of the loan to be queried
+          required: true
+          schema:
+            type: string
+
+
+      responses:
+        200:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BRCBBaseDetail'
+        400:
+          description: |
+            The operation __must__ be failed with a status of `400` under the following error conditions:
+            The `o3-aspsp-id` header is missing or has an unexpected value
+            The operation __should__ be failed with a status of `400` under the following error conditions:
+            The ASPSP should fail the call if the `o3-psu-identifier` header is not specified.
+            The operation __may__ be failed with a status of `400` under the following error conditions:
+            One or more of the mandatory header parameters is not specified or has an unexpected value
+              - `o3-api-uri`,
+              - `o3-api-operation`,
+              - `o3-ozone-interaction-id`
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+        401:
+          description: |
+            The operation __must__ be failed with a status of `401` under the following error conditions:
+            The API consumer is not authorised.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+      security:
+        - bearerAuth: []
+
+  /loans/{contractId}/warranties:
+    get:
+      tags:
+      - Brazil Loans
+      summary: Get a loan warranty
+      description: |
+        Retrieves the loan warranties for the contractId specified
+      operationId: findBrcbLoanWarranty
+      parameters:
+        # common header parameters that set context
+        - $ref: '#/components/parameters/aspspId'
+        - $ref: '#/components/parameters/callerOrgId'
+        - $ref: '#/components/parameters/callerClientId'
+        - $ref: '#/components/parameters/callerSoftwareStatementId'
+        - $ref: '#/components/parameters/apiUri'
+        - $ref: '#/components/parameters/apiOperation'
+        - $ref: '#/components/parameters/consentId'
+        - $ref: '#/components/parameters/callerInteractionId'
+        - $ref: '#/components/parameters/ozoneInteractionId'
+        - $ref: '#/components/parameters/psuIdentifier'
+
+        # Path param definitions
+        - name: contractId
+          in: path
+          description: contractId of the warranties to be queried
+          required: true
+          schema:
+            type: string
+
+
+      responses:
+        200:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BRCBBaseWarranty'
+        400:
+          description: |
+            The operation __must__ be failed with a status of `400` under the following error conditions:
+            The `o3-aspsp-id` header is missing or has an unexpected value
+            The operation __should__ be failed with a status of `400` under the following error conditions:
+            The ASPSP should fail the call if the `o3-psu-identifier` header is not specified.
+            The operation __may__ be failed with a status of `400` under the following error conditions:
+            One or more of the mandatory header parameters is not specified or has an unexpected value
+              - `o3-api-uri`,
+              - `o3-api-operation`,
+              - `o3-ozone-interaction-id`
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+        401:
+          description: |
+            The operation __must__ be failed with a status of `401` under the following error conditions:
+            The API consumer is not authorised.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+      security:
+        - bearerAuth: []
+
+
+  /loans/{contractId}/installments:
+    get:
+      tags:
+      - Brazil Loans
+      summary: Get a loan installment
+      description: |
+        Retrieves the loan installment for the contractId specified
+      operationId: findBrcbLoanInstallment
+      parameters:
+        # common header parameters that set context
+        - $ref: '#/components/parameters/aspspId'
+        - $ref: '#/components/parameters/callerOrgId'
+        - $ref: '#/components/parameters/callerClientId'
+        - $ref: '#/components/parameters/callerSoftwareStatementId'
+        - $ref: '#/components/parameters/apiUri'
+        - $ref: '#/components/parameters/apiOperation'
+        - $ref: '#/components/parameters/consentId'
+        - $ref: '#/components/parameters/callerInteractionId'
+        - $ref: '#/components/parameters/ozoneInteractionId'
+        - $ref: '#/components/parameters/psuIdentifier'
+
+        # Path param definitions
+        - name: contractId
+          in: path
+          description: contractId of the installments to be queried
+          required: true
+          schema:
+            type: string
+
+      responses:
+        200:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BRCBBaseInstallment'
+        400:
+          description: |
+            The operation __must__ be failed with a status of `400` under the following error conditions:
+            The `o3-aspsp-id` header is missing or has an unexpected value
+            The operation __should__ be failed with a status of `400` under the following error conditions:
+            The ASPSP should fail the call if the `o3-psu-identifier` header is not specified.
+            The operation __may__ be failed with a status of `400` under the following error conditions:
+            One or more of the mandatory header parameters is not specified or has an unexpected value
+              - `o3-api-uri`,
+              - `o3-api-operation`,
+              - `o3-ozone-interaction-id`
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+        401:
+          description: |
+            The operation __must__ be failed with a status of `401` under the following error conditions:
+            The API consumer is not authorised.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+      security:
+        - bearerAuth: []
+
+  /loans/{contractId}/payments:
+    get:
+      tags:
+      - Brazil Loans
+      summary: Get loan payment information
+      description: |
+        Retrieves the loan payment information for the contractId specified
+      operationId: findBrcbLoanPayment
+      parameters:
+        # common header parameters that set context
+        - $ref: '#/components/parameters/aspspId'
+        - $ref: '#/components/parameters/callerOrgId'
+        - $ref: '#/components/parameters/callerClientId'
+        - $ref: '#/components/parameters/callerSoftwareStatementId'
+        - $ref: '#/components/parameters/apiUri'
+        - $ref: '#/components/parameters/apiOperation'
+        - $ref: '#/components/parameters/consentId'
+        - $ref: '#/components/parameters/callerInteractionId'
+        - $ref: '#/components/parameters/ozoneInteractionId'
+        - $ref: '#/components/parameters/psuIdentifier'
+
+
+        # Path param definitions
+        - name: contractId
+          in: path
+          description: contractId of the payments to be queried
+          required: true
+          schema:
+            type: string
+
+
+      responses:
+        200:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BRCBBasePayment'
+        400:
+          description: |
+            The operation __must__ be failed with a status of `400` under the following error conditions:
+            The `o3-aspsp-id` header is missing or has an unexpected value
+            The operation __should__ be failed with a status of `400` under the following error conditions:
+            The ASPSP should fail the call if the `o3-psu-identifier` header is not specified.
+            The operation __may__ be failed with a status of `400` under the following error conditions:
+            One or more of the mandatory header parameters is not specified or has an unexpected value
+              - `o3-api-uri`,
+              - `o3-api-operation`,
+              - `o3-ozone-interaction-id`
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+        401:
+          description: |
+            The operation __must__ be failed with a status of `401` under the following error conditions:
+            The API consumer is not authorised.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+      security:
+        - bearerAuth: []
+
+  /financings:
+    get:
+      tags:
+      - Brazil Financings
+      summary: Get the list of financing agreements for the customer
+      description: |
+        Retrieves the list of financing agreements for the customer identified by the `o3-psu-identifier` header
+      operationId: findBrcbFinancing
+      parameters:
+        # common header parameters that set context
+        - $ref: '#/components/parameters/aspspId'
+        - $ref: '#/components/parameters/callerOrgId'
+        - $ref: '#/components/parameters/callerClientId'
+        - $ref: '#/components/parameters/callerSoftwareStatementId'
+        - $ref: '#/components/parameters/apiUri'
+        - $ref: '#/components/parameters/apiOperation'
+        - $ref: '#/components/parameters/consentId'
+        - $ref: '#/components/parameters/callerInteractionId'
+        - $ref: '#/components/parameters/ozoneInteractionId'
+        - $ref: '#/components/parameters/psuIdentifier'
+
+      responses:
+        200:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BRCBBase'
+        400:
+          description: |
+            The operation __must__ be failed with a status of `400` under the following error conditions:
+            The `o3-aspsp-id` header is missing or has an unexpected value
+            The operation __should__ be failed with a status of `400` under the following error conditions:
+            The ASPSP should fail the call if the `o3-psu-identifier` header is not specified.
+            The operation __may__ be failed with a status of `400` under the following error conditions:
+            One or more of the mandatory header parameters is not specified or has an unexpected value
+              - `o3-api-uri`,
+              - `o3-api-operation`,
+              - `o3-ozone-interaction-id`
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+        401:
+          description: |
+            The operation __must__ be failed with a status of `401` under the following error conditions:
+            The API consumer is not authorised.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+      security:
+        - bearerAuth: []
+
+  /financings/{contractId}:
+    get:
+      tags:
+      - Brazil Financings
+      summary: Get a financing agreement
+      description: |
+        Retrieves the financing agreements for the contractId specified
+      operationId: findBrcbFinancingSingle
+      parameters:
+        # common header parameters that set context
+        - $ref: '#/components/parameters/aspspId'
+        - $ref: '#/components/parameters/callerOrgId'
+        - $ref: '#/components/parameters/callerClientId'
+        - $ref: '#/components/parameters/callerSoftwareStatementId'
+        - $ref: '#/components/parameters/apiUri'
+        - $ref: '#/components/parameters/apiOperation'
+        - $ref: '#/components/parameters/consentId'
+        - $ref: '#/components/parameters/callerInteractionId'
+        - $ref: '#/components/parameters/ozoneInteractionId'
+        - $ref: '#/components/parameters/psuIdentifier'
+
+        # Path param definitions
+        - name: contractId
+          in: path
+          description: contractId of financing to be queried
+          required: true
+          schema:
+            type: string
+
+
+      responses:
+        200:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BRCBBaseDetail'
+        400:
+          description: |
+            The operation __must__ be failed with a status of `400` under the following error conditions:
+            The `o3-aspsp-id` header is missing or has an unexpected value
+            The operation __should__ be failed with a status of `400` under the following error conditions:
+            The ASPSP should fail the call if the `o3-psu-identifier` header is not specified.
+            The operation __may__ be failed with a status of `400` under the following error conditions:
+            One or more of the mandatory header parameters is not specified or has an unexpected value
+              - `o3-api-uri`,
+              - `o3-api-operation`,
+              - `o3-ozone-interaction-id`
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+        401:
+          description: |
+            The operation __must__ be failed with a status of `401` under the following error conditions:
+            The API consumer is not authorised.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+      security:
+        - bearerAuth: []
+
+  /financings/{contractId}/warranties:
+    get:
+      tags:
+      - Brazil Financings
+      summary: Get a financing warranty
+      description: |
+        Retrieves the financing warranties for the contractId specified
+      operationId: findBrcbFinancingWarranty
+      parameters:
+        # common header parameters that set context
+        - $ref: '#/components/parameters/aspspId'
+        - $ref: '#/components/parameters/callerOrgId'
+        - $ref: '#/components/parameters/callerClientId'
+        - $ref: '#/components/parameters/callerSoftwareStatementId'
+        - $ref: '#/components/parameters/apiUri'
+        - $ref: '#/components/parameters/apiOperation'
+        - $ref: '#/components/parameters/consentId'
+        - $ref: '#/components/parameters/callerInteractionId'
+        - $ref: '#/components/parameters/ozoneInteractionId'
+        - $ref: '#/components/parameters/psuIdentifier'
+
+        # Path param definitions
+        - name: contractId
+          in: path
+          description: contractId of the warranties to be queried
+          required: true
+          schema:
+            type: string
+
+
+      responses:
+        200:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BRCBBaseWarranty'
+        400:
+          description: |
+            The operation __must__ be failed with a status of `400` under the following error conditions:
+            The `o3-aspsp-id` header is missing or has an unexpected value
+            The operation __should__ be failed with a status of `400` under the following error conditions:
+            The ASPSP should fail the call if the `o3-psu-identifier` header is not specified.
+            The operation __may__ be failed with a status of `400` under the following error conditions:
+            One or more of the mandatory header parameters is not specified or has an unexpected value
+              - `o3-api-uri`,
+              - `o3-api-operation`,
+              - `o3-ozone-interaction-id`
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+        401:
+          description: |
+            The operation __must__ be failed with a status of `401` under the following error conditions:
+            The API consumer is not authorised.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+      security:
+        - bearerAuth: []
+
+
+  /financings/{contractId}/installments:
+    get:
+      tags:
+      - Brazil Financings
+      summary: Get a financing installment
+      description: |
+        Retrieves the financing installment for the contractId specified
+      operationId: findBrcbFinancingInstallment
+      parameters:
+        # common header parameters that set context
+        - $ref: '#/components/parameters/aspspId'
+        - $ref: '#/components/parameters/callerOrgId'
+        - $ref: '#/components/parameters/callerClientId'
+        - $ref: '#/components/parameters/callerSoftwareStatementId'
+        - $ref: '#/components/parameters/apiUri'
+        - $ref: '#/components/parameters/apiOperation'
+        - $ref: '#/components/parameters/consentId'
+        - $ref: '#/components/parameters/callerInteractionId'
+        - $ref: '#/components/parameters/ozoneInteractionId'
+        - $ref: '#/components/parameters/psuIdentifier'
+
+        # Path param definitions
+        - name: contractId
+          in: path
+          description: contractId of the installments to be queried
+          required: true
+          schema:
+            type: string
+
+      responses:
+        200:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BRCBBaseInstallment'
+        400:
+          description: |
+            The operation __must__ be failed with a status of `400` under the following error conditions:
+            The `o3-aspsp-id` header is missing or has an unexpected value
+            The operation __should__ be failed with a status of `400` under the following error conditions:
+            The ASPSP should fail the call if the `o3-psu-identifier` header is not specified.
+            The operation __may__ be failed with a status of `400` under the following error conditions:
+            One or more of the mandatory header parameters is not specified or has an unexpected value
+              - `o3-api-uri`,
+              - `o3-api-operation`,
+              - `o3-ozone-interaction-id`
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+        401:
+          description: |
+            The operation __must__ be failed with a status of `401` under the following error conditions:
+            The API consumer is not authorised.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+      security:
+        - bearerAuth: []
+
+  /financings/{contractId}/payments:
+    get:
+      tags:
+      - Brazil Financings
+      summary: Get financing payment information
+      description: |
+        Retrieves the financing payment information for the contractId specified
+      operationId: findBrcbFinancingPayment
+      parameters:
+        # common header parameters that set context
+        - $ref: '#/components/parameters/aspspId'
+        - $ref: '#/components/parameters/callerOrgId'
+        - $ref: '#/components/parameters/callerClientId'
+        - $ref: '#/components/parameters/callerSoftwareStatementId'
+        - $ref: '#/components/parameters/apiUri'
+        - $ref: '#/components/parameters/apiOperation'
+        - $ref: '#/components/parameters/consentId'
+        - $ref: '#/components/parameters/callerInteractionId'
+        - $ref: '#/components/parameters/ozoneInteractionId'
+        - $ref: '#/components/parameters/psuIdentifier'
+
+
+        # Path param definitions
+        - name: contractId
+          in: path
+          description: contractId of the payments to be queried
+          required: true
+          schema:
+            type: string
+
+
+      responses:
+        200:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BRCBBasePayment'
+        400:
+          description: |
+            The operation __must__ be failed with a status of `400` under the following error conditions:
+            The `o3-aspsp-id` header is missing or has an unexpected value
+            The operation __should__ be failed with a status of `400` under the following error conditions:
+            The ASPSP should fail the call if the `o3-psu-identifier` header is not specified.
+            The operation __may__ be failed with a status of `400` under the following error conditions:
+            One or more of the mandatory header parameters is not specified or has an unexpected value
+              - `o3-api-uri`,
+              - `o3-api-operation`,
+              - `o3-ozone-interaction-id`
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+        401:
+          description: |
+            The operation __must__ be failed with a status of `401` under the following error conditions:
+            The API consumer is not authorised.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+      security:
+        - bearerAuth: []
+
+  /unarranged-accounts-overdraft:
+    get:
+      tags:
+      - Brazil Unarranged Accounts Overdraft
+      summary: Get the list of unarranged accounts overdraft agreements for the customer
+      description: |
+        Retrieves the list of unarranged accounts overdraft agreements for the customer identified by the `o3-psu-identifier` header
+      operationId: findBrcbUnarranged
+      parameters:
+        # common header parameters that set context
+        - $ref: '#/components/parameters/aspspId'
+        - $ref: '#/components/parameters/callerOrgId'
+        - $ref: '#/components/parameters/callerClientId'
+        - $ref: '#/components/parameters/callerSoftwareStatementId'
+        - $ref: '#/components/parameters/apiUri'
+        - $ref: '#/components/parameters/apiOperation'
+        - $ref: '#/components/parameters/consentId'
+        - $ref: '#/components/parameters/callerInteractionId'
+        - $ref: '#/components/parameters/ozoneInteractionId'
+        - $ref: '#/components/parameters/psuIdentifier'
+
+      responses:
+        200:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BRCBBase'
+        400:
+          description: |
+            The operation __must__ be failed with a status of `400` under the following error conditions:
+            The `o3-aspsp-id` header is missing or has an unexpected value
+            The operation __should__ be failed with a status of `400` under the following error conditions:
+            The ASPSP should fail the call if the `o3-psu-identifier` header is not specified.
+            The operation __may__ be failed with a status of `400` under the following error conditions:
+            One or more of the mandatory header parameters is not specified or has an unexpected value
+              - `o3-api-uri`,
+              - `o3-api-operation`,
+              - `o3-ozone-interaction-id`
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+        401:
+          description: |
+            The operation __must__ be failed with a status of `401` under the following error conditions:
+            The API consumer is not authorised.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+      security:
+        - bearerAuth: []
+
+  /unarranged-accounts-overdraft/{contractId}:
+    get:
+      tags:
+      - Brazil Unarranged Accounts Overdraft
+      summary: Get a unarranged accounts overdraft agreement
+      description: |
+        Retrieves the unarranged accounts overdraft agreements for the contractId specified
+      operationId: findBrcbUnarrangedSingle
+      parameters:
+        # common header parameters that set context
+        - $ref: '#/components/parameters/aspspId'
+        - $ref: '#/components/parameters/callerOrgId'
+        - $ref: '#/components/parameters/callerClientId'
+        - $ref: '#/components/parameters/callerSoftwareStatementId'
+        - $ref: '#/components/parameters/apiUri'
+        - $ref: '#/components/parameters/apiOperation'
+        - $ref: '#/components/parameters/consentId'
+        - $ref: '#/components/parameters/callerInteractionId'
+        - $ref: '#/components/parameters/ozoneInteractionId'
+        - $ref: '#/components/parameters/psuIdentifier'
+
+        # Path param definitions
+        - name: contractId
+          in: path
+          description: contractId of the loan to be queried
+          required: true
+          schema:
+            type: string
+
+
+      responses:
+        200:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BRCBBaseDetail'
+        400:
+          description: |
+            The operation __must__ be failed with a status of `400` under the following error conditions:
+            The `o3-aspsp-id` header is missing or has an unexpected value
+            The operation __should__ be failed with a status of `400` under the following error conditions:
+            The ASPSP should fail the call if the `o3-psu-identifier` header is not specified.
+            The operation __may__ be failed with a status of `400` under the following error conditions:
+            One or more of the mandatory header parameters is not specified or has an unexpected value
+              - `o3-api-uri`,
+              - `o3-api-operation`,
+              - `o3-ozone-interaction-id`
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+        401:
+          description: |
+            The operation __must__ be failed with a status of `401` under the following error conditions:
+            The API consumer is not authorised.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+      security:
+        - bearerAuth: []
+
+  /unarranged-accounts-overdraft/{contractId}/warranties:
+    get:
+      tags:
+      - Brazil Unarranged Accounts Overdraft
+      summary: Get a unarranged accounts overdraft warranty
+      description: |
+        Retrieves the unarranged accounts overdraft warranties for the contractId specified
+      operationId: findBrcbUnarrangedWarranty
+      parameters:
+        # common header parameters that set context
+        - $ref: '#/components/parameters/aspspId'
+        - $ref: '#/components/parameters/callerOrgId'
+        - $ref: '#/components/parameters/callerClientId'
+        - $ref: '#/components/parameters/callerSoftwareStatementId'
+        - $ref: '#/components/parameters/apiUri'
+        - $ref: '#/components/parameters/apiOperation'
+        - $ref: '#/components/parameters/consentId'
+        - $ref: '#/components/parameters/callerInteractionId'
+        - $ref: '#/components/parameters/ozoneInteractionId'
+        - $ref: '#/components/parameters/psuIdentifier'
+
+        # Path param definitions
+        - name: contractId
+          in: path
+          description: contractId of the warranties to be queried
+          required: true
+          schema:
+            type: string
+
+
+      responses:
+        200:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BRCBBaseWarranty'
+        400:
+          description: |
+            The operation __must__ be failed with a status of `400` under the following error conditions:
+            The `o3-aspsp-id` header is missing or has an unexpected value
+            The operation __should__ be failed with a status of `400` under the following error conditions:
+            The ASPSP should fail the call if the `o3-psu-identifier` header is not specified.
+            The operation __may__ be failed with a status of `400` under the following error conditions:
+            One or more of the mandatory header parameters is not specified or has an unexpected value
+              - `o3-api-uri`,
+              - `o3-api-operation`,
+              - `o3-ozone-interaction-id`
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+        401:
+          description: |
+            The operation __must__ be failed with a status of `401` under the following error conditions:
+            The API consumer is not authorised.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+      security:
+        - bearerAuth: []
+
+
+  /unarranged-accounts-overdraft/{contractId}/installments:
+    get:
+      tags:
+      - Brazil Unarranged Accounts Overdraft
+      summary: Get a unarranged accounts overdraft installment
+      description: |
+        Retrieves the unarranged accounts overdraft installment for the contractId specified
+      operationId: findBrcbUnarrangedInstallment
+      parameters:
+        # common header parameters that set context
+        - $ref: '#/components/parameters/aspspId'
+        - $ref: '#/components/parameters/callerOrgId'
+        - $ref: '#/components/parameters/callerClientId'
+        - $ref: '#/components/parameters/callerSoftwareStatementId'
+        - $ref: '#/components/parameters/apiUri'
+        - $ref: '#/components/parameters/apiOperation'
+        - $ref: '#/components/parameters/consentId'
+        - $ref: '#/components/parameters/callerInteractionId'
+        - $ref: '#/components/parameters/ozoneInteractionId'
+        - $ref: '#/components/parameters/psuIdentifier'
+
+        # Path param definitions
+        - name: contractId
+          in: path
+          description: contractId of the installments to be queried
+          required: true
+          schema:
+            type: string
+
+      responses:
+        200:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BRCBBaseInstallment'
+        400:
+          description: |
+            The operation __must__ be failed with a status of `400` under the following error conditions:
+            The `o3-aspsp-id` header is missing or has an unexpected value
+            The operation __should__ be failed with a status of `400` under the following error conditions:
+            The ASPSP should fail the call if the `o3-psu-identifier` header is not specified.
+            The operation __may__ be failed with a status of `400` under the following error conditions:
+            One or more of the mandatory header parameters is not specified or has an unexpected value
+              - `o3-api-uri`,
+              - `o3-api-operation`,
+              - `o3-ozone-interaction-id`
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+        401:
+          description: |
+            The operation __must__ be failed with a status of `401` under the following error conditions:
+            The API consumer is not authorised.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+      security:
+        - bearerAuth: []
+
+  /unarranged-accounts-overdraft/{contractId}/payments:
+    get:
+      tags:
+      - Brazil Unarranged Accounts Overdraft
+      summary: Get unarranged accounts overdraft payment information
+      description: |
+        Retrieves the unarranged accounts overdraft payment information for the contractId specified
+      operationId: findBrcbUnarrangedPayment
+      parameters:
+        # common header parameters that set context
+        - $ref: '#/components/parameters/aspspId'
+        - $ref: '#/components/parameters/callerOrgId'
+        - $ref: '#/components/parameters/callerClientId'
+        - $ref: '#/components/parameters/callerSoftwareStatementId'
+        - $ref: '#/components/parameters/apiUri'
+        - $ref: '#/components/parameters/apiOperation'
+        - $ref: '#/components/parameters/consentId'
+        - $ref: '#/components/parameters/callerInteractionId'
+        - $ref: '#/components/parameters/ozoneInteractionId'
+        - $ref: '#/components/parameters/psuIdentifier'
+
+
+        # Path param definitions
+        - name: contractId
+          in: path
+          description: contractId of the payments to be queried
+          required: true
+          schema:
+            type: string
+
+
+      responses:
+        200:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BRCBBasePayment'
+        400:
+          description: |
+            The operation __must__ be failed with a status of `400` under the following error conditions:
+            The `o3-aspsp-id` header is missing or has an unexpected value
+            The operation __should__ be failed with a status of `400` under the following error conditions:
+            The ASPSP should fail the call if the `o3-psu-identifier` header is not specified.
+            The operation __may__ be failed with a status of `400` under the following error conditions:
+            One or more of the mandatory header parameters is not specified or has an unexpected value
+              - `o3-api-uri`,
+              - `o3-api-operation`,
+              - `o3-ozone-interaction-id`
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+        401:
+          description: |
+            The operation __must__ be failed with a status of `401` under the following error conditions:
+            The API consumer is not authorised.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+      security:
+        - bearerAuth: []
+
+
+  /invoice-financings:
+    get:
+      tags:
+      - Brazil Invoice Financings
+      summary: Get the list of invoice financing agreements for the customer
+      description: |
+        Retrieves the list of invoice financing agreements for the customer identified by the `o3-psu-identifier` header
+      operationId: findBrcbInvoiceFinancing
+      parameters:
+        # common header parameters that set context
+        - $ref: '#/components/parameters/aspspId'
+        - $ref: '#/components/parameters/callerOrgId'
+        - $ref: '#/components/parameters/callerClientId'
+        - $ref: '#/components/parameters/callerSoftwareStatementId'
+        - $ref: '#/components/parameters/apiUri'
+        - $ref: '#/components/parameters/apiOperation'
+        - $ref: '#/components/parameters/consentId'
+        - $ref: '#/components/parameters/callerInteractionId'
+        - $ref: '#/components/parameters/ozoneInteractionId'
+        - $ref: '#/components/parameters/psuIdentifier'
+
+      responses:
+        200:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BRCBBase'
+        400:
+          description: |
+            The operation __must__ be failed with a status of `400` under the following error conditions:
+            The `o3-aspsp-id` header is missing or has an unexpected value
+            The operation __should__ be failed with a status of `400` under the following error conditions:
+            The ASPSP should fail the call if the `o3-psu-identifier` header is not specified.
+            The operation __may__ be failed with a status of `400` under the following error conditions:
+            One or more of the mandatory header parameters is not specified or has an unexpected value
+              - `o3-api-uri`,
+              - `o3-api-operation`,
+              - `o3-ozone-interaction-id`
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+        401:
+          description: |
+            The operation __must__ be failed with a status of `401` under the following error conditions:
+            The API consumer is not authorised.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+      security:
+        - bearerAuth: []
+
+  /invoice-financings/{contractId}:
+    get:
+      tags:
+      - Brazil Invoice Financings
+      summary: Get a invoice financing agreement
+      description: |
+        Retrieves the invoice financing agreements for the contractId specified
+      operationId: findBrcbInvoiceFinancingSingle
+      parameters:
+        # common header parameters that set context
+        - $ref: '#/components/parameters/aspspId'
+        - $ref: '#/components/parameters/callerOrgId'
+        - $ref: '#/components/parameters/callerClientId'
+        - $ref: '#/components/parameters/callerSoftwareStatementId'
+        - $ref: '#/components/parameters/apiUri'
+        - $ref: '#/components/parameters/apiOperation'
+        - $ref: '#/components/parameters/consentId'
+        - $ref: '#/components/parameters/callerInteractionId'
+        - $ref: '#/components/parameters/ozoneInteractionId'
+        - $ref: '#/components/parameters/psuIdentifier'
+
+        # Path param definitions
+        - name: contractId
+          in: path
+          description: contractId of invoice financing to be queried
+          required: true
+          schema:
+            type: string
+
+
+      responses:
+        200:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BRCBBaseDetail'
+        400:
+          description: |
+            The operation __must__ be failed with a status of `400` under the following error conditions:
+            The `o3-aspsp-id` header is missing or has an unexpected value
+            The operation __should__ be failed with a status of `400` under the following error conditions:
+            The ASPSP should fail the call if the `o3-psu-identifier` header is not specified.
+            The operation __may__ be failed with a status of `400` under the following error conditions:
+            One or more of the mandatory header parameters is not specified or has an unexpected value
+              - `o3-api-uri`,
+              - `o3-api-operation`,
+              - `o3-ozone-interaction-id`
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+        401:
+          description: |
+            The operation __must__ be failed with a status of `401` under the following error conditions:
+            The API consumer is not authorised.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+      security:
+        - bearerAuth: []
+
+  /invoice-financings/{contractId}/warranties:
+    get:
+      tags:
+      - Brazil Invoice Financings
+      summary: Get a invoice financing warranty
+      description: |
+        Retrieves the invoice financing warranties for the contractId specified
+      operationId: findBrcbInvoiceFinancingWarranty
+      parameters:
+        # common header parameters that set context
+        - $ref: '#/components/parameters/aspspId'
+        - $ref: '#/components/parameters/callerOrgId'
+        - $ref: '#/components/parameters/callerClientId'
+        - $ref: '#/components/parameters/callerSoftwareStatementId'
+        - $ref: '#/components/parameters/apiUri'
+        - $ref: '#/components/parameters/apiOperation'
+        - $ref: '#/components/parameters/consentId'
+        - $ref: '#/components/parameters/callerInteractionId'
+        - $ref: '#/components/parameters/ozoneInteractionId'
+        - $ref: '#/components/parameters/psuIdentifier'
+
+        # Path param definitions
+        - name: contractId
+          in: path
+          description: contractId of the warranties to be queried
+          required: true
+          schema:
+            type: string
+
+
+      responses:
+        200:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BRCBBaseWarranty'
+        400:
+          description: |
+            The operation __must__ be failed with a status of `400` under the following error conditions:
+            The `o3-aspsp-id` header is missing or has an unexpected value
+            The operation __should__ be failed with a status of `400` under the following error conditions:
+            The ASPSP should fail the call if the `o3-psu-identifier` header is not specified.
+            The operation __may__ be failed with a status of `400` under the following error conditions:
+            One or more of the mandatory header parameters is not specified or has an unexpected value
+              - `o3-api-uri`,
+              - `o3-api-operation`,
+              - `o3-ozone-interaction-id`
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+        401:
+          description: |
+            The operation __must__ be failed with a status of `401` under the following error conditions:
+            The API consumer is not authorised.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+      security:
+        - bearerAuth: []
+
+
+  /invoice-financings/{contractId}/installments:
+    get:
+      tags:
+      - Brazil Invoice Financings
+      summary: Get a invoice financing installment
+      description: |
+        Retrieves the invoice financing installment for the contractId specified
+      operationId: findBrcbInvoiceFinancingInstallment
+      parameters:
+        # common header parameters that set context
+        - $ref: '#/components/parameters/aspspId'
+        - $ref: '#/components/parameters/callerOrgId'
+        - $ref: '#/components/parameters/callerClientId'
+        - $ref: '#/components/parameters/callerSoftwareStatementId'
+        - $ref: '#/components/parameters/apiUri'
+        - $ref: '#/components/parameters/apiOperation'
+        - $ref: '#/components/parameters/consentId'
+        - $ref: '#/components/parameters/callerInteractionId'
+        - $ref: '#/components/parameters/ozoneInteractionId'
+        - $ref: '#/components/parameters/psuIdentifier'
+
+        # Path param definitions
+        - name: contractId
+          in: path
+          description: contractId of the installments to be queried
+          required: true
+          schema:
+            type: string
+
+      responses:
+        200:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BRCBBaseInstallment'
+        400:
+          description: |
+            The operation __must__ be failed with a status of `400` under the following error conditions:
+            The `o3-aspsp-id` header is missing or has an unexpected value
+            The operation __should__ be failed with a status of `400` under the following error conditions:
+            The ASPSP should fail the call if the `o3-psu-identifier` header is not specified.
+            The operation __may__ be failed with a status of `400` under the following error conditions:
+            One or more of the mandatory header parameters is not specified or has an unexpected value
+              - `o3-api-uri`,
+              - `o3-api-operation`,
+              - `o3-ozone-interaction-id`
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+        401:
+          description: |
+            The operation __must__ be failed with a status of `401` under the following error conditions:
+            The API consumer is not authorised.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+      security:
+        - bearerAuth: []
+
+  /invoice-financings/{contractId}/payments:
+    get:
+      tags:
+      - Brazil Invoice Financings
+      summary: Get invoice financing payment information
+      description: |
+        Retrieves the invoice financing payment information for the contractId specified
+      operationId: findBrcbInvoiceFinancingPayment
+      parameters:
+        # common header parameters that set context
+        - $ref: '#/components/parameters/aspspId'
+        - $ref: '#/components/parameters/callerOrgId'
+        - $ref: '#/components/parameters/callerClientId'
+        - $ref: '#/components/parameters/callerSoftwareStatementId'
+        - $ref: '#/components/parameters/apiUri'
+        - $ref: '#/components/parameters/apiOperation'
+        - $ref: '#/components/parameters/consentId'
+        - $ref: '#/components/parameters/callerInteractionId'
+        - $ref: '#/components/parameters/ozoneInteractionId'
+        - $ref: '#/components/parameters/psuIdentifier'
+
+
+        # Path param definitions
+        - name: contractId
+          in: path
+          description: contractId of the payments to be queried
+          required: true
+          schema:
+            type: string
+
+
+      responses:
+        200:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BRCBBasePayment'
+        400:
+          description: |
+            The operation __must__ be failed with a status of `400` under the following error conditions:
+            The `o3-aspsp-id` header is missing or has an unexpected value
+            The operation __should__ be failed with a status of `400` under the following error conditions:
+            The ASPSP should fail the call if the `o3-psu-identifier` header is not specified.
+            The operation __may__ be failed with a status of `400` under the following error conditions:
+            One or more of the mandatory header parameters is not specified or has an unexpected value
+              - `o3-api-uri`,
+              - `o3-api-operation`,
+              - `o3-ozone-interaction-id`
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+        401:
+          description: |
+            The operation __must__ be failed with a status of `401` under the following error conditions:
+            The API consumer is not authorised.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+      security:
+        - bearerAuth: []
+
+
+  /customer/personal/identifications:
+    get:
+      tags:
+      - Brazil Customer
+      summary: Fetch personal identification information
+      description: |
+        Retrieves the personal identification information specified by the `o3-psu-identifier` header
+      operationId: findPersonalIdentification
+      parameters:
+        # common header parameters that set context
+        - $ref: '#/components/parameters/aspspId'
+        - $ref: '#/components/parameters/callerOrgId'
+        - $ref: '#/components/parameters/callerClientId'
+        - $ref: '#/components/parameters/callerSoftwareStatementId'
+        - $ref: '#/components/parameters/apiUri'
+        - $ref: '#/components/parameters/apiOperation'
+        - $ref: '#/components/parameters/consentId'
+        - $ref: '#/components/parameters/callerInteractionId'
+        - $ref: '#/components/parameters/ozoneInteractionId'
+        - $ref: '#/components/parameters/psuIdentifier'
+
+      responses:
+        200:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BRCBPersonalIdentification'
+        400:
+          description: |
+            The operation __must__ be failed with a status of `400` under the following error conditions:
+            The `o3-aspsp-id` header is missing or has an unexpected value
+            The operation __should__ be failed with a status of `400` under the following error conditions:
+            The ASPSP should fail the call if the `o3-psu-identifier` header is not specified.
+            The operation __may__ be failed with a status of `400` under the following error conditions:
+            One or more of the mandatory header parameters is not specified or has an unexpected value
+              - `o3-api-uri`,
+              - `o3-api-operation`,
+              - `o3-ozone-interaction-id`
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+        401:
+          description: |
+            The operation __must__ be failed with a status of `401` under the following error conditions:
+            The API consumer is not authorised.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+      security:
+        - bearerAuth: []
+
+  /customer/personal/qualifications:
+    get:
+      tags:
+      - Brazil Customer
+      summary: Fetch personal qualification information
+      description: |
+        Retrieves the personal qualification information specified by the `o3-psu-identifier` header
+      operationId: findPersonalQualifications
+      parameters:
+        # common header parameters that set context
+        - $ref: '#/components/parameters/aspspId'
+        - $ref: '#/components/parameters/callerOrgId'
+        - $ref: '#/components/parameters/callerClientId'
+        - $ref: '#/components/parameters/callerSoftwareStatementId'
+        - $ref: '#/components/parameters/apiUri'
+        - $ref: '#/components/parameters/apiOperation'
+        - $ref: '#/components/parameters/consentId'
+        - $ref: '#/components/parameters/callerInteractionId'
+        - $ref: '#/components/parameters/ozoneInteractionId'
+        - $ref: '#/components/parameters/psuIdentifier'
+
+      responses:
+        200:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BRCBPersonalQualification'
+        400:
+          description: |
+            The operation __must__ be failed with a status of `400` under the following error conditions:
+            The `o3-aspsp-id` header is missing or has an unexpected value
+            The operation __should__ be failed with a status of `400` under the following error conditions:
+            The ASPSP should fail the call if the `o3-psu-identifier` header is not specified.
+            The operation __may__ be failed with a status of `400` under the following error conditions:
+            One or more of the mandatory header parameters is not specified or has an unexpected value
+              - `o3-api-uri`,
+              - `o3-api-operation`,
+              - `o3-ozone-interaction-id`
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+        401:
+          description: |
+            The operation __must__ be failed with a status of `401` under the following error conditions:
+            The API consumer is not authorised.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+      security:
+        - bearerAuth: []
+
+  /customer/personal/financial-relations:
+    get:
+      tags:
+      - Brazil Customer
+      summary: Fetch personal financial relation information
+      description: |
+        Retrieves the personal financial relation information specified by the `o3-psu-identifier` header
+      operationId: findPersonalFinancialRelations
+      parameters:
+        # common header parameters that set context
+        - $ref: '#/components/parameters/aspspId'
+        - $ref: '#/components/parameters/callerOrgId'
+        - $ref: '#/components/parameters/callerClientId'
+        - $ref: '#/components/parameters/callerSoftwareStatementId'
+        - $ref: '#/components/parameters/apiUri'
+        - $ref: '#/components/parameters/apiOperation'
+        - $ref: '#/components/parameters/consentId'
+        - $ref: '#/components/parameters/callerInteractionId'
+        - $ref: '#/components/parameters/ozoneInteractionId'
+        - $ref: '#/components/parameters/psuIdentifier'
+
+      responses:
+        200:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BRCBPersonalFinancialRelations'
+        400:
+          description: |
+            The operation __must__ be failed with a status of `400` under the following error conditions:
+            The `o3-aspsp-id` header is missing or has an unexpected value
+            The operation __should__ be failed with a status of `400` under the following error conditions:
+            The ASPSP should fail the call if the `o3-psu-identifier` header is not specified.
+            The operation __may__ be failed with a status of `400` under the following error conditions:
+            One or more of the mandatory header parameters is not specified or has an unexpected value
+              - `o3-api-uri`,
+              - `o3-api-operation`,
+              - `o3-ozone-interaction-id`
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+        401:
+          description: |
+            The operation __must__ be failed with a status of `401` under the following error conditions:
+            The API consumer is not authorised.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+      security:
+        - bearerAuth: []
+
+  /customer/business/identifications:
+    get:
+      tags:
+      - Brazil Customer
+      summary: Fetch business identification information
+      description: |
+        Retrieves the business identification information specified by the `o3-psu-identifier` header
+      operationId: findBusinessIdentification
+      parameters:
+        # common header parameters that set context
+        - $ref: '#/components/parameters/aspspId'
+        - $ref: '#/components/parameters/callerOrgId'
+        - $ref: '#/components/parameters/callerClientId'
+        - $ref: '#/components/parameters/callerSoftwareStatementId'
+        - $ref: '#/components/parameters/apiUri'
+        - $ref: '#/components/parameters/apiOperation'
+        - $ref: '#/components/parameters/consentId'
+        - $ref: '#/components/parameters/callerInteractionId'
+        - $ref: '#/components/parameters/ozoneInteractionId'
+        - $ref: '#/components/parameters/psuIdentifier'
+
+      responses:
+        200:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BRCBBusinessIdentification'
+        400:
+          description: |
+            The operation __must__ be failed with a status of `400` under the following error conditions:
+            The `o3-aspsp-id` header is missing or has an unexpected value
+            The operation __should__ be failed with a status of `400` under the following error conditions:
+            The ASPSP should fail the call if the `o3-psu-identifier` header is not specified.
+            The operation __may__ be failed with a status of `400` under the following error conditions:
+            One or more of the mandatory header parameters is not specified or has an unexpected value
+              - `o3-api-uri`,
+              - `o3-api-operation`,
+              - `o3-ozone-interaction-id`
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+        401:
+          description: |
+            The operation __must__ be failed with a status of `401` under the following error conditions:
+            The API consumer is not authorised.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+      security:
+        - bearerAuth: []
+
+  /customer/business/qualifications:
+    get:
+      tags:
+      - Brazil Customer
+      summary: Fetch business qualification information
+      description: |
+        Retrieves the business qualification information specified by the `o3-psu-identifier` header
+      operationId: findBusinessQualifications
+      parameters:
+        # common header parameters that set context
+        - $ref: '#/components/parameters/aspspId'
+        - $ref: '#/components/parameters/callerOrgId'
+        - $ref: '#/components/parameters/callerClientId'
+        - $ref: '#/components/parameters/callerSoftwareStatementId'
+        - $ref: '#/components/parameters/apiUri'
+        - $ref: '#/components/parameters/apiOperation'
+        - $ref: '#/components/parameters/consentId'
+        - $ref: '#/components/parameters/callerInteractionId'
+        - $ref: '#/components/parameters/ozoneInteractionId'
+        - $ref: '#/components/parameters/psuIdentifier'
+
+      responses:
+        200:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BRCBBusinessQualification'
+        400:
+          description: |
+            The operation __must__ be failed with a status of `400` under the following error conditions:
+            The `o3-aspsp-id` header is missing or has an unexpected value
+            The operation __should__ be failed with a status of `400` under the following error conditions:
+            The ASPSP should fail the call if the `o3-psu-identifier` header is not specified.
+            The operation __may__ be failed with a status of `400` under the following error conditions:
+            One or more of the mandatory header parameters is not specified or has an unexpected value
+              - `o3-api-uri`,
+              - `o3-api-operation`,
+              - `o3-ozone-interaction-id`
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+        401:
+          description: |
+            The operation __must__ be failed with a status of `401` under the following error conditions:
+            The API consumer is not authorised.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+      security:
+        - bearerAuth: []
+
+  /customer/business/financial-relations:
+    get:
+      tags:
+      - Brazil Customer
+      summary: Fetch business financial relation information
+      description: |
+        Retrieves the business financial relation information specified by the `o3-psu-identifier` header
+      operationId: findBusinessFinancialRelations
+      parameters:
+        # common header parameters that set context
+        - $ref: '#/components/parameters/aspspId'
+        - $ref: '#/components/parameters/callerOrgId'
+        - $ref: '#/components/parameters/callerClientId'
+        - $ref: '#/components/parameters/callerSoftwareStatementId'
+        - $ref: '#/components/parameters/apiUri'
+        - $ref: '#/components/parameters/apiOperation'
+        - $ref: '#/components/parameters/consentId'
+        - $ref: '#/components/parameters/callerInteractionId'
+        - $ref: '#/components/parameters/ozoneInteractionId'
+        - $ref: '#/components/parameters/psuIdentifier'
+
+      responses:
+        200:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BRCBBusinessFinancialRelations'
+        400:
+          description: |
+            The operation __must__ be failed with a status of `400` under the following error conditions:
+            The `o3-aspsp-id` header is missing or has an unexpected value
+            The operation __should__ be failed with a status of `400` under the following error conditions:
+            The ASPSP should fail the call if the `o3-psu-identifier` header is not specified.
+            The operation __may__ be failed with a status of `400` under the following error conditions:
+            One or more of the mandatory header parameters is not specified or has an unexpected value
+              - `o3-api-uri`,
+              - `o3-api-operation`,
+              - `o3-ozone-interaction-id`
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+        401:
+          description: |
+            The operation __must__ be failed with a status of `401` under the following error conditions:
+            The API consumer is not authorised.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+      security:
+        - bearerAuth: []
+
+components:
+  schemas:
+    #
+    # Schemas for Accounts
+    #
+    AccountsResponse:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/Account'
+        meta:
+          $ref: '#/components/schemas/Meta'
+
+    AccountResponse:
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/Account'
+        meta:
+          $ref: '#/components/schemas/Meta'
+
+    Account:
+      type: object
+      description: |
+        A descriptor for an account.
+        This is a composite object that may be expanded in the future to support
+        additional account types for new API standards and account types.
+      oneOf:
+        - $ref: '#/components/schemas/GenericAccount'
+        - $ref: '#/components/schemas/BRCBAccount'
+
+    GenericAccount:
+      type: object
+      properties:
+        id:
+          type: string
+        product:
+          $ref: '#/components/schemas/ProductIdentifier'
+        multiAuth:
+          type: boolean
+        currency:
+          $ref: '#/components/schemas/TCurrency'
+        businessCustomer:
+          type: array
+          items:
+            $ref: '#/components/schemas/CustomerIdentifier'
+        customers:
+          type: array
+          items:
+            $ref: '#/components/schemas/CustomerIdentifier'
+          minimum: 1
+        accountNumbers:
+          type: array
+          items:
+            $ref: '#/components/schemas/AccountNumber'
+          minimum: 1
+        status:
+          type: string
+        accountType:
+          type: string
+        accountSubType:
+          type: string
+        description:
+          type: string
+        nickName:
+          type: string
+        openingDate:
+          type: string
+          format: date-time
+        maturityDate:
+          type: string
+          format: date-time
+      required:
+        - id
+        - product
+        - multiAuth
+        - currency
+        - customers
+        - accountNumbers
+      additionalProperties: false
+
+    BRCBBase:
+      type: object
+      required:
+        - brandName
+        - companyCnpj
+        - contractId
+        - ipocCode
+        - productType
+      properties:
+        brandName:
+          type: string
+        companyCnpj:
+          type: string
+        contractId:
+          type: string
+        ipocCode:
+          type: string
+        productSubType:
+          type: string
+        productType:
+          type: string
+
+    BRCBBaseDetail:
+      type: object
+      required:
+        - CET
+        - amortizationScheduled
+        - contractAmount
+        - contractDate
+        - contractNumber
+        - contractedFees
+        - contractedFinanceCharges
+        - currency
+        - disbursementDate
+        - dueDate
+        - firstInstalmentDueDate
+        - instalmentPeriodicity
+        - interestRates
+        - ipocCode
+        - productName
+        - productSubType
+        - productType
+        - settlementDate
+      properties:
+        CET:
+          type: string
+        amortizationScheduled: 
+          type: string
+        amortizationScheduledAddit: 
+          type: string
+        contractAmount:  
+          type: string
+        contractDate: 
+          type: string
+        cnpjConsignee: 
+          type: string
+        contractNumber: 
+          type: string
+        contractedFees: 
+          type: array
+          items:
+            $ref: '#/components/schemas/BRCBFees'
+        contractedFinanceCharges: 
+          type: array
+          items:
+            $ref: '#/components/schemas/BRCBFinanceCharges'
+        currency: 
+          type: string
+        disbursementDate: 
+          type: string
+        dueDate: 
+          type: string
+        firstInstalmentDueDate: 
+          type: string
+        instalmentPeriodicity: 
+          type: string
+        instalmentPeriodicityAddit: 
+          type: string
+        instalmentPeriodicityAdditionalInfo: 
+          type: string
+        interestRates: 
+          type: array
+          items:
+            $ref: '#/components/schemas/BRCBInterestRate'
+        ipocCode: 
+          type: string
+        productName: 
+          type: string
+        productSubType: 
+          type: string
+        productType: 
+          type: string
+        settlementDate: 
+          type: string
+
+    BRCBBaseWarranty:
+      type: object
+      required:
+      - currency
+      - warrantySubType
+      - warrantyType
+      properties:
+        currency:
+          type: string
+        warrantyAmount:
+          type: string
+        warrantySubType:
+          type: string
+        warrantyType:
+          type: string
+
+    BRCBBaseInstallment:
+      type: object
+      required:
+      - balloonPayments
+      - contractRemainingNumber
+      - dueInstalments
+      - paidInstalments
+      - pastDueInstalments
+      - totalNumberOfInstalments
+      - typeContractRemaining
+      - typeNumberOfInstalments
+      properties:
+        balloonPayments:
+          type: string
+        contractRemainingNumber:
+          type: string
+        dueInstalments:
+          type: string
+        paidInstalments:
+          type: string
+        pastDueInstalments:
+          type: string
+        totalNumberOfInstalments:
+          type: string
+        typeContractRemaining:
+          type: string
+        typeNumberOfInstalments:
+          type: string
+
+    BRCBBasePayment:
+      type: object
+      required:
+      - paidInstalments
+      - releases
+      properties:
+        contractOutstandingBalance:
+          type: string
+        paidInstalments:
+          type: string
+        releases:
+          type: array
+          items:
+            $ref: '#/components/schemas/BRCBRelease'
+
+    BRCBRelease:
+      type: object
+      required:
+      - currency
+      - instalmentId
+      - isOverParcelPayment
+      - overParcel
+      - paidAmount
+      - paidDate
+      - paymentId
+      properties:
+        currency:
+          type: string
+        instalmentId:
+          type: string
+        isOverParcelPayment:
+          type: string
+        overParcel:
+          $ref: '#/components/schemas/BRCBParcel'
+
+    BRCBParcel:
+      type: object
+      required:
+      - charges
+      - fees
+      properties:
+        charges:
+          type: array
+          items:
+            $ref: '#/components/schemas/BRCBOverParcel'
+        fees:
+          type: array
+          items:
+            $ref: '#/components/schemas/BRCBParcelFee'
+
+    BRCBOverParcel:
+      type: object
+      required:
+      - chargeAdditionalInfo
+      - chargeAmount
+      - chargeType
+      properties:
+        chargeAdditionalInfo:
+          type: string
+        chargeAmount:
+          type: string
+        chargeType:
+          type: string
+
+    BRCBParcelFee:
+      type: object
+      required:
+      - feeAmount
+      - feeCode
+      - feeName
+      properties:
+        feeAmount:
+          type: string
+        feeCode:
+          type: string
+        feeName:
+          type: string
+
+    BRCBInterestRate:
+      type: object
+      required:
+      - additionalInfo
+      - calculation
+      - interestRateType
+      - postFixedRate
+      - preFixedRate
+      - referentialRateIndexerAddi
+      - referentialRateIndexerSubT
+      - referentialRateIndexerType
+      - taxPeriodicity
+      - taxType
+      properties:
+        additionalInfo:
+          type: string
+        calculation:
+          type: string
+        interestRateType:
+          type: string
+        postFixedRate:
+          type: string
+        preFixedRate:
+          type: string
+        referentialRateIndexerAddi:
+          type: string
+        referentialRateIndexerSubT:
+          type: string
+        referentialRateIndexerType:
+          type: string
+        taxPeriodicity:
+          type: string
+        taxType:
+          type: string
+
+    BRCBFinanceCharges:
+      type: object
+      required:
+      - chargeAdditionalInfo
+      - chargeType
+      properties:
+        chargeAdditionalInfo:
+          type: string
+        chargeType:
+          type: string
+        chargeRate:
+          type: string
+
+    BRCBFees:
+      type: object
+      required:
+      - feeAmount
+      - feeCharge
+      - feeChargeType
+      - feeCode
+      - feeName
+      - feeRate
+      properties:
+        feeAmount:
+          type: string
+        feeCharge:
+          type: string
+        feeChargeType:
+          type: string
+        feeCode:
+          type: string
+        feeName:
+          type: string
+        feeRate:
+          type: string
+
+    BRCBAccount:
+      type: object
+      properties:
+        id:
+          type: string
+        brandID:
+          type: string
+        brandName:
+          type: string
+        companyCnpj:
+          type: string
+        accountType:
+          type: string
+        accountSubType:
+          type: string
+        currency:
+          $ref: '#/components/schemas/TCurrency'
+        status:
+          type: string
+        compeCode:
+          type: string
+        branchCode:
+          type: string
+        checkDigit:
+          type: string
+        accountNumbers:
+          type: array
+          items:
+            $ref: '#/components/schemas/AccountNumber'
+          minimum: 1
+
+      required:
+        - id
+        - brandID
+        - brandName
+        - companyCnpj
+        - accountType
+        - currency
+        - compeCode
+        - branchCode
+        - checkDigit
+        - accountNumbers
+      additionalProperties: true
+
+    CustomersResponse:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/Customer'
+        meta:
+          $ref: '#/components/schemas/Meta'
+
+    CustomerResponse:
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/Customer'
+        meta:
+          $ref: '#/components/schemas/Meta'
+
+    Customer:
+      type: object
+      properties:
+        id:
+          type: string
+        number:
+          type: string
+        customerName:
+          type: string
+        customerType:
+          type: string
+        contact:
+          $ref: '#/components/schemas/Contact'
+      required:
+        - id
+        - number
+        - customerName
+        - customerType
+
+    Contact:
+      type: object
+      properties:
+        email:
+          type: string
+        phone:
+          type: string
+        mobile:
+          type: string
+        address:
+          type: array
+          items:
+            $ref: '#/components/schemas/Address'
+      required:
+        - email
+        - phone
+        - mobile
+
+    Address:
+      type: object
+      properties:
+        addressType:
+          type: string
+        department:
+          type: string
+        subDepartment:
+          type: string
+        street:
+          type: string
+        building:
+          type: string
+        postCode:
+          type: string
+        town:
+          type: string
+        countrySubDivision:
+          type: string
+        country:
+          type: string
+        addressLine:
+          type: array
+          items:
+            type: string
+
+    ProductIdentifier:
+      type: object
+      properties:
+        id:
+          type: string
+        productName:
+          type: string
+      required:
+        - id
+        - productName
+
+    CustomerIdentifier:
+      type: object
+      properties:
+        id:
+          type: string
+        customerName:
+          type: string
+      required:
+        - id
+        - customerName
+
+    #
+    # Schemas related to Balances
+    #
+    BalancesResponse:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/Balance'
+        meta:
+          $ref: '#/components/schemas/Meta'
+
+    BalanceResponse:
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/Balance'
+        meta:
+          $ref: '#/components/schemas/Meta'
+
+    Balance:
+      type: object
+      properties:
+        accountId:
+          type: string
+        creditDebitIndicator:
+          $ref: '#/components/schemas/BalanceCreditDebitEnum'
+        balanceType:
+          type: string
+        timestamp:
+          type: string
+          format: date-time
+        amount:
+          $ref: '#/components/schemas/Amount'
+        creditLines:
+          type: array
+          items:
+            $ref: '#/components/schemas/CreditLine'
+      required:
+        - accountId
+        - creditDebitIndicator
+        - balanceType
+        - timestamp
+        - amount
+
+    CreditLine:
+      type: object
+      properties:
+        included:
+          type: boolean
+        amount:
+          $ref: '#/components/schemas/Amount'
+        creditType:
+          type: string
+      required:
+        - included
+        - amount
+
+    #
+    # Schemas related to Transactions
+    #
+
+    TransactionsResponse:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/Transaction'
+        meta:
+            $ref: '#/components/schemas/PaginatedMeta'
+
+    Transaction:
+      type: object
+      oneOf:
+        - $ref: '#/components/schemas/GenericTransaction'
+        - $ref: '#/components/schemas/BRCBTransaction'
+
+    GenericTransaction:
+      type: object
+      properties:
+        accountId:
+          type: string
+        transactionId:
+          type: string
+        transactionReference:
+          type: string
+        statementReference:
+          type: array
+          items:
+            type: string
+        creditDebitIndicator:
+          $ref: '#/components/schemas/CreditDebitEnum'
+        status:
+          type: string
+        transactionMutability:
+          type: string
+        bookingDateTime:
+          type: string
+          format: date-time
+        valueDateTime:
+          type: string
+          format: date-time
+        transactionInformation:
+          type: string
+        merchantAddress:
+          type: string
+        amount:
+          $ref: '#/components/schemas/Amount'
+        chargeAmount:
+          $ref: '#/components/schemas/Amount'
+        currencyExchange:
+          $ref: '#/components/schemas/CurrencyExchange'
+        bankTransactionCode:
+          $ref: '#/components/schemas/BankTransactionCode'
+        proprietoryBankTransactionCode:
+          $ref: '#/components/schemas/ProprietoryBankTransactionCode'
+        balance:
+          $ref: '#/components/schemas/TransactionBalance'
+        merchantDetails:
+          $ref: '#/components/schemas/MerchantDetails'
+        creditorAgent:
+          $ref: '#/components/schemas/Agent'
+        creditorAccount:
+          $ref: '#/components/schemas/AccountNumber'
+        debtorAgent:
+          $ref: '#/components/schemas/Agent'
+        debtorAccount:
+          $ref: '#/components/schemas/AccountNumber'
+        cardInstrument:
+          $ref: '#/components/schemas/CardInstrument'
+        supplementaryData:
+          type: object
+      required:
+        - accountId
+        - creditDebitIndicator
+        - status
+        - bookingDateTime
+        - amount
+
+    BRCBTransaction:
+      type: object
+      properties:
+        status:
+          type: string
+        creditDebitIndicator:
+          $ref: '#/components/schemas/CreditDebitEnum'
+        transactionReference:
+          type: string
+        bankTransactionCode:
+          $ref: '#/components/schemas/BankTransactionCode'
+        amount:
+          $ref: '#/components/schemas/Amount'
+        bookingDateTime:
+          type: string
+          format: date-time
+        valueDateTime:
+          type: string
+          format: date-time
+        partieCnpjCpf:
+          type: string
+        partiePersonType:
+          type: string
+        partieCompeCode:
+          type: string
+        partieBranchCode:
+          type: string
+        partieNumber:
+          type: string
+        partieCheckDigit:
+          type: string
+      required:
+        - status
+        - creditDebitIndicator
+        - transactionReference
+        - bankTransactionCode
+        - amount
+        - bookingDateTime
+
+    BRCBPersonalQualification:
+      type: object
+      required:
+        - updateDateTime
+        - companyCnpj
+        - informedIncome
+        - informedPatrimony
+        - occupationCode
+        - occupationDescription
+      properties:
+        updateDateTime:
+          type: string
+          maxLength: 20
+          format: date-time
+        companyCnpj:
+          type: string
+        occupationCode:
+          type: string
+        occupationDescription:
+          type: string
+        informedIncome:
+          type: object
+          required:
+            - frequency
+            - amount
+            - currency
+            - date
+          properties:
+            frequency:
+              type: string
+            amount:
+              type: string
+            currency:
+              type: string
+            date:
+              type: string
+          additionalProperties: false
+        informedPatrimony:
+          $ref: '#/components/schemas/BRCBPatrimony'
+      additionalProperties: false 
+
+    BRCBBusinessQualification:
+      type: object
+      required:
+        - updateDateTime
+        - economicActivities
+        - informedRevenue
+        - informedPatrimony
+      properties:
+        updateDateTime:
+          type: string
+          maxLength: 20
+          format: date-time
+        informedRevenue:
+          type: object
+          required:
+            - frequency
+            - amount
+            - currency
+            - date
+          properties:
+            frequency:
+              type: string
+            amount:
+              type: string
+            currency:
+              type: string
+            date:
+              type: string
+            frequencyAdditionalInfo:
+              type: string
+            year:
+              type: string
+          additionalProperties: false
+        informedPatrimony:
+          $ref: '#/components/schemas/BRCBPatrimony'
+      additionalProperties: false 
+
+    BRCBPersonalIdentification:
+      type: object
+      required:
+        - updateDateTime
+        - personalId
+        - brandName
+        - civilName
+        - socialName
+        - birthDate
+        - maritalStatusCode
+        - sex
+        - companyCnpj
+        - documents
+        - otherDocuments
+        - hasBrazilianNationality
+        - nationality
+        - filiation
+        - contacts
+      properties:
+        updateDateTime:
+          type: string
+        personalId:
+          type: string
+        brandName:
+          type: string
+        civilName:
+          type: string
+        socialName:
+          type: string
+        birthDate:
+          type: string
+        maritalStatusCode:
+          type: string
+        maritalStatusAdditionalInfo:
+          type: string
+        sex:
+          type: string
+        companyCnpj:
+          type: string
+        documents:
+          type: object
+          required:
+            - cpfNumber
+            - passportNumber
+            - passportCountry
+            - passportExpirationDate
+          properties:
+            cpfNumber:
+              type: string
+            passportNumber:
+              type: string
+            passportCountry:
+              type: string
+            passportExpirationDate:
+              type: string
+            passportIssueDate:
+              type: string
+        otherDocuments:
+          type: array
+          items: 
+              $ref: '#/components/schemas/BRCBPersonalOtherDocument'
+        hasBrazilianNationality:
+          type: boolean
+        nationality:
+          type: array
+          items:
+            $ref: '#/components/schemas/BRCBNationality'
+        filiation:
+          type: array
+          items: 
+              $ref: '#/components/schemas/BRCBFiliation'
+
+        contacts:
+          type: array
+          items: 
+            $ref: '#/components/schemas/BRCBPContacts'
+
+    BRCBFiliation:
+      type: object
+      required:
+        - type
+        - civilName
+      properties:
+        type:
+          type: string
+        civilName:
+          type: string
+        socialName:
+          type: string    
+
+    BRCBBusinessIdentification:
+      type: object
+      required:
+        - updateDateTime
+        - businessId
+        - brandName
+        - companyName
+        - tradeName
+        - incorporationDate
+        - cnpjNumber
+        - companyCnpjNumber
+        - parties
+        - contacts
+      properties:
+        updateDateTime:
+          type: string
+        businessId:
+          type: string
+        brandName:
+          type: string
+        companyName:
+          type: string
+        tradeName:
+          type: string
+        incorporationDate:
+          type: string
+        cnpjNumber:
+          type: string
+        companyCnpjNumber:
+          type: array
+          items:
+            type: string
+        otherDocuments:
+          type: array
+          items: 
+            $ref: '#/components/schemas/BRCBBusinessOtherDocument'
+        parties:
+          type: array
+          items: 
+            $ref: '#/components/schemas/BRCBPartiesParticipation'
+        contacts:
+          type: array
+          items: 
+            $ref: '#/components/schemas/BRCBPContacts'
+
+    BRCBPersonalFinancialRelations:
+      type: object
+      required:
+        - updateDateTime
+        - startDate
+        - productServicesType
+        - procurrators
+        - accounts
+      properties:
+        updateDateTime:
+          type: string
+        startDate:
+          type: string
+        productsServicesType:
+          type: string
+        productsServicesTypeAdditionalInfo:
+          type: string
+        procurators:
+          type: array
+          items:
+            $ref: '#/components/schemas/BRCBPersonalProcurator'
+        accounts:
+          type: array
+          items:
+            $ref: '#/components/schemas/BRCBPersonalAccount'
+
+    BRCBBusinessFinancialRelations:
+      type: object
+      required:
+        - updateDateTime
+        - startDate
+        - productServicesType
+        - procurrators
+        - accounts
+      properties:
+        updateDateTime:
+          type: string
+        startDate:
+          type: string
+        productsServicesType:
+          type: string
+        procurators:
+          type: array
+          items:
+            $ref: '#/components/schemas/BRCBBusinessProcurator'
+        accounts:
+          type: array
+          items:
+            $ref: '#/components/schemas/BRCBBusinessAccount'
+
+
+    BRCBBusinessAccount:
+      type: object
+      required:
+        - compeCode
+        - branchCode
+        - number
+        - checkDigit
+        - type  
+      properties:
+        compeCode:
+          type: string
+        branchCode:
+          type: string
+        number: 
+          type: string
+        checkDigit:
+          type: string
+        type:
+          type: string
+
+    BRCBPersonalAccount:
+      type: object
+      required:
+        - compeCode
+        - branchCode
+        - number
+        - checkDigit
+        - type
+        - subtype
+      properties:
+        compeCode:
+          type: string
+        branchCode:
+          type: string
+        number: 
+          type: string
+        checkDigit:
+          type: string
+        type:
+          type: string
+        subtype:
+          type: string
+
+    BRCBPersonalProcurator:
+      type: object
+      required:
+        - type
+        - cpfNumber
+        - civilName
+        - socialName
+      properties:
+        type:
+          type: string
+        cnpjNumber:
+          type: string
+        civilName:
+          type: string
+        socialName:
+          type: string
+
+    BRCBBusinessProcurator:
+      type: object
+      required:
+        - type
+        - cnpjCpfNumber
+        - civilName
+        - socialName
+      properties:
+        type:
+          type: string
+        cnpjCpfNumber:
+          type: string
+        civilName:
+          type: string
+        socialName:
+          type: string
+
+
+    BRCBPartiesParticipation:
+      type: object
+      required:
+        - personType
+        - type
+        - civilName
+        - socialName
+        - companyName
+        - tradeName
+        - startDate
+        - shareholding
+        - documentType
+        - documentNumber
+        - documentAdditionalInfo
+        - documentCountry
+        - documentExpirationDate
+      properties:
+        personType:
+          type: string
+        type:
+          type: string
+        civilName:
+          type: string
+        socialName:
+          type: string
+        companyName:
+          type: string
+        tradeName:
+          type: string
+        startDate:
+          type: string
+        shareholding:
+          type: string
+        documentType:
+          type: string
+        documentAdditionalInfo:
+          type: string
+        documentCountry:
+          type: string
+        documentExpirationDate:
+          type: string
+        documentIssueDate:
+          type: string
+
+    BRCBNationality:
+      type: object
+      required:
+        - otherNationalitiesInfo
+        - documents
+      properties:
+        otherNationalitiesInfo:
+          type: string
+        documents:
+          type: array
+          items: 
+              $ref: '#/components/schemas/BRCBNationalityOtherDocument'
+
+    BRCBNationalityOtherDocument:
+      type: object
+      required:
+        - type
+        - number
+        - expirationDate
+        - issueDate
+      properties:
+        type:
+          type: string
+        number:
+          type: string
+        expirationDate:
+          type: string
+        issueDate:
+          type: string
+        country:
+          type: string
+        typeAdditionalInfo:
+          type: string        
+
+    BRCBBusinessOtherDocument:
+      type: object
+      required:
+        - number
+        - country
+        - expirationDate
+      properties:
+        type:
+          type: string
+        number:
+          type: string
+        country:
+          type: string
+        expirationDate:
+          type: string
+
+    BRCBPersonalOtherDocument:
+      type: object
+      required:
+        - type
+        - typeAdditionalInfo
+        - number
+        - checkDigit
+        - passportExpirationDate
+      properties:
+        type:
+          type: string
+        typeAdditionalInfo:
+          type: string
+        number:
+          type: string
+        checkDigit:
+          type: string
+        additionalInfo:
+          type: string
+        passportExpirationDate:
+          type: string
+
+    BRCBPatrimony:
+      type: object
+      required:
+        - amount
+        - currency
+        - year
+      properties:
+        amount:
+          type: string
+        currency:
+          type: string
+        date:
+          type: string
+
+    BRCBPContacts:
+      type: object
+      required:
+        - postalAddresses
+        - phones
+        - emails
+      properties:
+        postalAddresses:
+          type: array
+          items:
+            $ref: '#/components/schemas/BRCBPostalAddress'
+        phones:
+          type: array
+          items:
+            $ref: '#/components/schemas/BRCBCustomerPhone'
+        emails:
+          type: array
+          items:
+            $ref: '#/components/schemas/BRCBCustomerEmail'
+
+    BRCBPostalAddress:
+      type: object
+      required:
+        - isMain
+        - address
+        - districtName
+        - townName
+        - countrySubDivision
+        - postCode
+        - country
+      properties:
+        isMain:
+          type: boolean
+        address:
+          type: string
+        addionalInfo:
+          type: string
+        districtName:
+          type: string
+        townName:
+          type: string
+        ibgeTownCode:
+          type: string
+        countrySubDivision:
+          type: string
+        postCode:
+          type: string
+        country:
+          type: string
+        countryCode:
+          type: string
+        geographicCoordinates:
+          type: object
+          properties:
+            lattitude:
+              type: string
+            longitude:
+              type: string
+
+    BRCBCustomerPhone:
+      type: object
+      required:
+        - isMain
+        - type
+        - countryCallingCode
+        - areaCode
+        - number
+        - phoneExtension
+      properties:
+        isMain:
+          type: boolean
+        type:
+          type: string
+        addionalInfo:
+          type: string
+        countryCallingCode:
+          type: string
+        areaCode:
+          type: string
+        number:
+          type: string
+        phoneExtension:
+          type: string
+
+    BRCBCustomerEmail:
+      type: object
+      required:
+        - isMain
+        - email
+      properties:
+        isMain:
+          type: boolean
+        email:
+          type: string
+
+    CardInstrument:
+      type: object
+      properties:
+        cardSchemeName:
+          type: string
+        authorizationType:
+          type: string
+        name:
+          type: string
+        identificiation:
+          type: string
+      required:
+        - cardSchemeName
+
+    Agent:
+      type: object
+      properties:
+        schemeName:
+          type: string
+        identification:
+          type: string
+        name:
+          type: string
+        postalAddress:
+          $ref: '#/components/schemas/PostalAddress'
+      required:
+        - schemeName
+        - identification
+
+    PostalAddress:
+      type: object
+      properties:
+        addressType:
+          type: string
+        department:
+          type: string
+        subDepartment:
+          type: string
+        streetName:
+          type: string
+        buildingNumber:
+          type: string
+        postCode:
+          type: string
+        townName:
+          type: string
+        countrySubDivision:
+          type: string
+        country:
+          type: string
+          pattern: ^[A-Z]{2,2}$
+        addressLine:
+          type: array
+          items:
+            type: string
+            minItems: 0
+            maxItems: 7
+
+    MerchantDetails:
+      type: object
+      properties:
+        merchantName:
+          type: string
+        merchantCategoryCode:
+          type: string
+
+    TransactionBalance:
+      type: object
+      properties:
+        amount:
+          $ref: '#/components/schemas/Amount'
+        creditDebitIndicator:
+          $ref: '#/components/schemas/CreditDebitEnum'
+        balanceType:
+          type: string
+      required:
+        - amount
+        - creditDebitIndicator
+        - balanceType
+
+    ProprietoryBankTransactionCode:
+      type: string
+      properties:
+        code:
+            type: string
+        issuer:
+            type: string
+      required:
+        - code
+
+    BankTransactionCode:
+      type: object
+      properties:
+        code:
+            type: string
+        subCode:
+            type: string
+      required:
+        - code
+        - subCode
+
+    CurrencyExchange:
+      type: object
+      properties:
+        sourceCurrency:
+          $ref: '#/components/schemas/TCurrency'
+        targetCurrency:
+          $ref: '#/components/schemas/TCurrency'
+        unitCurrency:
+          $ref: '#/components/schemas/TCurrency'
+        exchangeRate:
+          type: string
+        contractIdentification:
+          type: string
+        quotationDate:
+          type: string
+          format: date-time
+        instructedAmount:
+          $ref: '#/components/schemas/Amount'
+      required:
+        - sourceCurrency
+        - exchangeRate
+
+    #
+    # Schemas related to Direct Debits
+    #
+
+    DirectDebitsResponse:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/DirectDebit'
+        meta:
+          $ref: '#/components/schemas/Meta'
+
+    DirectDebit:
+      type: object
+      properties:
+        accountId:
+          type: string
+        directDebitId:
+          type: string
+        mandateIdentification:
+          type: string
+        name:
+          type: string
+        directDebitStatusCode:
+          $ref: '#/components/schemas/DirectDebitStatusEnum'
+        previousPaymentDateTime:
+          type: string
+          format: date-time
+        previousPaymentAmount:
+          $ref: '#/components/schemas/Amount'
+        frequency:
+          type: string
+      required:
+        - accountId
+        - mandateIdentification
+        - name
+
+    DirectDebitStatusEnum:
+      type: string
+      enum:
+        - Active
+        - Inactive
+
+    #
+    # Schemas related to Scheduled Payments
+    #
+
+    ScheduledPaymentsResponse:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/ScheduledPayment'
+        meta:
+          $ref: '#/components/schemas/Meta'
+
+    ScheduledPayment:
+      type: object
+      properties:
+        accountId:
+          type: string
+        scheduledPaymentId:
+          type: string
+        scheduledPaymentDateTime:
+          type: string
+          format: date-time
+        scheduledType:
+          $ref: '#/components/schemas/ScheduledPaymentScheduleType'
+        reference:
+          type: string
+        debtorReference:
+          type: string
+        instructedAmount:
+          $ref: '#/components/schemas/Amount'
+        creditorAgent:
+          $ref: '#/components/schemas/Agent'
+        creditorAccount:
+          $ref: '#/components/schemas/AccountNumber'
+      required:
+        - accountId
+        - scheduledType
+        - instructedAmount
+
+    ScheduledPaymentScheduleType:
+      type: string
+
+    #
+    # Schemas related to Standing Orders
+    #
+
+    StandingOrdersResponse:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/StandingOrder'
+        meta:
+          $ref: '#/components/schemas/Meta'
+
+    StandingOrder:
+      type: object
+      properties:
+        accountId:
+          type: string
+        standingOrderId:
+          type: string
+        frequency:
+          type: string
+        reference:
+          type: string
+        firstPaymentDateTime:
+          type: string
+          format: date-time
+        nextPaymentDateTime:
+          type: string
+          format: date-time
+        lastPaymentDateTime:
+          type: string
+          format: date-time
+        finalPaymentDateTime:
+          type: string
+          format: date-time
+        numberOfPayments:
+          type: string
+        standingOrderStatusCode:
+          $ref: '#/components/schemas/StandingOrderStatusCodeEnum'
+        firstPaymentAmount:
+          $ref: '#/components/schemas/Amount'
+        nextPaymentAmount:
+          $ref: '#/components/schemas/Amount'
+        lastPaymentAmount:
+          $ref: '#/components/schemas/Amount'
+        finalPaymentAmount:
+          $ref: '#/components/schemas/Amount'
+        creditorAgent:
+          $ref: '#/components/schemas/Agent'
+        creditorAccount:
+          $ref: '#/components/schemas/AccountNumber'
+        supplementaryData:
+          type: object
+      required:
+        - accountId
+        - frequency
+
+    StandingOrderStatusCodeEnum:
+      type: string
+      enum:
+        - Active
+        - Inactive
+
+    #
+    # Schemas related to Offers
+    #
+    OffersResponse:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/Offer'
+        meta:
+          $ref: '#/components/schemas/Meta'
+
+    Offer:
+      type: object
+      properties:
+        accountId:
+          type: string
+        amount:
+          $ref: '#/components/schemas/Amount'
+        description:
+          type: string
+        endDateTime:
+          type: string
+          format: date-time
+        fee:
+          $ref: '#/components/schemas/Amount'
+        offerid:
+          type: string
+        offerType:
+          type: string
+        rate:
+          type: string
+        startDateTime:
+          type: string
+          format: date-time
+        term:
+          type: string
+        url:
+          type: string
+        value:
+          type: string
+      required:
+        - accountId
+
+
+    #
+    # Schemas related to Products
+    #
+    ProductsResponse:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/Product'
+        meta:
+          $ref: '#/components/schemas/Meta'
+
+    Product:
+      type: object
+      description: |
+        A descriptor for an product.
+        This is a composite object that may be expanded in the future to support
+        additional account types for new API standards and product types.
+      properties:
+        CreditCards:
+          type: object
+        Loans:
+          type: object
+        CASA:
+          type: object
+        Investment:
+          type: object
+        FundsTransferServices:
+          type: object
+        ATM:
+          type: object
+        Branch:
+          type: object
+
+    #
+    # Common types
+    #
+
+    BeneficiariesResponse:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/Beneficiary'
+        meta:
+          $ref: '#/components/schemas/Meta'
+
+    BeneficiaryResponse:
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/Beneficiary'
+        meta:
+          $ref: '#/components/schemas/Meta'
+
+    Beneficiary:
+      type: object
+      properties:
+        accountId:
+          type: string
+        beneficiaryType:
+          type: string
+        beneficiaryId:
+          type: string
+        creditorAccount:
+          type: object
+          properties:
+            schemeName:
+              type: string
+            identification:
+              type: string
+            name:
+              type: string
+          required:
+            - schemeName
+            - identification
+        reference:
+          type: string
+        servicer:
+          type: object
+          properties:
+            schemeName:
+              type: string
+            identification:
+              type: string
+      required:
+        - beneficiaryType
+
+    TCurrency:
+      type: string
+      pattern: '^[A-Z]{3,3}$'
+
+    AccountNumber:
+      type: object
+      properties:
+        name:
+          type: string
+        schemeName:
+          type: string
+        identification:
+          type: string
+        secondaryIdentification:
+          type: string
+      required:
+        - schemeName
+        - identification
+
+    CreditDebitEnum:
+      type: string
+      description: |
+        "Credit" if it is incoming transaction / adding money to account
+        "Debit" if it is outgoing transaction / paying someone else
+      enum:
+        - Credit
+        - Debit
+
+    BalanceCreditDebitEnum:
+      type: string
+      description: |
+        Indicates whether the balance is a credit or a debit balance.
+        Usage: A zero balance is considered to be a credit balance.
+      enum:
+        - Credit
+        - Debit
+
+    Amount:
+      type: object
+      properties:
+        amount:
+          type: string
+          pattern: '^\d{1,13}$|^\d{1,13}.\d{1,5}$'
+        currency:
+          $ref: '#/components/schemas/TCurrency'
+
+      required:
+        - amount
+        - currency
+
+    Meta:
+      type: object
+      additionalProperties: false
+
+    PaginatedMeta:
+      type: object
+      properties:
+        paginated:
+          type: boolean
+          description: |
+            `true` if the response is paginated.
+
+            `false` if the response returns all matching data elements.
+
+            If not specified, a non-paginated response is assumed.
+
+        totalPages:
+          type: number
+          description: |
+            The number of expected pages for the query.
+
+    Error:
+      type: object
+      properties:
+        errorCode:
+          type: string
+          description: Error code identifying the problem occured
+        errorMessage:
+          type: string
+          description: Message describing what problem has occured
+
+  parameters:
+    aspspId:
+      name: o3-aspsp-id
+      in: header
+      schema:
+        type: string
+      required: true
+      description: Identifier for the ASPSP that the request is targetted to
+
+    callerOrgId:
+      name: o3-caller-org-id
+      in: header
+      schema:
+        type: string
+      required: false
+      description: An identifier for the organization calling the API
+
+    callerClientId:
+      name: o3-caller-client-id
+      in: header
+      schema:
+        type: string
+      required: false
+      description: An identifier for the OIDC clientId calling the API
+
+    callerSoftwareStatementId:
+      name: o3-caller-software-statement-id
+      in: header
+      schema:
+        type: string
+      required: false
+      description: An identifier for the software statement calling the API
+
+    apiUri:
+      name: o3-api-uri
+      in: header
+      schema:
+        type: string
+      required: true
+      description: The parameterised URL of the API being called by the caller
+
+    apiOperation:
+      name: o3-api-operation
+      in: header
+      schema:
+        type: string
+      required: true
+      description: The API operation carried out by the caller (e.g. GET, POST, PUT, DELETE, PATCH)
+
+    consentId:
+      name: o3-consent-id
+      in: header
+      schema:
+        type: string
+      required: false
+      description: The consentId for which this call is being made
+
+    callerInteractionId:
+      name: o3-caller-interaction-id
+      in: header
+      schema:
+        type: string
+      required: false
+      description: The interaction ID passed in by the caller, if any
+
+    ozoneInteractionId:
+      name: o3-ozone-interaction-id
+      in: header
+      schema:
+        type: string
+      required: true
+      description: An interaction ID generated by Ozone if the caller did not send in one. If the callerInteractionId is specified, this takes the same value.
+
+    psuIdentifier:
+      name: o3-psu-identifier
+      in: header
+      schema:
+        type: string
+      required: false
+      description: A Base64 encoded representation of the psuIdentifier JSON object.
+
+    pageNumber:
+      name: page
+      in: query
+      schema:
+        type: string
+      required: false
+      description: Page number to be returned
+
+    transaction-status:
+      name: status
+      in: query
+      description: |
+        If specified, the API should only return transactions that match the specified `status`.
+
+        If this parameter is not specified, then all transactions irrespective of the status should be returned.
+
+        This functionality is only required for Berlin Group APIs.
+
+        ### Optionality
+        This parameter is optional to support.
+
+        If not supported by the ASPSP and the parameter is provided, ASPSPs must return an error.
+
+      required: false
+      schema:
+        type: string
+
+    transaction-fromBookingDateTime:
+      name: fromBookingDateTime
+      in: query
+      description: |
+        If specified, the API should only return transactions which have a `bookingDateTime` that occours on or after the specified date-time.
+      required: false
+      schema:
+        type: string
+        format: date
+
+    transaction-toBookingDateTime:
+      name: toBookingDateTime
+      in: query
+      description: |
+        If specified, the API should only return transactions which have a `bookingDateTime` that occours on or before the specified date-time.
+      required: false
+      schema:
+        type: string
+        format: date
+
+    transaction-creditDebitIndicator:
+      name: creditDebitIndicator
+      in: query
+      description: |
+        If specified, the API should only return transactions that match the specified `creditDebitIndicator`.
+
+        If this parameter is not specified, then all transactions irrespective of the status should be returned.
+
+        This functionality is only required for Berlin Group APIs.
+
+        ### Optionality
+        This parameter is optional to support.
+
+        If not supported by the ASPSP and the parameter is provided, ASPSPs must return an error.
+      required: false
+      schema:
+        $ref: '#/components/schemas/CreditDebitEnum'
+
+    pagination-page:
+      name: page
+      in: query
+      description: |
+        The page of results to be returned.
+
+        If the `page` parameter is not specified, the ASPSP may return either:
+        - a complete set of unpaginated data. The `paginated` flag is set to `false`.
+        - the first page of paginated data. The `paginated` flag is set to `true`. Optionally,
+          number of pages are indicated in the `totalPages` attribute.
+
+        ### Optionality
+        This parameter is optional to support.
+
+        If not supported by the ASPSP and the parameter is provided, ASPSPs must return an error.
+
+      required: false
+      schema:
+        type: number
+
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT

@@ -1,0 +1,532 @@
+openapi: 3.0.1
+
+info:
+  title: Consent Manager APIs
+  description: |
+
+    This document provides the OAS3 specification for the APIs provided by the Ozone Consent Manager.
+
+    These APIs are implemented by Ozone and should be called by the ASPSP to find,
+    modify and delete consents.
+
+  version: Version 2.2 Release 31.2
+
+tags:
+  - name: consents
+
+paths:
+  /consents:
+    post:
+      tags:
+        - consents
+      summary: Creates a new consent
+      operationId: addConsent
+      requestBody:
+        description: |
+          An end-point for creating a new consent
+
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ConsentPostRequest'
+
+      responses:
+        201:
+          description: |
+            Indicates the successful creation of a consent
+
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ConsentPostResponse'
+
+        400:
+          description: |
+            Indicates a failure to create the consent
+
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /consents/{consentId}:
+    get:
+      tags:
+        - consents
+      summary: Retrieve a consent by its id
+      operationId: getConsentsByConsentId
+
+      parameters:
+        - $ref: '#/components/parameters/consentId'
+
+      responses:
+        200:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ConsentGetResponse'
+
+        400:
+          description: |
+            Indicates a failure to create the consent
+
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+    patch:
+      tags:
+        - consents
+      summary: Patches one or more fields in a consent
+
+      description: |
+        This operation allows an ASPSP modify fields within a consent's `consentBody`.
+
+        Typically, this API would be called after the PSU has authorised a consent. This would
+        allow the ASPSP to "patch in" the `psuIdentifier` and `accountIds` associated with the
+        consent
+
+      operationId: patchConsent
+
+      parameters:
+        - $ref: '#/components/parameters/consentId'
+
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ConsentPatchRequest'
+
+      responses:
+        204:
+          description: An empty response
+
+        400:
+          description: |
+            Indicates a failure to create the consent
+
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /psu/{userId}/consents:
+    get:
+      tags:
+        - consents
+      summary: Retrieves all the consents associated with a given PSU
+
+      description: |
+        Retrieves an array of consents associated with the PSU.
+
+        If no consents could be found associated with the PSU, then an empty array is returned.
+
+        The userId path parameter is matched with the `psuIdentifiers.userId` field in the consent.
+
+      operationId: getConsents
+
+      parameters:
+        - $ref: '#/components/parameters/userId'
+
+        # query parameters
+        - name: consentType
+          in: query
+          description: Consent type filter
+          schema:
+            type: string
+
+      responses:
+        200:
+          description: |
+            Successful response
+
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ConsentsGetResponse'
+
+        400:
+          description: |
+            Indicates a failure to retrieve the consents
+
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+components:
+  schemas:
+    ConsentPostRequest:
+      type: object
+      properties:
+        requestUrl:
+          type: string
+          description: |
+            Self url
+
+        consentType:
+          $ref: '#/components/schemas/ConsentType'
+
+        request:
+          $ref: '#/components/schemas/Request'
+
+        requestHeaders:
+          $ref: '#/components/schemas/RequestHeaders'
+
+        psuIdentifiers:
+          $ref: '#/components/schemas/PSUIdentifiers'
+
+        accountIds:
+          $ref: '#/components/schemas/AccountIds'
+
+        consentBody:
+          $ref: '#/components/schemas/ConsentBody'
+
+        tpp:
+          $ref: '#/components/schemas/TPP'
+
+      required:
+        - consentType
+        - request
+        - requestHeaders
+        - tpp
+      additionalProperties: false
+
+    ConsentPostResponse:
+      type: object
+      properties:
+        id:
+          type: string
+          description: |
+            A unique identifier for the consent in uuid-v4 format.
+
+            This is distinct from the ConsentId that is communicated back to PSUs and TPPs.
+
+        requestUrl:
+          type: string
+          format: url
+          description: |
+            Self url
+
+        consentType:
+          $ref: '#/components/schemas/ConsentType'
+
+        request:
+          $ref: '#/components/schemas/Request'
+
+        requestHeaders:
+          $ref: '#/components/schemas/RequestHeaders'
+
+        psuIdentifiers:
+          $ref: '#/components/schemas/PSUIdentifiers'
+
+        accountIds:
+          $ref: '#/components/schemas/AccountIds'
+
+        consentBody:
+          $ref: '#/components/schemas/ConsentBody'
+
+        tpp:
+          $ref: '#/components/schemas/TPP'
+
+      required:
+        - id
+        - consentType
+        - request
+        - requestHeaders
+        - tpp
+
+      additionalProperties: false
+
+    #
+    # Consent GET operation response
+    #
+    ConsentGetResponse:
+      type: object
+      description: |
+
+        A consent in its current state.
+
+        If the consent has been authorised, then it can be expected that the ASPSP
+        would have patched in `accountIds` and `psuIdentifier` fields.
+
+        Additionally, the ASPSP may also patch in an arbitrary set of fields along with consent
+        in the `supplementaryInformation` field.
+
+      properties:
+        id:
+          type: string
+          description: |
+            A unique identifier for the consent in uuid-v4 format.
+
+            This is distinct from the ConsentId that is communicated back to PSUs and TPPs.
+
+        consentType:
+          $ref: '#/components/schemas/ConsentType'
+
+        request:
+          $ref: '#/components/schemas/Request'
+
+        requestHeaders:
+          $ref: '#/components/schemas/RequestHeaders'
+
+        consentBody:
+          $ref: '#/components/schemas/ConsentBody'
+
+        tpp:
+          $ref: '#/components/schemas/TPP'
+
+        psuIdentifiers:
+          $ref: '#/components/schemas/PSUIdentifiers'
+
+        accountIds:
+          $ref: '#/components/schemas/AccountIds'
+
+      required:
+        - id
+        - consentType
+        - request
+        - requestHeaders
+        - tpp
+
+      additionalProperties: false
+
+    #
+    # Consent PATCH operation response
+    #
+    ConsentPatchRequest:
+      type: object
+      description: |
+        Describes the fields to be patched and their corresponding values.
+
+        The fields that are supported differ based on the API standard that the consent belongs to.
+
+      oneOf:
+        - $ref: '#/components/schemas/OBIEConsentPatchRequest'
+
+    OBIEConsentPatchRequest:
+      allOf:
+        - $ref: '#/components/schemas/CommonConsentPatch'
+        - type: object
+          properties:
+            consentBody.Data.Status:
+              $ref: '#/components/schemas/ConsentStatusEnum'
+
+    CommonConsentPatch:
+      type: object
+      properties:
+        psuIdentifiers:
+          $ref: '#/components/schemas/PSUIdentifiers'
+        accountIds:
+          $ref: '#/components/schemas/AccountIds'
+        supplementaryInformation:
+          type: object
+          additionalProperties: true
+
+
+    ConsentsGetResponse:
+      type: array
+      items:
+        $ref: '#/components/schemas/ConsentGetResponse'
+
+    #
+    # Common objects
+    #
+    ConsentType:
+      type: string
+      description: |
+        The type of the consent that is being created.
+
+        Each ASPSP's instance may support a different set of consent types
+        The Consent Manager supports the creation of consents of different consent types
+        depending on the standards supported.
+
+        For example, for the UK OBIE standards, the following consent types are available:
+          - account-access-consents
+          - domestic-payment-consents
+          - future-dated-payment-consents
+          - standing-order-consents
+          - international-payment-consents
+          - international-future-dated-payment-consents
+          - international-standing-order-consents
+
+    Request:
+      type: object
+      description: |
+        The entire HTTP request body that was received by Ozone from the TPP.
+
+        The Consent Manager uses the consent type to identify the schema
+        that should be used to validate the request. (These schemas are defined by the
+        underlying standard)
+      additionalProperties: true
+
+    RequestHeaders:
+      type: object
+      description: |
+        The entire set of HTTP request headers that was received by Ozone from the TPP
+      additionalProperties: true
+
+    TPP:
+      type: object
+      description: |
+        The TPP record as held by Ozone.
+
+        If Ozone TPP Connect has been integrated into a directory, the `directoryRecord`
+        provides the TPP's directory record as held by Ozone.
+      properties:
+        clientId:
+          type: string
+        orgId:
+          type: string
+        softwareStatementId:
+          type: string
+        tppName:
+          type: string
+        directoryRecord:
+          type: object
+          additionalProperties: true
+
+    ConsentBody:
+      type: object
+      description: |
+        An object representing the current state of the consent.
+        This includes the entire request, augmented by additional computed properties
+        (e.g. ids, charges etc)
+
+        The Ozone Consent Manager caters to consents from various standards. The actual schema
+        for each consentBody would be determined by the underlying standard.
+
+      oneOf:
+        - $ref: '#/components/schemas/OBIEConsentBody'
+
+    OBIEConsentBody:
+      type: object
+      description: |
+        A representation of a consent body for a consent from the OBIE RW-API standards.
+
+        It should be noted that the entire content payload (not just the fields listed below) is stored.
+
+        The list of fields below identifies the common fields across all OBIE consents.
+
+      properties:
+        Data:
+          type: object
+          properties:
+            ConsentId:
+              type: string
+              description: |
+                A ConsentId generated by the ASPSP for the consent.
+
+                This is different from the top-level `id` field which is used by Consent Manager.
+
+            CreationDateTime:
+              type: string
+              format: date-time
+              description: An ISO date-time representing when the consent was created
+
+            Status:
+              $ref: '#/components/schemas/ConsentStatusEnum'
+
+            StatusUpdateDateTime:
+              type: string
+              format: date-time
+              description: An ISO date-time representing when the consent status was last updated
+
+          required:
+            - ConsentId
+            - CreationDateTime
+            - Status
+            - StatusUpdateDateTime
+          additionalProperties: true
+
+      required:
+        - Data
+      additionalProperties: true
+
+    ConsentStatusEnum:
+      type: string
+      enum:
+        - AwaitingAuthorisation
+        - Authorised
+        - Consumed
+        - Rejected
+        - Revoked
+      description: The current status of the consent
+
+    PSUIdentifiers:
+      type: object
+      description: |
+        The PSU that is associated with this consent.
+
+        The `PSUIdentifiers` object may have artitrary custom fields that an ASPSP may use to
+        identify the PSU.
+
+        However, all `PSUIdentifiers` must have a mandatory `userId` field that provides a unique
+        user id for the PSU.
+
+        The consent is initially created without a PSU identified.
+
+        The value must be specified once the consent is authorised.
+
+      properties:
+        userId:
+          type: string
+
+      required:
+        - userId
+
+      additionalProperties: true
+
+    AccountIds:
+      type: array
+      items:
+        type: string
+      minItems: 1
+      description: |-
+        An array of account ids associated with the consent. The array must be populated once consent has been authorised.
+        For payment consents, the array must always have one element - the debtor account from which the payment will be made
+        For CBPII consents, the array must always have one element - the account for which CoF requests will be answered
+        For AIS requests, the array may contain multiple values, representing each of the payment accounts for which an AIS service will be provided.
+
+    Error:
+      type: object
+      properties:
+        errorCode:
+          type: string
+          description: Error code identifying the problem occured
+        errorMessage:
+          type: string
+          description: Message describing what problem has occured
+
+  parameters:
+    consentId:
+      name: consentId
+      in: path
+      schema:
+        type: string
+      required: true
+      description: Identifier for the consent
+
+    userId:
+      name: userId
+      in: path
+      schema:
+        type: string
+      required: true
+      description: |
+        Identifies the PSU associated with a consent.
+
+        This should match up with the `psuIdentifier.userId` field.
+
+
+  securitySchemes:
+    api_key:
+      type: apiKey
+      name: api_key
+      in: header
+      description: TLS-MA and JWS in authorization header
+

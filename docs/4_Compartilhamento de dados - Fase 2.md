@@ -5,10 +5,19 @@ Este documento descreve como é o fluxo para Compartilhamento de Dados entre as 
 ![Fluxo de compartilhamento](../images/Macrofluxocompartilhamento.jpg)
 
 
-- **IR** – Instituição Receptora (TPP)
+- **IR** – Instituição Receptora (TPP).
 
-- **IT** – Instituição Transmissora (Banco)
+- **IT** – Instituição Transmissora (Banco).
 
+- **PSU** – é o usuário final.
+  
+- **Cliente** – é o __sistema__ da IR que se comunica com a TecBan em nome do usuário.
+
+- **Servidor** – é o __sistema__ da IT que recebe as requisições da TecBan.
+
+<br>
+
+> Este documento detalha todos os passos para melhor entendimento, mas para a implementação da Instituição Financeira são relevantes apenas as APIs [IT→TB] ou [TB→IT]
 
 O diagrama de sequência a seguir mostra o fluxo de informações entre os três participantes da solução: Instituição Receptora, TecBan e Instituição Transmissora.
 
@@ -22,29 +31,25 @@ Na **Instituição Transmissora**, são mostrados três componentes com as segui
 
 - **Servidor de Recursos** – é a API de negócios da IT. É restrita a receber apenas as requisições vindas da plataforma OpenBanking da TecBan. Neste ponto a IT pode realizar a transação com confiança que todo o processo de consentimento foi verificado.
 
-Esse é um modelo lógico, e a implementação concreta pela Instituição Transmissora pode ser diferente.
+Esse é um modelo *lógico*, e a implementação concreta pela Instituição Transmissora pode ser diferente.
 
 > É de *responsabilidade da Instituição Transmissora* implementar essas APIs e realizar as chamadas das APIs da Tecban quando necessário, de acordo com o descrito neste documento.
 
 
-| **API implementada pela IT** |
-|-------------|
-|  Passo 3001 |
-|  Passo 6002 |
+APIs **implementadas** pela IT
+- Passo 3001
+- Passo 6002
 
-| **API usada pela IT** |
-|------------|
-| Passo 3003 |
-| Passo 3005 |
-| Passo 4003 |
-| Passo 4005 |
-| Passo 5001 |
+APIs **usadas** pela IT
+- Passo 3003
+- Passo 3005
+- Passo 4003
+- Passo 4005
+- Passo 5001
 
-> Todas as APIs estão especificadas usando o padrão OpenAPI Specification 3 (OAS3).
+> Todas as APIs estão descritas usando o padrão OpenAPI Specification 3.0 (OAS3).
 
-O passo 4001 do diagrama de sequência não é uma API, mas representa a jornada de consentimento do usuário, que deve ser implementada pela IT.
-
-A comunicação entre APIs da **Tecban** e da **IT** deve ser realizada através de mTLS (certificate-based mutual Transport Layer Security) ou seja, ambos participantes precisam de certificados X.509 para se autenticar e estabelecer a conexão.
+O passo 4001 do diagrama de sequência não é uma API, mas representa a jornada de consentimento do usuário, que deve ser implementada pela IT através de uma interface web.
 
 <br>
 
@@ -53,9 +58,9 @@ A comunicação entre APIs da **Tecban** e da **IT** deve ser realizada através
 - **x-fapi-financial-id** - é um identificador único da instituição.
 Este id é designado para a instituição pela Autoridade Central, quando ocorrer a adesão ao Open Banking Brasil.
 
-- **x-fapi-interaction-id** - é um identificador único da requisição e deve ser gerado pelo cliente quando chamar os endpoints.
-A TecBan responderá com o header x-fapi-interaction-id com o mesmo id da requisição.
-O seu uso é opcional. Caso ele não esteja presente na requisição, a TecBan irá gerar um novo id para a resposta.
+- **x-fapi-auth-date** - Data em que o usuário logou pela última vez com o receptor
+- **x-fapi-customer-ip-address** - O endereço IP do usuário se estiver atualmente logado com o receptor
+- **x-fapi-interaction-id** - Um UID RFC4122 usado como um ID de correlação. Se fornecido, o transmissor deve "reproduzir" esse valor no cabeçalho de resposta
 
 <br>
 
