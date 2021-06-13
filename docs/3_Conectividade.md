@@ -35,3 +35,21 @@ Para as Instituições Financeiras que já ingressaram no Banco24Horas® haverá
 #### 7. Qual a banda necessária para suportar a solução?
 ##### R: Depende da previestimativa de volumetria, mas para te apoiar nessa análise tenha em mente que uma mensagem possui um tamanho em média de 2KB.
 
+#### 8. Quais os endereços para instalação dos links e procedimento?
+Datacenter TecBan - UOL/DIVEO (Principal)
+Endereço: Av. Ceci, 1850 – (Área2, Cage 8 e 9)
+Barueri SP
+CEP 06460-120
+
+Datacenter TecBan - VIVO (Principal 2)
+Av. Marcos Penteado de Ulhôa Rodrigues, 1690
+Santana de Parnaíba - SP
+CEP 06543-001
+
+Datacenter TecBan - CETEM (DR)
+Endereço: Rua São Vicente, 237 1º Andar
+Bela Vista - São Paulo/SP CEP 01314-010
+
+Para realizar o estudo de viabilidade nos Datacenters TecBan, esta visita técnica conjunta com a operadora, pode ser realizado através de agendamento prévio de 48 horas, informando o nome e RG dos possíveis técnicos para a solicitação de liberação de acesso. A visita será acompanhada pela TecBan para disponibilização de espaço nos racks e demais requisitos técnicos.
+O agendamento da visita técnica é realizado com a equipe TecBan  Centro de Gerenciamento de Redes – CGR, através de email ou telefone: cgr@TecBan.com.br – 11 4196-8421.
+
