@@ -10,13 +10,13 @@
 - [8. Fluxo de Consentimento](#6-fluxo-de-consentimento)
 
 
-
 # 1. O que é o Portal de Consentimento?
 O Portal do Consentimento é o conjunto de interfaces que permite que os clientes das Instituições Financeiras façam a gestão de seus consentimentos.
 
 É uma solução opcional oferecida pela TecBan para adequar a experiência do usuário em sua jornada de consentimento, atendendo os requisitos determinados pelo Grupo de Trabalho do OpenBanking Brasil
 
 Atualmente, está em fase de construção para atendimento da Fase 03 do OpenBanking.
+
 
 # 2. Jornadas de Usuário
 Nos fluxos abaixo serão ilustradas as principais funcionalidades da 'Gestão de Consentimentos' pela perspectiva do usuário.
@@ -28,6 +28,7 @@ Nos fluxos abaixo serão ilustradas as principais funcionalidades da 'Gestão de
 Navegue pelo protótipo (Clique)[aqui](https://www.figma.com/proto/aWwbavLPVAbx0H2AdnSQxi/Untitled?node-id=1%3A387&scaling=min-zoom&page-id=0%3A1)
 
 ![JornadaConfirmaPagto](../images/JornadaConfirmaPagtoUnico01.png)
+
 
 # 3.Diagrama de Sequência de Interface - Visão Macro
 As imagens abaixo ilustram a jornada de confirmação do consentimento de pagamento.
@@ -78,6 +79,7 @@ Na etapa anterior o cliente aprovou o consentimento para pagamento e foi redirec
 Enquanto esta comunicação sistêmica ocorre, fica a critério da 'IP' exibir interfaces da experiência do cliente.
 ![DS12](../images/DS12.jpg)
 
+
 # 4. Padrão Visual
 Este item serve como guia de customização do 'Portal de Consentimento-TecBan' para Instituições parceiras.
 
@@ -88,7 +90,7 @@ Também está disponível para do download o documento na qual as Insituições 
 ![EstiloVisual01](../images/EstiloVisual01.jpg)
 
 
-# 3. Fluxos de Autenticação e Autorização
+# 5. Fluxos de Autenticação e Autorização
 Um Autorizador deve usar o protocolo OpenID Connect (OIDC) e o OAuth 2.0 Authorization Framework para autenticar usuários e obter sua autorização para acessar recursos protegidos.
 A autenticação e a autorização representam funções fundamentalmente diferentes, conforme comparativo abaixo:
 
@@ -101,11 +103,11 @@ A autenticação e a autorização representam funções fundamentalmente difere
 |Geralmente, transmite informações por meio de um token de ID	|Geralmente, transmite informações por meio de um token de acesso|
 |Geralmente regido pelo protocolo OpenID Connect (OIDC)	|Geralmente regido pela estrutura OAuth 2.0|
 
-<b>Camada de transporte</b>
+## Camada de transporte
 A comunicação entre os aplicativos terceiros e os recursos protegidos, devem ser sempre protegidas utilizando uma conexão TLS versão 1.2 ou superior. A conexão TLS deve ser estabelecida sempre utilizando o certificado qualificado para a autenticação do site e o certificado deve ser emitido seguindo as normas definidas para o Open Banking
 
 
-# 4. Fluxo Client Credentials
+# 6. Fluxo Client Credentials
 Com aplicativos machine-to-machine (M2M), como serviços em execução no back-end, o sistema autentica e autoriza o Client em vez de um usuário. Para este cenário, esquemas de autenticação típicos como nome de usuário + senha ou logins sociais não fazem sentido.
 
 Em vez disso, as aplicações M2M usam o fluxo Client Credentials utilizando mTLS (definido em OAuth 2.0 Mutual-TLS Client Authentication and Certificate-Bound RFC 8705) e infraestrutura de chave pública (PKI). No qual o Client, o Authorization Server e o Servidor API são autenticados usando certificados X.509. O Access Token também é vinculado ao Client e validado utilizando certificados X.509.
@@ -113,7 +115,8 @@ Em vez disso, as aplicações M2M usam o fluxo Client Credentials utilizando mTL
 Este método acrescenta uma restrição com chave de confirmação (ou prova de posse) ao Client que deseja utilizar um token emitido, com isso ele mitiga a possibilidade de uso abusivo dos Access Tokens Oauth tradicionais em caso de vazamento.
 
 ![Credintial Fluxo](../images/imagem_32.png)
-<b>Diagrama – Fluxo de credenciais do client.</b>
+
+### Diagrama - Fluxo de credenciais do client
 
 - O client e o servidor de autenticação estabelecem uma conexão mTLS, e o Client solicita um Access Token.
 - O Servidor de Autenticação gera uma impressão digital SHA-256 do certificado do Client e a incorpora em um Access Token JWT. Isto limita o Access Token ao Client.
@@ -126,14 +129,14 @@ Este método acrescenta uma restrição com chave de confirmação (ou prova de 
 Conforme definido na Seção 6.1 do RFC8705, os endpoints utilizados para emissão e validação de tokens que requerem uma conexão mTLS são endpoints convencionais separados por hostname ou porta diferente.
 
 
-# 5. Fluxo do Authorization Code
+# 7. Fluxo do Authorization Code
 No Fluxo do Authorization Code, o Client pode recuperar um Access Token e, opcionalmente, um Refresh Token. É considerada a escolha mais segura, pois o Access Token é passado diretamente para o servidor que hospeda o Client, sem passar pelo navegador do usuário e correr o risco de exposição.
 
 Como os Clients são aplicativos do lado do servidor em que o código-fonte não é exposto publicamente, eles podem usar o fluxo do Authorization Code (definido no OAuth 2.0 [RFC 6749], seção 4.1), que troca um Authorization Code por um token. Seu Client deve estar no lado do servidor, porque durante essa troca, você também deve passar adiante o client secret do seu Client, que deve ser mantido sempre seguro, e deve armazená-lo em seu client.
 
 ![Credintial Fluxo](../images/imagem_33.png)
 
-<b>Diagrama - Fluxo do código de autorização.</b>
+### Diagrama - Fluxo do código de autorização
 
 - O usuário clica em Login no Client.
 - O client redireciona o usuário para o Authorization Server.
@@ -146,7 +149,8 @@ Como os Clients são aplicativos do lado do servidor em que o código-fonte não
 - O Client usa o Access Token para chamar uma API para acessar informações sobre o usuário.
 - A API responde com os dados solicitados.
 
-# 6. Fluxo de Consentimento
+
+# 8. Fluxo de Consentimento
 Pedidos de revogação de consentimentos feitos pelo usuário final por meio de API´s da instituição receptora devem obrigatoriamente implicar na revogação dos tokens de acesso e de consentimento relacionados por meio de chamadas executadas no servidor de autorização da instituição transmissora responsável pelo consentimento e/ou em API de consentimento mantida pelo transmissor.
 
 A instituição transmissora deve disponibilizar, por meio de API específica para o controle de consentimentos, interface que permita à instituição receptora detentora de consentimentos a verificação do seu estado.
@@ -156,6 +160,7 @@ O acesso à API de consentimento deve ser precedido de autenticação e a consul
 A instituição receptora de dados detentora de consentimentos e de tokens de autorização deve revogá-los, por meio de chamadas específicas às API´s das instituições transmissoras publicadas para esse fim, quando perceber violações à confidencialidade dos tokens ou no fim da prestação dos serviços ao usuário final.
 
 ## Padrão Lodging Intent
+
 Essa seção descreve o padrão Lodging Intent, utilizado para parametrizar solicitações de autorização OAuth complexas de maneira confiável e segura.
 
 O OAuth por si, suporta apenas autorizar ações simples de leitura, o parâmetro scope é definido por uma lista delimitada por espaços contendo strings simples, quando se trata de autorizações mais complexas, como o início de um pagamento, o suporte integrado do OAuth não é suficiente.

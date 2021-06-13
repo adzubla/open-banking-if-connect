@@ -6,7 +6,6 @@
 - [2. Geração de certificado por parte da IF](#2-geração-de-certificado-por-parte-da-if)
 - [3. Validade dos Certificados Digitais TecBan](#3-validade-dos-certificados-digitais-tecban)
 
-
 Para consultar os requisitos de segurança do Open Banking Brasil, acesse [aqui](https://openbanking-brasil.github.io/areadesenvolvedor/#seguranca).
 
 

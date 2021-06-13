@@ -10,7 +10,6 @@ Foram criadas contas AWS dedicadas ao projeto Open Finance, elas estão integrad
 
 Todos os serviços estão alocados no Brasil em 3 datacenters (availability zones) no formato ativo/ativo. Para os serviços globais como IAM e Roles não há região específica. 
 
-
 Toda infraestrutura é provisionada como código e serão detalhados neste documento. Abaixo está a lista de serviços criados.
 
 
